@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Plugin Name: Wenprise WeChatPay Checkout For WooCommerce
  * Plugin URI: https://www.wpzhiku.com
@@ -10,8 +9,6 @@
  * Text Domain: wprs-woo-wechatpay
  * Domain Path: /languages
  */
-
-namespace WizhiWooCommercePayment\WechatPay;
 
 if ( ! defined('ABSPATH')) {
     exit; // Exit if accessed directly
@@ -33,6 +30,10 @@ add_action('plugins_loaded', function ()
 
     require WENPRISE_WECHATPAY_PATH . 'vendor/autoload.php';
     require WENPRISE_WECHATPAY_PATH . 'class-checkout.php';
+
+    add_action('wp_ajax_wprs-woo-wechatpay-query-order', [new Wenprise_Wechat_Pay_Gateway(), "query_order"]);
+    add_action('wp_ajax_nopriv_wprs-woo-wechatpay-query-order', [new Wenprise_Wechat_Pay_Gateway(), "query_order"]);
+    add_action('woocommerce_receipt_wprs-woo-wechatpay', [new Wenprise_Wechat_Pay_Gateway(), 'receipt_page']);
 
     add_filter('woocommerce_payment_gateways', function ($methods)
     {
