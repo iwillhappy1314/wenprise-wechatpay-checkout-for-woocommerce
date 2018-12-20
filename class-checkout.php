@@ -350,6 +350,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             do_action('woocommerce_wenprise_wechatpay_before_payment_redirect', $response);
 
             $code_url = $response->getCodeUrl();
+
             update_post_meta($order_id, 'code_url', $code_url);
 
             wc_empty_cart();
