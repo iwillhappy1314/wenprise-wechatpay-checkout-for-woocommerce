@@ -1,0 +1,6 @@
+{
+    "require": {
+        "lokielse/omnipay-wechatpay": "^3.0",
+        "endroid/qrcode": "^3.0"
+    }
+}

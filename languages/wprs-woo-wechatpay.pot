@@ -1,0 +1,108 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Better Alipay for WooCommerce (Lite)\n"
+"POT-Creation-Date: 2018-12-20 11:42+0800\n"
+"PO-Revision-Date: 2016-03-11 10:19+0100\n"
+"Last-Translator: Agbonghama Collins <me@w3guy.com>\n"
+"Language-Team: Agbonghama Collins <me@w3guy.com>\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: class-checkout.php:34 class-checkout.php:40
+msgid "Wechat Pay"
+msgstr ""
+
+#: class-checkout.php:37
+msgid "Wechat Pay payment gateway for WooCommerce"
+msgstr ""
+
+#: class-checkout.php:63
+msgid "Proceed to Wechatpay"
+msgstr ""
+
+#: class-checkout.php:83
+msgid "Enable / Disable"
+msgstr ""
+
+#: class-checkout.php:84
+msgid "Enable this payment gateway"
+msgstr ""
+
+#: class-checkout.php:89
+msgid " Wechatpay Sanbox Mode"
+msgstr ""
+
+#: class-checkout.php:90
+msgid "Enable Wechatpay Sanbox Mode"
+msgstr ""
+
+#: class-checkout.php:92
+#, php-format
+msgid ""
+"Wechatpay sandbox can be used to test payments. Sign up for an account <a "
+"href=\"%s\">here</a>"
+msgstr ""
+
+#: class-checkout.php:98
+msgid "Title"
+msgstr ""
+
+#: class-checkout.php:100
+msgid "Wechatpay"
+msgstr ""
+
+#: class-checkout.php:103
+msgid "Description"
+msgstr ""
+
+#: class-checkout.php:105
+msgid "Pay securely using Wechat Pay"
+msgstr ""
+
+#: class-checkout.php:109
+msgid "Wechat App Id"
+msgstr ""
+
+#: class-checkout.php:111
+msgid "Enter your Wechat App Id."
+msgstr ""
+
+#: class-checkout.php:114
+msgid "Wechat Mch Id"
+msgstr ""
+
+#: class-checkout.php:116
+msgid "Enter your Wechat Mch Id."
+msgstr ""
+
+#: class-checkout.php:119
+msgid "Wechat Api Key"
+msgstr ""
+
+#: class-checkout.php:121
+msgid "Enter your Wechat Api Key"
+msgstr ""
+
+#: class-checkout.php:133
+msgid "Settings"
+msgstr ""
+
+#: class-checkout.php:254
+msgid "Shipping Fee"
+msgstr ""
+
+#: class-checkout.php:381
+#, php-format
+msgid "Wechatpay payment complete (Charge ID: %s)"
+msgstr ""
