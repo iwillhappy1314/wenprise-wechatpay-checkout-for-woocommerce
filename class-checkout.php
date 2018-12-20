@@ -25,6 +25,13 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
     public $mch_id = false;
     public $api_key = false;
 
+    /**
+     * 网关支持的功能
+     *
+     * @var array
+     */
+    public $supports = ['products', 'refunds'];
+
     /** @var string WC_API for the gateway - 作为回调 url 使用 */
     public $notify_url;
 
@@ -203,8 +210,10 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
     public function process_payment($order_id)
     {
 
-        $order            = new WC_Order($order_id);
-        $this->notify_url = WC()->api_request_url('wprs-wechatpay-notify');
+        $order    = new WC_Order($order_id);
+        $order_no = $order->get_order_number();
+
+        $this->notify_url = wc_get_endpoint_url('wprs-wechatpay-notify');
 
         do_action('wenprise_woocommerce_wechatpay_before_process_payment');
 
@@ -213,34 +222,9 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
             $gateway = $this->get_gateway();
 
-            // 获取购物车中的商品
-            $order_cart = $order->get_items();
-
-            // 构造购物车数组
-            $cart = [];
-            foreach ($order_cart as $product_id => $product) {
-                $cart[] = [
-                    'name'       => $product[ 'name' ],
-                    'quantity'   => $product[ 'qty' ],
-                    'price'      => $product[ 'line_total' ],
-                    'product_id' => $product_id,
-                ];
-            }
-
-            // 添加更多购物车数据
-            if (($shipping_total = $order->get_total()) > 0) {
-                $cart[] = [
-                    'name'     => __('Shipping Fee', 'wprs-woo-wechatpay'),
-                    'quantity' => 1,
-                    'price'    => $shipping_total,
-                ];
-            }
-
-            $order_no = $order->get_order_number();
-
-            $order = apply_filters('woocommerce_wenprise_wechatpay_args',
+            $order_data = apply_filters('woocommerce_wenprise_wechatpay_args',
                 [
-                    'body'             => '购买精益中国图书',
+                    'body'             => '网站订单',
                     'out_trade_no'     => $order_no,
                     'total_fee'        => $order->get_total() * 100,
                     'spbill_create_ip' => '127.0.0.1',
@@ -253,7 +237,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
              * @var \Omnipay\WechatPay\Message\CreateOrderRequest  $request
              * @var \Omnipay\WechatPay\Message\CreateOrderResponse $response
              */
-            $request  = $gateway->purchase($order);
+            $request  = $gateway->purchase($order_data);
             $response = $request->send();
 
             do_action('woocommerce_wenprise_wechatpay_before_payment_redirect', $response);
@@ -261,59 +245,67 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             // 微信支付, 显示二维码
             $code_url = $response->getCodeUrl();
 
-            $qrCode = new QrCode($code_url);
-            $qrCode->setSize(128);
-            $qrCode->setMargin(0);
+            if ($code_url) {
+                $qrCode = new QrCode($code_url);
+                $qrCode->setSize(128);
+                $qrCode->setMargin(0);
+            } else {
+                $error = $response->getMessage();
+                wc_add_notice($error, "error");
+            }
 
             $image_url = $qrCode->writeDataUri();
 
             if ( ! empty($_SERVER[ 'HTTP_X_REQUESTED_WITH' ]) && strtolower($_SERVER[ 'HTTP_X_REQUESTED_WITH' ]) == 'xmlhttprequest') {
 
+                wc_empty_cart();
+
                 $data = [
-                    'out_trade_no' => $order_no,
-                    'url'          => $image_url,
+                    'result' => 'success',
+                    'data'   => [
+                        'out_trade_no' => $order_no,
+                        'url'          => $image_url,
+                    ],
                 ];
 
                 wp_send_json($data);
 
             } else {
 
+                wc_empty_cart();
+
                 $args = [
                     'out_trade_no' => $order_no,
                     'image_url'    => $image_url,
                 ];
 
-                wc_get_template('payment/qrcode', $args);
+                wc_get_template('payment/qrcode', $args, WC()->template_path(), WENPRISE_WECHATPAY_PATH . 'templates/');
             }
 
-
-            // 返回支付连接，由 Woo Commerce 跳转到支付宝支付
+            // 返回支付连接，由 Woo Commerce 跳转到微信支付
             if ($response->isRedirect()) {
+
+                wc_empty_cart();
+
                 return [
                     'result'   => 'success',
                     'redirect' => $response->getRedirectUrl(),
                 ];
-            } else {
-                $error = $response->getMessage();
-                $order->add_order_note(sprintf("%s Payments Failed: '%s'", $this->method_title, $error));
-                wc_add_notice($error, 'error');
-                $this->log($error);
 
-                return [
-                    'result'   => 'fail',
-                    'redirect' => '',
-                ];
             }
 
         } catch (Exception $e) {
+
             $error = $e->getMessage();
             $order->add_order_note(sprintf("%s Payments Failed: '%s'", $this->method_title, $error));
+
             wc_add_notice($error, "error");
 
             return [
                 'result'   => 'fail',
                 'redirect' => '',
             ];
+
         }
     }
 
@@ -332,8 +324,6 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
      */
     public function listen_notify()
     {
-
-        print_r($_REQUEST);
 
         if (isset($_REQUEST[ 'out_trade_no' ]) && ! empty($_REQUEST[ 'out_trade_no' ])) {
 
@@ -363,7 +353,6 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
                         )
                     );
 
-                    WC()->cart->empty_cart();
                     wp_redirect($this->get_return_url($order));
                     exit;
                 } else {
