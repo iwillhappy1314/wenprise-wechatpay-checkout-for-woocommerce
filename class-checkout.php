@@ -13,20 +13,45 @@ use Omnipay\Omnipay;
 class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 {
 
-    public $current_currency;
-
     /** @var bool 日志是否启用 */
     public $debug_active = false;
 
     /** @var WC_Logger Logger 实例 */
     public $log = false;
 
+    /**
+     * @var bool
+     */
     public $environment = false;
-    public $multi_currency_enabled;
 
-    public $app_id = false;
-    public $mch_id = false;
-    public $api_key = false;
+    /**
+     * @var string
+     */
+    public $app_id = '';
+
+    /**
+     * @var string
+     */
+    public $mch_id = '';
+
+    /**
+     * @var string
+     */
+    public $api_key = '';
+
+    /**
+     * @var string
+     */
+    public $current_currency = '';
+
+    /**
+     * @var bool
+     */
+    public $multi_currency_enabled = false;
+
+    /**
+     * @var string
+     */
     public $exchange_rate = '';
 
     /**
@@ -51,13 +76,13 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
         $this->id = WENPRISE_WECHATPAY_WOOCOMMERCE_ID;
 
         // 支付网关页面显示的支付网关标题
-        $this->method_title = __("Wechat Pay", 'wprs-woo-wechatpay');
+        $this->method_title = __("Wechat Pay", 'wprs-wc-wechatpay');
 
         // 支付网关设置页面显示的支付网关标题
-        $this->method_description = __("Wechat Pay payment gateway for WooCommerce", 'wprs-woo-wechatpay');
+        $this->method_description = __("Wechat Pay payment gateway for WooCommerce", 'wprs-wc-wechatpay');
 
         // 前端显示的支付网关名称
-        $this->title = __("Wechat Pay", 'wprs-woo-wechatpay');
+        $this->title = __("Wechat Pay", 'wprs-wc-wechatpay');
 
         // 支付网关标题
         $this->icon = apply_filters('omnipay_eechat_pay_icon', null);
@@ -69,8 +94,9 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
         $this->init_settings();
 
-        $this->debug_active = true;
-        $this->has_fields   = false;
+        $this->debug_active = false;
+
+        $this->has_fields = false;
 
         $this->description = $this->get_option('description');
 
@@ -82,7 +108,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
         }
 
         // 设置是否应该重命名按钮。
-        $this->order_button_text = apply_filters('woocommerce_Wechatpay_button_text', __('Proceed to Wechatpay', 'wprs-woo-wechatpay'));
+        $this->order_button_text = apply_filters('woocommerce_Wechatpay_button_text', __('Proceed to Wechatpay', 'wprs-wc-wechatpay'));
 
         // 保存设置
         if (is_admin()) {
@@ -108,57 +134,55 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
     {
         $this->form_fields = [
             'enabled'     => [
-                'title'   => __('Enable / Disable', 'wprs-woo-wechatpay'),
-                'label'   => __('Enable this payment gateway', 'wprs-woo-wechatpay'),
+                'title'   => __('Enable / Disable', 'wprs-wc-wechatpay'),
+                'label'   => __('Enable this payment gateway', 'wprs-wc-wechatpay'),
                 'type'    => 'checkbox',
                 'default' => 'no',
             ],
-            'environment' => [
-                'title'       => __(' Wechatpay Sanbox Mode', 'wprs-woo-wechatpay'),
-                'label'       => __('Enable Wechatpay Sanbox Mode', 'wprs-woo-wechatpay'),
-                'type'        => 'checkbox',
-                'description' => sprintf(__('Wechatpay sandbox can be used to test payments. Sign up for an account <a href="%s">here</a>',
-                    'wprs-woo-wechatpay'),
-                    'https://sandbox.Wechatpay.com'),
-                'default'     => 'no',
-            ],
+            // 'environment' => [
+            //     'title'       => __(' Wechatpay Sanbox Mode', 'wprs-wc-wechatpay'),
+            //     'label'       => __('Enable Wechatpay Sanbox Mode', 'wprs-wc-wechatpay'),
+            //     'type'        => 'checkbox',
+            //     'description' => sprintf(__('Wechatpay sandbox can be used to test payments. Sign up for an account <a href="%s">here</a>',
+            //         'wprs-wc-wechatpay'),
+            //         'https://sandbox.Wechatpay.com'),
+            //     'default'     => 'no',
+            // ],
             'title'       => [
-                'title'   => __('Title', 'wprs-woo-wechatpay'),
+                'title'   => __('Title', 'wprs-wc-wechatpay'),
                 'type'    => 'text',
-                'default' => __('Wechatpay', 'wprs-woo-wechatpay'),
+                'default' => __('Wechatpay', 'wprs-wc-wechatpay'),
             ],
             'description' => [
-                'title'   => __('Description', 'wprs-woo-wechatpay'),
+                'title'   => __('Description', 'wprs-wc-wechatpay'),
                 'type'    => 'textarea',
-                'default' => __('Pay securely using Wechat Pay', 'wprs-woo-wechatpay'),
+                'default' => __('Pay securely using Wechat Pay', 'wprs-wc-wechatpay'),
                 'css'     => 'max-width:350px;',
             ],
             'app_id'      => [
-                'title'       => __('Wechat App Id', 'wprs-woo-wechatpay'),
+                'title'       => __('Wechat App Id', 'wprs-wc-wechatpay'),
                 'type'        => 'text',
-                'description' => __('Enter your Wechat App Id.', 'wprs-woo-wechatpay'),
+                'description' => __('Enter your Wechat App Id.', 'wprs-wc-wechatpay'),
             ],
             'mch_id'      => [
-                'title'       => __('Wechat Mch Id', 'wprs-woo-wechatpay'),
+                'title'       => __('Wechat Mch Id', 'wprs-wc-wechatpay'),
                 'type'        => 'text',
-                'description' => __('Enter your Wechat Mch Id.', 'wprs-woo-wechatpay'),
+                'description' => __('Enter your Wechat Mch Id.', 'wprs-wc-wechatpay'),
             ],
             'api_key'     => [
-                'title'       => __('Wechat Api Key', 'wprs-woo-wechatpay'),
+                'title'       => __('Wechat Api Key', 'wprs-wc-wechatpay'),
                 'type'        => 'text',
-                'description' => __('Enter your Wechat Api Key', 'wprs-woo-wechatpay'),
+                'description' => __('Enter your Wechat Api Key', 'wprs-wc-wechatpay'),
             ],
         ];
 
         if ( ! in_array($this->current_currency, ['RMB', 'CNY'])) {
 
             $this->form_fields[ 'exchange_rate' ] = [
-                'title'       => __('Exchange Rate', 'wechatpay'),
+                'title'       => __('Exchange Rate', 'wprs-wc-wechatpay'),
                 'type'        => 'text',
                 'description' => sprintf(__("Please set the %s against Chinese Yuan exchange rate, eg if your currency is US Dollar, then you should enter 6.19",
-                    'wprs-woo-wechatpay'), $this->current_currency),
-                'css'         => 'width:80px;',
-                'desc_tip'    => true,
+                    'wprs-wc-wechatpay'), $this->current_currency),
             ];
 
         }
@@ -172,9 +196,9 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
     {
         $orderId = get_query_var('order-pay');
         $order   = new WC_Order($orderId);
-        if ("wprs-woo-wechatpay" == $order->payment_method) {
+        if ("wprs-wc-wechatpay" == $order->payment_method) {
             if (is_checkout_pay_page() && ! isset($_GET[ 'pay_for_order' ])) {
-                wp_enqueue_script('wprs-woo-wechatpay-scripts', plugins_url('/assets/main.js', __FILE__), ['jquery'], null);
+                wp_enqueue_script('wprs-wc-wechatpay-scripts', plugins_url('/assets/main.js', __FILE__), ['jquery'], null);
             }
         }
     }
@@ -186,7 +210,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
     public function admin_options()
     { ?>
 
-        <h3><?php echo ( ! empty($this->method_title)) ? $this->method_title : __('Settings', 'wprs-woo-wechatpay'); ?></h3>
+        <h3><?php echo ( ! empty($this->method_title)) ? $this->method_title : __('Settings', 'wprs-wc-wechatpay'); ?></h3>
 
         <?php echo ( ! empty($this->method_description)) ? wpautop($this->method_description) : ''; ?>
 
@@ -231,7 +255,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
     {
         if ( ! in_array($this->current_currency, ['RMB', 'CNY']) && ! $this->exchange_rate) {
             echo '<div class="error"><p>' . sprintf(__('WeChatPay is enabled, but the store currency is not set to Chinese Yuan. Please <a href="%1s">set the %2s against the Chinese Yuan exchange rate</a>.',
-                    'wechatpay'), admin_url('admin.php?page=wc-settings&tab=checkout&section=wc_wechatpay#woocommerce_wechatpay_exchange_rate'),
+                    'wechatpay'), admin_url('admin.php?page=wc-settings&tab=checkout&section=wprs-wc-wechatpay#woocommerce_wprs-wc-wechatpay_exchange_rate'),
                     $this->current_currency) . '</p></div>';
         }
     }
@@ -328,10 +352,10 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             $code_url = $response->getCodeUrl();
             update_post_meta($order_id, 'code_url', $code_url);
 
+            wc_empty_cart();
+
             // 微信支付, 显示二维码
             if ( ! empty($_SERVER[ 'HTTP_X_REQUESTED_WITH' ]) && strtolower($_SERVER[ 'HTTP_X_REQUESTED_WITH' ]) == 'xmlhttprequest') {
-
-                wc_empty_cart();
 
                 $data = [
                     'result'   => 'success',
@@ -342,8 +366,6 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
             } else {
 
-                wc_empty_cart();
-
                 $args = [
                     'out_trade_no' => $order_no,
                 ];
@@ -351,10 +373,8 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
                 wc_get_template('payment/qrcode', $args, WC()->template_path(), WENPRISE_WECHATPAY_PATH . 'templates/');
             }
 
-            // 返回支付连接，由 Woo Commerce 跳转到微信支付
+            // 返回支付连接，由 WooCommerce 跳转到微信支付
             if ($response->isRedirect()) {
-
-                wc_empty_cart();
 
                 return [
                     'result'   => 'success',
@@ -393,8 +413,8 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             $qrCode->setSize(256);
             $qrCode->setMargin(0);
 
-            echo '<p>' . __('Please scan the QR code with WeChat to finish the payment.', 'wprs-woo-wechatpay') . '</p>';
-            echo '<img id="js-wprs-woo-wechatpay" data-order_id="' . $order_id . '" src="' . $qrCode->writeDataUri() . '" />';
+            echo '<p>' . __('Please scan the QR code with WeChat to finish the payment.', 'wprs-wc-wechatpay') . '</p>';
+            echo '<img id="js-wprs-wc-wechatpay" data-order_id="' . $order_id . '" src="' . $qrCode->writeDataUri() . '" />';
         }
 
     }
@@ -410,8 +430,8 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
         if ( ! $order->needs_payment()) {
             $data = [
-                'success' => true,
-                'redirect'  => $this->get_return_url(wc_get_order($order_id)),
+                'success'  => true,
+                'redirect' => $this->get_return_url(wc_get_order($order_id)),
             ];
 
             wp_send_json($data);
@@ -448,7 +468,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
                     // 添加订单备注
                     $order->add_order_note(
-                        sprintf(__('Wechatpay payment complete (Charge ID: %s)', 'wprs-woo-wechatpay'),
+                        sprintf(__('Wechatpay payment complete (Charge ID: %s)', 'wprs-wc-wechatpay'),
                             $transaction_ref
                         )
                     );
@@ -488,7 +508,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             if ( ! ($this->log)) {
                 $this->log = new WC_Logger();
             }
-            $this->log->add('wprs-woo-wechatpay', $message);
+            $this->log->add('wprs-wc-wechatpay', $message);
         }
     }
 

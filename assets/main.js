@@ -3,13 +3,13 @@
   var looptime = 300; //ms
 
   function wprs_woo_wechatpay_query_order() {
-    var order_id = $('#js-wprs-woo-wechatpay').data('order_id');
+    var order_id = $('#js-wprs-wc-wechatpay').data('order_id');
     $.ajax({
       type: 'GET',
       url : wc_checkout_params.ajax_url,
       data: {
         order_id: order_id,
-        action  : 'wprs-woo-wechatpay-query-order',
+        action  : 'wprs-wc-wechatpay-query-order',
       },
     }).done(function(data) {
       data = JSON.parse(data);
