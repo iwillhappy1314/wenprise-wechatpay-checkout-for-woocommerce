@@ -119,8 +119,8 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
         add_action('admin_notices', [$this, 'requirement_checks']);
 
         // 添加 URL
-        add_action('woocommerce_api_wprs-wechatpay-query', [$this, 'query_order']);
-        add_action('woocommerce_api_wprs-wechatpay-notify', [$this, 'listen_notify']);
+        add_action('woocommerce_api_wprs-wc-wechatpay-query', [$this, 'query_order']);
+        add_action('woocommerce_api_wprs-wc-wechatpay-notify', [$this, 'listen_notify']);
 
         // 添加前端脚本
         add_action('wp_enqueue_scripts', [$this, 'enqueue_script']);
@@ -320,7 +320,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
         $order    = new WC_Order($order_id);
         $order_no = $order->get_order_number();
 
-        $this->notify_url = wc_get_endpoint_url('wprs-wechatpay-notify');
+        $this->notify_url = wc_get_endpoint_url('wprs-wc-wechatpay-notify');
 
         do_action('wenprise_woocommerce_wechatpay_before_process_payment');
 
