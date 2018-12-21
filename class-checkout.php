@@ -366,77 +366,67 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
         do_action('wenprise_woocommerce_wechatpay_before_process_payment');
 
         // 调用响应的方法来处理支付
-        try {
 
-            $gateway = $this->get_gateway();
+        $gateway = $this->get_gateway();
 
-            $order_data = apply_filters('woocommerce_wenprise_wechatpay_args',
-                [
-                    'body'             => '网站订单',
-                    'out_trade_no'     => $order_no,
-                    'total_fee'        => $order->get_total() * 100,
-                    'spbill_create_ip' => wprs_get_ip(),
-                    'fee_type'         => 'CNY',
-                ]
-            );
+        $order_data = apply_filters('woocommerce_wenprise_wechatpay_args',
+            [
+                'body'             => '网站订单',
+                'out_trade_no'     => $order_no,
+                'total_fee'        => $order->get_total() * 100,
+                'spbill_create_ip' => wprs_get_ip(),
+                'fee_type'         => 'CNY',
+            ]
+        );
 
-            if (wprs_is_wechat()) {
-                $order_data[ 'open_id' ] = $open_id;
-            }
+        if (wprs_is_wechat()) {
+            $order_data[ 'open_id' ] = $open_id;
+        }
 
-            // 生成订单并发送支付
-            /**
-             * @var \Omnipay\WechatPay\Message\CreateOrderRequest  $request
-             * @var \Omnipay\WechatPay\Message\CreateOrderResponse $response
-             */
-            $request  = $gateway->purchase($order_data);
-            $response = $request->send();
+        // 生成订单并发送支付
+        /**
+         * @var \Omnipay\WechatPay\Message\CreateOrderRequest  $request
+         * @var \Omnipay\WechatPay\Message\CreateOrderResponse $response
+         */
+        $request  = $gateway->purchase($order_data);
+        $response = $request->send();
 
-            do_action('woocommerce_wenprise_wechatpay_before_payment_redirect', $response);
+        do_action('woocommerce_wenprise_wechatpay_before_payment_redirect', $response);
 
-            wc_empty_cart();
+        wc_empty_cart();
 
-            // 微信支付, 显示二维码
-            if ($response->isSuccessful()) {
+        // 微信支付, 显示二维码
+        if ($response->isSuccessful()) {
 
-                if (wp_is_mobile()) {
-                    if (wprs_is_wechat()) {
-                        update_post_meta($order_id, 'wprs_wc_wechat_order_data', $response->getJsOrderData());
+            if (wp_is_mobile()) {
+                if (wprs_is_wechat()) {
+                    update_post_meta($order_id, 'wprs_wc_wechat_order_data', $response->getJsOrderData());
 
-                        $redirect_url = $order->get_checkout_payment_url(true);
-                    } else {
-                        $redirect_url = $response->getMwebUrl();
-                    }
-
-                } else {
-                    $code_url = $response->getCodeUrl();
-                    update_post_meta($order_id, 'wprs_wc_wechat_code_url', $code_url);
                     $redirect_url = $order->get_checkout_payment_url(true);
+                } else {
+                    $redirect_url = $response->getMwebUrl();
                 }
 
-                return [
-                    'result'   => 'success',
-                    'redirect' => $redirect_url,
-                ];
-
             } else {
-
-                return [
-                    'result'   => 'failure',
-                    'messages' => $response->getData(),
-                ];
-
+                $code_url = $response->getCodeUrl();
+                update_post_meta($order_id, 'wprs_wc_wechat_code_url', $code_url);
+                $redirect_url = $order->get_checkout_payment_url(true);
             }
 
-        } catch (Exception $e) {
-            $this->log($e);
+            return [
+                'result'   => 'success',
+                'redirect' => $redirect_url,
+            ];
+
+        } else {
 
             return [
                 'result'   => 'failure',
-                'messages' => $e->getMessage(),
+                'messages' => $response->getData(),
             ];
 
         }
+
     }
 
 
@@ -488,55 +478,47 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
         if (isset($_REQUEST[ 'out_trade_no' ]) && ! empty($_REQUEST[ 'out_trade_no' ])) {
 
-            try {
-                $gateway = $this->get_gateway();
+            $gateway = $this->get_gateway();
 
-                /**
-                 * 获取支付宝返回的参数
-                 */
-                $options = [
-                    'request_params' => file_get_contents('php://input'),
-                ];
+            /**
+             * 获取支付宝返回的参数
+             */
+            $options = [
+                'request_params' => file_get_contents('php://input'),
+            ];
 
-                /** @var \Omnipay\WechatPay\Message\CompletePurchaseResponse $response */
-                $response = $gateway->completePurchase($options)->send();
+            /** @var \Omnipay\WechatPay\Message\CompletePurchaseResponse $response */
+            $response = $gateway->completePurchase($options)->send();
 
-                $order = new WC_Order($response->getTransactionId());
+            $order = new WC_Order($response->getTransactionId());
 
-                if ($response->isPaid()) {
+            if ($response->isPaid()) {
 
-                    $transaction_ref = $response->getTransactionReference();
-                    $order->payment_complete();
+                $transaction_ref = $response->getTransactionReference();
+                $order->payment_complete();
 
-                    // 添加订单备注
-                    $order->add_order_note(
-                        sprintf(__('Wechatpay payment complete (Charge ID: %s)', 'wprs-wc-wechatpay'),
-                            $transaction_ref
-                        )
-                    );
+                // 添加订单备注
+                $order->add_order_note(
+                    sprintf(__('Wechatpay payment complete (Charge ID: %s)', 'wprs-wc-wechatpay'),
+                        $transaction_ref
+                    )
+                );
 
-                    wp_redirect($this->get_return_url($order));
-                    exit;
-
-                } else {
-
-                    $error = $response->getMessage();
-
-                    $order->add_order_note(sprintf("%s Payments Failed: '%s'", $this->method_title, $error));
-                    wc_add_notice($error, 'error');
-
-                    wp_redirect(wc_get_checkout_url());
-
-                    exit;
-                }
-
-            } catch (\Exception $e) {
-
-                $this->log($error);
-                wp_redirect(wc_get_checkout_url());
+                wp_redirect($this->get_return_url($order));
                 exit;
 
+            } else {
+
+                $error = $response->getMessage();
+
+                $order->add_order_note(sprintf("%s Payments Failed: '%s'", $this->method_title, $error));
+                wc_add_notice($error, 'error');
+
+                wp_redirect(wc_get_checkout_url());
+
+                exit;
             }
+
         }
     }
 
