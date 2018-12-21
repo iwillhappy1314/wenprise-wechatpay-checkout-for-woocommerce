@@ -429,14 +429,10 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             }
 
         } catch (Exception $e) {
-
-            $error = $e->getMessage();
-            $order->add_order_note(sprintf("%s Payments Failed: '%s'", $this->method_title, $error));
-
-            wc_add_notice($error, "error");
+            $this->log($e);
 
             return [
-                'result'   => 'fail',
+                'result'   => 'failure',
                 'messages' => $e->getMessage(),
             ];
 
@@ -508,6 +504,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
                 $order = new WC_Order($response->getTransactionId());
 
                 if ($response->isPaid()) {
+
                     $transaction_ref = $response->getTransactionReference();
                     $order->payment_complete();
 
@@ -520,19 +517,21 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
                     wp_redirect($this->get_return_url($order));
                     exit;
+
                 } else {
+
                     $error = $response->getMessage();
+
                     $order->add_order_note(sprintf("%s Payments Failed: '%s'", $this->method_title, $error));
                     wc_add_notice($error, 'error');
-                    $this->log($error);
+
                     wp_redirect(wc_get_checkout_url());
+
                     exit;
                 }
 
             } catch (\Exception $e) {
 
-                $error = $e->getMessage();
-                wc_add_notice($error, 'error');
                 $this->log($error);
                 wp_redirect(wc_get_checkout_url());
                 exit;
@@ -630,12 +629,10 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
                 } else {
 
-                    print_r($oauth_user);
-
                     wp_set_auth_cookie($oauth_user[ 0 ]->ID, true);
-                    $reddd = isset($_GET[ 'state' ]) ? $_GET[ 'state' ] : home_url();
+                    $redirect_url = isset($_GET[ 'state' ]) ? $_GET[ 'state' ] : home_url();
 
-                    wp_redirect($reddd);
+                    wp_redirect($redirect_url);
 
                 }
             }
