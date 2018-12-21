@@ -40,3 +40,37 @@ if ( ! function_exists('wprs_get_ip')) {
     }
 }
 
+
+
+if ( ! function_exists('wprs_get_current_url')) {
+    /**
+     * 获取当前 URL
+     *
+     * @return bool|string
+     */
+    function wprs_get_current_url()
+    {
+        $url = false;
+
+        if (isset($_SERVER[ 'SERVER_ADDR' ])) {
+            $is_https   = isset($_SERVER[ 'HTTPS' ]) && 'on' == $_SERVER[ 'HTTPS' ];
+            $protocol   = 'http' . ($is_https ? 's' : '');
+            $host       = isset($_SERVER[ 'HTTP_HOST' ])
+                ? $_SERVER[ 'HTTP_HOST' ]
+                : $_SERVER[ 'SERVER_ADDR' ];
+            $port       = $_SERVER[ 'SERVER_PORT' ];
+            $path_query = $_SERVER[ 'REQUEST_URI' ];
+
+            $url = sprintf('%s://%s%s%s',
+                $protocol,
+                $host,
+                $is_https
+                    ? (443 != $port ? ':' . $port : '')
+                    : (80 != $port ? ':' . $port : ''),
+                $path_query
+            );
+        }
+
+        return $url;
+    }
+}

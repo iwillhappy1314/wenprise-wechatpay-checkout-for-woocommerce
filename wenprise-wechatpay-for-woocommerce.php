@@ -30,6 +30,7 @@ add_action('plugins_loaded', function ()
 
     require WENPRISE_WECHATPAY_PATH . 'vendor/autoload.php';
     require WENPRISE_WECHATPAY_PATH . 'helpers.php';
+    require WENPRISE_WECHATPAY_PATH . 'jssdk.php';
     require WENPRISE_WECHATPAY_PATH . 'class-checkout.php';
 
     add_action('wp_ajax_wprs-wc-wechatpay-query-order', [new Wenprise_Wechat_Pay_Gateway(), "query_order"]);
@@ -43,3 +44,13 @@ add_action('plugins_loaded', function ()
         return $methods;
     });
 }, 0);
+
+
+add_action('init', function ()
+{
+    if (wprs_is_wechat() && ! is_user_logged_in()) {
+        $Gateway = new Wenprise_Wechat_Pay_Gateway();
+
+        $Gateway->wechat_auth();
+    }
+});
