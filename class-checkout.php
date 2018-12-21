@@ -420,6 +420,13 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
         } else {
 
+            $error = $response->getMessage();
+
+            $order->add_order_note(sprintf("%s Payments Failed: '%s'", $this->method_title, $error));
+            wc_add_notice($error, 'error');
+
+            $this->log($response);
+
             return [
                 'result'   => 'failure',
                 'messages' => $response->getData(),
@@ -513,6 +520,8 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
                 $order->add_order_note(sprintf("%s Payments Failed: '%s'", $this->method_title, $error));
                 wc_add_notice($error, 'error');
+
+                $this->log($error);
 
                 wp_redirect(wc_get_checkout_url());
 
