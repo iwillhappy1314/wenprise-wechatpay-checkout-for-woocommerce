@@ -67,11 +67,6 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
     function __construct()
     {
 
-        $this->current_currency = get_option('woocommerce_currency');
-
-        $this->multi_currency_enabled = in_array('woocommerce-multilingual/wpml-woocommerce.php',
-                apply_filters('active_plugins', get_option('active_plugins'))) && get_option('icl_enable_multi_currency') == 'yes';
-
         // 支付方法的全局 ID
         $this->id = WENPRISE_WECHATPAY_WOOCOMMERCE_ID;
 
@@ -99,6 +94,11 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
         $this->has_fields = false;
 
         $this->description = $this->get_option('description');
+
+        $this->current_currency = get_option('woocommerce_currency');
+
+        $this->multi_currency_enabled = in_array('woocommerce-multilingual/wpml-woocommerce.php',
+                apply_filters('active_plugins', get_option('active_plugins'))) && get_option('icl_enable_multi_currency') == 'yes';
 
         $this->exchange_rate = $this->get_option('exchange_rate');
 
