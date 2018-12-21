@@ -366,9 +366,15 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             // 微信支付, 显示二维码
             if ( ! empty($_SERVER[ 'HTTP_X_REQUESTED_WITH' ]) && strtolower($_SERVER[ 'HTTP_X_REQUESTED_WITH' ]) == 'xmlhttprequest') {
 
+                if (wp_is_mobile()) {
+                    $redirect_url = $response->getData()[ 'mweb_url' ];
+                } else {
+                    $redirect_url = $order->get_checkout_payment_url(true);
+                }
+
                 $data = [
                     'result'   => 'success',
-                    'redirect' => $order->get_checkout_payment_url(true),
+                    'redirect' => $redirect_url,
                 ];
 
                 wp_send_json($data);
