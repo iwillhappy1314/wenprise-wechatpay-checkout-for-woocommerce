@@ -291,7 +291,15 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
     public function get_gateway()
     {
         /** @var \Omnipay\WechatPay\BaseAbstractGateway $gateway */
-        $gateway = Omnipay::create('WechatPay_Native');
+        if (wp_is_mobile()) {
+            if (wprs_is_wechat()) {
+                $gateway = Omnipay::create('WechatPay_Js');
+            } else {
+                $gateway = Omnipay::create('WechatPay_Mweb');
+            }
+        } else {
+            $gateway = Omnipay::create('WechatPay_Native');
+        }
 
         $gateway->setAppId($this->app_id);
         $gateway->setMchId($this->mch_id);
@@ -320,7 +328,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
         $order    = new WC_Order($order_id);
         $order_no = $order->get_order_number();
 
-        $this->notify_url = wc_get_endpoint_url('wprs-wc-wechatpay-notify');
+        $this->notify_url = WC()->api_request_url('wprs-wc-wechatpay-notify');
 
         do_action('wenprise_woocommerce_wechatpay_before_process_payment');
 
@@ -334,7 +342,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
                     'body'             => '网站订单',
                     'out_trade_no'     => $order_no,
                     'total_fee'        => $order->get_total() * 100,
-                    'spbill_create_ip' => '127.0.0.1',
+                    'spbill_create_ip' => wprs_get_ip(),
                     'fee_type'         => 'CNY',
                 ]
             );
