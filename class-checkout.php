@@ -173,9 +173,9 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
                 'description' => __('Enter your Wechat App Id.', 'wprs-wc-wechatpay'),
             ],
             'app_secret'  => [
-                'title'       => __('Wechat App Id', 'wprs-wc-wechatpay'),
+                'title'       => __('Wechat App Secret', 'wprs-wc-wechatpay'),
                 'type'        => 'text',
-                'description' => __('Enter your Wechat App Id.', 'wprs-wc-wechatpay'),
+                'description' => __('Enter your Wechat App Secret.', 'wprs-wc-wechatpay'),
             ],
             'mch_id'      => [
                 'title'       => __('Wechat Mch Id', 'wprs-wc-wechatpay'),
@@ -208,11 +208,11 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
     public function enqueue_script()
     {
         $order_id = get_query_var('order-pay');
-        $order   = new WC_Order($order_id);
+        $order    = new WC_Order($order_id);
 
         $jssdk       = new JSSDK($this->app_id, $this->app_secret);
         $signPackage = $jssdk->GetSignPackage();
-        $order_data = get_post_meta($order_id, 'wprs_wc_wechat_order_data', false);
+        $order_data  = get_post_meta($order_id, 'wprs_wc_wechat_order_data', false);
 
         if ("wprs-wc-wechatpay" == $order->payment_method) {
             if (is_checkout_pay_page() && ! isset($_GET[ 'pay_for_order' ])) {
@@ -394,51 +394,36 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
             do_action('woocommerce_wenprise_wechatpay_before_payment_redirect', $response);
 
-            $code_url = $response->getCodeUrl();
-
-            update_post_meta($order_id, 'wprs_wc_wechat_code_url', $code_url);
-
             wc_empty_cart();
 
             // 微信支付, 显示二维码
-            if ( ! empty($_SERVER[ 'HTTP_X_REQUESTED_WITH' ]) && strtolower($_SERVER[ 'HTTP_X_REQUESTED_WITH' ]) == 'xmlhttprequest') {
+            if ($response->isSuccessful()) {
 
                 if (wp_is_mobile()) {
                     if (wprs_is_wechat()) {
-                        $order_data = $response->getJsOrderData();
-                        update_post_meta($order_id, 'wprs_wc_wechat_order_data', $order_data);
+                        update_post_meta($order_id, 'wprs_wc_wechat_order_data', $response->getJsOrderData());
 
                         $redirect_url = $order->get_checkout_payment_url(true);
                     } else {
-                        $redirect_url = $response->getData()[ 'mweb_url' ];
+                        $redirect_url = $response->getMwebUrl();
                     }
 
                 } else {
+                    $code_url = $response->getCodeUrl();
+                    update_post_meta($order_id, 'wprs_wc_wechat_code_url', $code_url);
                     $redirect_url = $order->get_checkout_payment_url(true);
                 }
 
-                $data = [
+                return [
                     'result'   => 'success',
                     'redirect' => $redirect_url,
                 ];
 
-                wp_send_json($data);
-
             } else {
 
-                $args = [
-                    'out_trade_no' => $order_no,
-                ];
-
-                wc_get_template('payment/qrcode', $args, WC()->template_path(), WENPRISE_WECHATPAY_PATH . 'templates/');
-            }
-
-            // 返回支付连接，由 WooCommerce 跳转到微信支付
-            if ($response->isRedirect()) {
-
                 return [
-                    'result'   => 'success',
-                    'redirect' => $response->getRedirectUrl(),
+                    'result'   => 'failure',
+                    'messages' => $response->getData(),
                 ];
 
             }
@@ -452,7 +437,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
             return [
                 'result'   => 'fail',
-                'redirect' => '',
+                'messages' => $e->getMessage(),
             ];
 
         }
@@ -466,8 +451,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
      */
     function receipt_page($order_id)
     {
-        $code_url   = get_post_meta($order_id, 'wprs_wc_wechat_code_url', true);
-        $order_data = get_post_meta($order_id, 'wprs_wc_wechat_order_data', true);
+        $code_url = get_post_meta($order_id, 'wprs_wc_wechat_code_url', true);
 
         if ($code_url) {
             $qrCode = new QrCode($code_url);
