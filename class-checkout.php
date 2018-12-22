@@ -212,20 +212,23 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
         $jssdk       = new JSSDK($this->app_id, $this->app_secret);
         $signPackage = $jssdk->GetSignPackage();
-        $order_data  = get_post_meta($order_id, 'wprs_wc_wechat_order_data', false);
+        $order_data  = get_post_meta($order_id, 'wprs_wc_wechat_order_data', true);
 
         if ("wprs-wc-wechatpay" == $order->payment_method) {
             if (is_checkout_pay_page() && ! isset($_GET[ 'pay_for_order' ])) {
 
                 if (wprs_is_wechat()) {
-                    wp_enqueue_script('wprs-wc-wechatpay-js-sdk', 'https://res.wx.qq.com/open/js/jweixin-1.4.0.js', ['jquery'], null);
-                    wp_enqueue_script('wprs-wc-wechatpay-scripts', plugins_url('/assets/mpweb.js', __FILE__), ['jquery'], null);
-                } else {
-                    wp_enqueue_script('wprs-wc-wechatpay-scripts', plugins_url('/assets/main.js', __FILE__), ['jquery'], null);
+                    wp_enqueue_script('wprs-wc-wechatpay-js-sdk', 'https://res.wx.qq.com/open/js/jweixin-1.4.0.js', ['jquery'], null, false);
+                    wp_enqueue_script('wprs-wc-wechatpay-scripts', plugins_url('/assets/mpweb.js', __FILE__), ['jquery'], null, false);
                 }
+
+                wp_enqueue_script('wprs-wc-wechatpay-scripts', plugins_url('/assets/main.js', __FILE__), ['jquery'], null, false);
 
                 wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatPaySign', $signPackage);
                 wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatPayOrder', $order_data);
+                wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatData', [
+                    'return_url' => $this->get_return_url($order),
+                ]);
 
             }
         }
@@ -446,11 +449,14 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
     {
         $code_url = get_post_meta($order_id, 'wprs_wc_wechat_code_url', true);
 
+        if(wprs_is_wechat()){
+            echo '<button onclick="wprs_wc_call_wechat_pay()" >立即支付</button>';
+        }
+
         if ($code_url) {
             $qrCode = new QrCode($code_url);
             $qrCode->setSize(256);
             $qrCode->setMargin(0);
-
             echo '<p>' . __('Please scan the QR code with WeChat to finish the payment.', 'wprs-wc-wechatpay') . '</p>';
             echo '<img id="js-wprs-wc-wechatpay" data-order_id="' . $order_id . '" src="' . $qrCode->writeDataUri() . '" />';
         }
@@ -510,6 +516,8 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
                         $transaction_ref
                     )
                 );
+
+                delete_post_meta($order->get_id(), 'wprs_wc_wechat_order_data');
 
                 wp_redirect($this->get_return_url($order));
                 exit;

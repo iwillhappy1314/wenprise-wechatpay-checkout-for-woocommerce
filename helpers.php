@@ -15,7 +15,6 @@ if ( ! function_exists('wprs_is_wechat')) {
 }
 
 
-
 if ( ! function_exists('wprs_get_ip')) {
     /**
      * 获取用户的真实 IP
@@ -24,6 +23,11 @@ if ( ! function_exists('wprs_get_ip')) {
      */
     function wprs_get_ip()
     {
+        if (isset($_SERVER[ "HTTP_CF_CONNECTING_IP" ])) {
+            $_SERVER[ 'REMOTE_ADDR' ]    = $_SERVER[ "HTTP_CF_CONNECTING_IP" ];
+            $_SERVER[ 'HTTP_CLIENT_IP' ] = $_SERVER[ "HTTP_CF_CONNECTING_IP" ];
+        }
+
         $client  = @$_SERVER[ 'HTTP_CLIENT_IP' ];
         $forward = @$_SERVER[ 'HTTP_X_FORWARDED_FOR' ];
         $remote  = $_SERVER[ 'REMOTE_ADDR' ];
@@ -39,7 +43,6 @@ if ( ! function_exists('wprs_get_ip')) {
         return $ip;
     }
 }
-
 
 
 if ( ! function_exists('wprs_get_current_url')) {
