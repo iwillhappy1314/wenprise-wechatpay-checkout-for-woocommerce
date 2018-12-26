@@ -32,8 +32,8 @@ add_action('plugins_loaded', function ()
     require WENPRISE_WECHATPAY_PATH . 'helpers.php';
     require WENPRISE_WECHATPAY_PATH . 'class-checkout.php';
 
-    add_action('wp_ajax_wprs-wc-wechatpay-query-order', [new Wenprise_Wechat_Pay_Gateway(), "query_order"]);
-    add_action('wp_ajax_nopriv_wprs-wc-wechatpay-query-order', [new Wenprise_Wechat_Pay_Gateway(), "query_order"]);
+    // add_action('wp_ajax_wprs-wc-wechatpay-query-order', [new Wenprise_Wechat_Pay_Gateway(), "query_order"]);
+    // add_action('wp_ajax_nopriv_wprs-wc-wechatpay-query-order', [new Wenprise_Wechat_Pay_Gateway(), "query_order"]);
     add_action('woocommerce_receipt_wprs-wc-wechatpay', [new Wenprise_Wechat_Pay_Gateway(), 'receipt_page']);
 
     add_filter('woocommerce_payment_gateways', function ($methods)

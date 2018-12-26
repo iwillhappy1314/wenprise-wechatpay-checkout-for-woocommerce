@@ -20,9 +20,8 @@ function wprs_wc_call_wechat_pay() {
       'signType' : WpWooWechatPayOrder.signType,
       'paySign'  : WpWooWechatPayOrder.paySign,
       'success'  : function(res) {
-        JSON.stringify(res)
-        if (res.err_msg === 'chooseWXPay:ok') {
-          window.location.href = WpWooWechatData.url;
+        if (res.errMsg === 'chooseWXPay:ok') {
+          window.location.href = WpWooWechatData.return_url;
         } else {
           alert('支付失败');
         }

@@ -68,8 +68,6 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
      */
     public $supports = ['products', 'refunds'];
 
-    /** @var string WC_API for the gateway - 作为回调 url 使用 */
-    public $notify_url;
 
     function __construct()
     {
@@ -140,6 +138,11 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
      */
     public function init_form_fields()
     {
+
+        // 扫码回调链接: home_url('wc-api/wprs-wc-wechatpay-notify/')
+        // 支付授权目录: home_url()
+        // H5 支付域名: home_url()
+
         $this->form_fields = [
             'enabled'     => [
                 'title'   => __('Enable / Disable', 'wprs-wc-wechatpay'),
@@ -228,6 +231,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
                 wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatPayOrder', $order_data);
                 wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatData', [
                     'return_url' => $this->get_return_url($order),
+                    'query_url'  => WC()->api_request_url('wprs-wc-wechatpay-query'),
                 ]);
 
             }
@@ -335,13 +339,13 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             $gateway = Omnipay::create('WechatPay_Native');
         }
 
-        $gateway->setAppId($this->app_id);
-        $gateway->setMchId($this->mch_id);
+        $gateway->setAppId(trim($this->app_id));
+        $gateway->setMchId(trim($this->mch_id));
 
         // 这个 key 需要在微信商户里面单独设置，而吧是微信服务号里面的 key
-        $gateway->setApiKey($this->api_key);
+        $gateway->setApiKey(trim($this->api_key));
 
-        $gateway->setNotifyUrl(urldecode($this->notify_url));
+        $gateway->setNotifyUrl(WC()->api_request_url('wprs-wc-wechatpay-notify'));
 
         return $gateway;
     }
@@ -363,8 +367,6 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
         $order_no = $order->get_order_number();
 
         $open_id = get_user_meta(get_current_user_id(), 'wprs_wc_wechat_open_id', true);
-
-        $this->notify_url = WC()->api_request_url('wprs-wc-wechatpay-notify');
 
         do_action('wenprise_woocommerce_wechatpay_before_process_payment');
 
@@ -441,6 +443,69 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
 
     /**
+     * 处理支付接口异步返回的信息
+     */
+    public function listen_notify()
+    {
+
+        $gateway = $this->get_gateway();
+
+        /**
+         * 获取支付宝返回的参数
+         */
+        $options = [
+            'request_params' => file_get_contents('php://input'),
+        ];
+
+        /** @var \Omnipay\WechatPay\Message\CompletePurchaseResponse $response */
+        /** @var \Omnipay\WechatPay\Message\CompletePurchaseRequest $request */
+        $request = $gateway->completePurchase($options);
+
+        try {
+
+            $response = $request->send();
+
+            $order = wc_get_order($response->getRequestData()['out_trade_no']);
+
+            if ($response->isPaid()) {
+
+                $transaction_ref = $response->getTransactionReference();
+                $order->payment_complete();
+
+                // 添加订单备注
+                $order->add_order_note(
+                    sprintf(__('Wechatpay payment complete (Charge ID: %s)', 'wprs-wc-wechatpay'),
+                        $transaction_ref
+                    )
+                );
+
+                delete_post_meta($order->get_id(), 'wprs_wc_wechat_order_data');
+
+                wp_redirect($this->get_return_url($order));
+
+            } else {
+
+                $error = $response->getMessage();
+
+                $order->add_order_note(sprintf("%s Payments Failed: '%s'", $this->method_title, $error));
+                wc_add_notice($error, 'error');
+
+                $this->log($error);
+
+                wp_redirect(wc_get_checkout_url());
+
+            }
+
+        } catch (\Exception $e) {
+
+            file_put_contents(get_theme_file_path("werror.log"), print_r($e, true));
+
+        }
+
+    }
+
+
+    /**
      * 扫码支付页面
      *
      * @param $order_id int 订单 ID
@@ -449,7 +514,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
     {
         $code_url = get_post_meta($order_id, 'wprs_wc_wechat_code_url', true);
 
-        if(wprs_is_wechat()){
+        if (wprs_is_wechat()) {
             echo '<button onclick="wprs_wc_call_wechat_pay()" >立即支付</button>';
         }
 
@@ -472,71 +537,16 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
         $order_id = isset($_GET[ 'order_id' ]) ? $_GET[ 'order_id' ] : false;
         $order    = wc_get_order($order_id);
 
-        if ( ! $order->needs_payment()) {
-            $data = [
-                'success'  => true,
-                'redirect' => $this->get_return_url(wc_get_order($order_id)),
-            ];
-
-            wp_send_json($data);
-        }
-    }
-
-
-    /**
-     * 处理支付接口异步返回的信息
-     */
-    public function listen_notify()
-    {
-
-        if (isset($_REQUEST[ 'out_trade_no' ]) && ! empty($_REQUEST[ 'out_trade_no' ])) {
-
-            $gateway = $this->get_gateway();
-
-            /**
-             * 获取支付宝返回的参数
-             */
-            $options = [
-                'request_params' => file_get_contents('php://input'),
-            ];
-
-            /** @var \Omnipay\WechatPay\Message\CompletePurchaseResponse $response */
-            $response = $gateway->completePurchase($options)->send();
-
-            $order = new WC_Order($response->getTransactionId());
-
-            if ($response->isPaid()) {
-
-                $transaction_ref = $response->getTransactionReference();
-                $order->payment_complete();
-
-                // 添加订单备注
-                $order->add_order_note(
-                    sprintf(__('Wechatpay payment complete (Charge ID: %s)', 'wprs-wc-wechatpay'),
-                        $transaction_ref
-                    )
-                );
-
-                delete_post_meta($order->get_id(), 'wprs_wc_wechat_order_data');
-
-                wp_redirect($this->get_return_url($order));
-                exit;
-
+        if ($order) {
+            if ($order->is_paid()) {
+                wp_send_json_success($this->get_return_url($order));
             } else {
-
-                $error = $response->getMessage();
-
-                $order->add_order_note(sprintf("%s Payments Failed: '%s'", $this->method_title, $error));
-                wc_add_notice($error, 'error');
-
-                $this->log($error);
-
-                wp_redirect(wc_get_checkout_url());
-
-                exit;
+                wp_send_json_error();
             }
-
+        } else {
+            wp_send_json_error();
         }
+
     }
 
 

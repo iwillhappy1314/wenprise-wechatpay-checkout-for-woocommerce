@@ -5,24 +5,25 @@
   function wprs_woo_wechatpay_query_order() {
     var order_id = $('#js-wprs-wc-wechatpay').data('order_id');
     $.ajax({
-      type: 'GET',
-      url : wc_checkout_params.ajax_url,
-      data: {
+      type   : 'GET',
+      url    : WpWooWechatData.query_url,
+      data   : {
         order_id: order_id,
-        action  : 'wprs-wc-wechatpay-query-order',
       },
-    }).done(function(data) {
-      data = JSON.parse(data);
-      if (data && data.success === true) {
-        location.href = data.redirect;
-      } else {
+      success: function(data) {
+        if (data && data.success === true) {
+          location.href = data.data;
+        } else {
+          if (loopCnt-- > 0) {
+            setTimeout(wprs_woo_wechatpay_query_order, looptime);
+          }
+        }
+      },
+      error  : function(data) {
         if (loopCnt-- > 0) {
           setTimeout(wprs_woo_wechatpay_query_order, looptime);
         }
-      }
-    }).fail(function() {
-
-    }).always(function() {
+      },
     });
   }
 
