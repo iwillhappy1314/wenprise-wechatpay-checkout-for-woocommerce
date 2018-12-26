@@ -211,7 +211,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
     public function enqueue_script()
     {
         $order_id = get_query_var('order-pay');
-        $order    = new WC_Order($order_id);
+        $order    = wc_get_order($order_id);
 
         $jssdk       = new JSSDK($this->app_id, $this->app_secret);
         $signPackage = $jssdk->GetSignPackage();
@@ -363,7 +363,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
     public function process_payment($order_id)
     {
 
-        $order    = new WC_Order($order_id);
+        $order    = wc_get_order($order_id);
         $order_no = $order->get_order_number();
 
         $open_id = get_user_meta(get_current_user_id(), 'wprs_wc_wechat_open_id', true);
@@ -465,7 +465,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
             $response = $request->send();
 
-            $order = wc_get_order($response->getRequestData()['out_trade_no']);
+            $order = wc_get_order($response->getRequestData()[ 'out_trade_no' ]);
 
             if ($response->isPaid()) {
 
