@@ -409,12 +409,13 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
                     $redirect_url = $order->get_checkout_payment_url(true);
                 } else {
-                    $redirect_url = $response->getMwebUrl();
+                    $redirect_url = $response->getMwebUrl() . '&redirect_url=' . urlencode($order->get_checkout_payment_url(true) . '&from=wap');
                 }
 
             } else {
                 $code_url = $response->getCodeUrl();
                 update_post_meta($order_id, 'wprs_wc_wechat_code_url', $code_url);
+
                 $redirect_url = $order->get_checkout_payment_url(true);
             }
 
@@ -512,18 +513,25 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
      */
     function receipt_page($order_id)
     {
+        $form     = isset($_GET[ 'from' ]) ? $_GET[ 'from' ] : false;
         $code_url = get_post_meta($order_id, 'wprs_wc_wechat_code_url', true);
 
-        if (wprs_is_wechat()) {
-            echo '<button onclick="wprs_wc_call_wechat_pay()" >立即支付</button>';
-        }
+        if ($form == 'wap') {
+            // H5 支付需要手动检查订单是否完成
+            echo '<button id="js-wprs-wc-wechatpay" data-order_id="' . $order_id . '" onclick="wprs_woo_wechatpay_query_order()" >已支付</button>';
 
-        if ($code_url) {
-            $qrCode = new QrCode($code_url);
-            $qrCode->setSize(256);
-            $qrCode->setMargin(0);
-            echo '<p>' . __('Please scan the QR code with WeChat to finish the payment.', 'wprs-wc-wechatpay') . '</p>';
-            echo '<img id="js-wprs-wc-wechatpay" data-order_id="' . $order_id . '" src="' . $qrCode->writeDataUri() . '" />';
+        } else {
+            if (wprs_is_wechat()) {
+                echo '<button onclick="wprs_wc_call_wechat_pay()" >立即支付</button>';
+            }
+
+            if ($code_url) {
+                $qrCode = new QrCode($code_url);
+                $qrCode->setSize(256);
+                $qrCode->setMargin(0);
+                echo '<p>' . __('Please scan the QR code with WeChat to finish the payment.', 'wprs-wc-wechatpay') . '</p>';
+                echo '<img id="js-wprs-wc-wechatpay" data-order_id="' . $order_id . '" src="' . $qrCode->writeDataUri() . '" />';
+            }
         }
 
     }

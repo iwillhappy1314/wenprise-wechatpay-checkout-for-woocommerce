@@ -12,7 +12,7 @@
       },
       success: function(data) {
         if (data && data.success === true) {
-          location.href = data.data;
+          location.href = data.redirect;
         } else {
           if (loopCnt-- > 0) {
             setTimeout(wprs_woo_wechatpay_query_order, looptime);
@@ -27,8 +27,6 @@
     });
   }
 
-  $(function() {
-    wprs_woo_wechatpay_query_order();
-  });
+  wprs_woo_wechatpay_query_order();
 
 })(jQuery);
