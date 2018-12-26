@@ -196,7 +196,7 @@
         ]
     },
     {
-        "name": "endroid/qrcode",
+        "name": "endroid/qr-code",
         "version": "3.5.2",
         "version_normalized": "3.5.2.0",
         "source": {
@@ -255,8 +255,7 @@
             "php",
             "qr",
             "qrcode"
-        ],
-        "abandoned": "endroid/qr-code"
+        ]
     },
     {
         "name": "guzzlehttp/guzzle",

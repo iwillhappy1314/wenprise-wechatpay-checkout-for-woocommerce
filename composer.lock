@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "06775193d44611e9267a119f9ccf4e58",
+    "content-hash": "33c90a3b1234acc5019b34e026edf4bd",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -195,7 +195,7 @@
             "time": "2018-11-30T13:00:41+00:00"
         },
         {
-            "name": "endroid/qrcode",
+            "name": "endroid/qr-code",
             "version": "3.5.2",
             "source": {
                 "type": "git",
@@ -252,7 +252,6 @@
                 "qr",
                 "qrcode"
             ],
-            "abandoned": "endroid/qr-code",
             "time": "2018-12-16T12:37:37+00:00"
         },
         {

@@ -168,7 +168,7 @@ class ComposerStaticInit933ae72fdf1833f0ff08043d28cd6226
         ),
         'Endroid\\QrCode\\' => 
         array (
-            0 => __DIR__ . '/..' . '/endroid/qrcode/src',
+            0 => __DIR__ . '/..' . '/endroid/qr-code/src',
         ),
         'Endroid\\Installer\\' => 
         array (

@@ -12,7 +12,7 @@
       },
       success: function(data) {
         if (data && data.success === true) {
-          location.href = data.redirect;
+          location.href = data.data;
         } else {
           if (loopCnt-- > 0) {
             setTimeout(wprs_woo_wechatpay_query_order, looptime);

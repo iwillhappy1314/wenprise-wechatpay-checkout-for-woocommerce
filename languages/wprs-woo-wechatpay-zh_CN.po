@@ -1,107 +1,137 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Wenprise WechatPay for WooCommerce\n"
-"POT-Creation-Date: 2018-12-20 11:42+0800\n"
-"PO-Revision-Date: 2018-12-20 11:49+0800\n"
+"POT-Creation-Date: 2018-12-26 21:05+0800\n"
+"PO-Revision-Date: 2018-12-26 21:05+0800\n"
+"Last-Translator: Amos Lee <iwillhappy1314@gmail.com>\n"
 "Language-Team: Amos Lee (amos@wpcio.com)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2\n"
+"X-Generator: Poedit 1.8.12\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;"
-"esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;"
-"esc_html_x:1,2c;_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"Last-Translator: Amos Lee <iwillhappy1314@gmail.com>\n"
-"Language: zh_CN\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: class-checkout.php:34 class-checkout.php:40
+#: class-checkout.php:79 class-checkout.php:85
 msgid "Wechat Pay"
 msgstr "微信支付"
 
-#: class-checkout.php:37
+#: class-checkout.php:82
 msgid "Wechat Pay payment gateway for WooCommerce"
 msgstr "WooCommerce 的微信支付支付网关"
 
-#: class-checkout.php:63
+#: class-checkout.php:116
 msgid "Proceed to Wechatpay"
 msgstr "前往微信支付"
 
-#: class-checkout.php:83
+#: class-checkout.php:148 class-checkout.php:154
 msgid "Enable / Disable"
 msgstr "启用/停用"
 
-#: class-checkout.php:84
+#: class-checkout.php:149
 msgid "Enable this payment gateway"
 msgstr "启用此付款网关"
 
-#: class-checkout.php:89
-msgid " Wechatpay Sanbox Mode"
-msgstr " 微信沙箱模式"
+#: class-checkout.php:155
+msgid "Enable auto login in wechat Official Accounts"
+msgstr "在微信中打开时自动登录"
 
-#: class-checkout.php:90
-msgid "Enable Wechatpay Sanbox Mode"
-msgstr "启用微信付费沙箱模式"
-
-#: class-checkout.php:92
-#, php-format
-msgid ""
-"Wechatpay sandbox can be used to test payments. Sign up for an account <a "
-"href=\"%s\">here</a>"
-msgstr "微信支付沙箱可用于测试付款。在<href=\" %s\" >这里</a>注册一个帐户"
-
-#: class-checkout.php:98
+#: class-checkout.php:169
 msgid "Title"
 msgstr "标题"
 
-#: class-checkout.php:100
+#: class-checkout.php:171
 msgid "Wechatpay"
 msgstr "微信支付"
 
-#: class-checkout.php:103
+#: class-checkout.php:174
 msgid "Description"
 msgstr "描述"
 
-#: class-checkout.php:105
+#: class-checkout.php:176
 msgid "Pay securely using Wechat Pay"
 msgstr "使用微信支付安全快捷的支付"
 
-#: class-checkout.php:109
+#: class-checkout.php:180
 msgid "Wechat App Id"
 msgstr "微信公众号 App ID"
 
-#: class-checkout.php:111
+#: class-checkout.php:182
 msgid "Enter your Wechat App Id."
 msgstr "输入微信公众号 App ID。"
 
-#: class-checkout.php:114
+#: class-checkout.php:185
+msgid "Wechat App Secret"
+msgstr "微信 App 密钥"
+
+#: class-checkout.php:187
+msgid "Enter your Wechat App Secret."
+msgstr "输入微信公众号 App ID。"
+
+#: class-checkout.php:190
 msgid "Wechat Mch Id"
 msgstr "微信商户 ID"
 
-#: class-checkout.php:116
+#: class-checkout.php:192
 msgid "Enter your Wechat Mch Id."
 msgstr "输入微信商户 ID。"
 
-#: class-checkout.php:119
+#: class-checkout.php:195
 msgid "Wechat Api Key"
 msgstr "微信支付应用密钥"
 
-#: class-checkout.php:121
+#: class-checkout.php:197
 msgid "Enter your Wechat Api Key"
 msgstr "输入微信支付应用密钥"
 
-#: class-checkout.php:133
+#: class-checkout.php:204
+msgid "Exchange Rate"
+msgstr "汇率"
+
+#: class-checkout.php:206
+#, php-format
+msgid ""
+"Please set the %s against Chinese Yuan exchange rate, eg if your currency is "
+"US Dollar, then you should enter 6.19"
+msgstr ""
+
+#: class-checkout.php:256
 msgid "Settings"
 msgstr "设置"
 
-#: class-checkout.php:254
-msgid "Shipping Fee"
-msgstr "快递费"
-
-#: class-checkout.php:381
+#: class-checkout.php:300
 #, php-format
-msgid "Wechatpay payment complete (Charge ID: %s)"
+msgid ""
+"WeChatPay is enabled, but the store currency is not set to Chinese Yuan. "
+"Please <a href=\"%1s\">set the %2s against the Chinese Yuan exchange rate</"
+"a>."
+msgstr ""
+
+#: class-checkout.php:485
+#, php-format
+msgid "Wechatpay payment complete (Transaction ID: %s)"
 msgstr "微信支付已完成(微信订单号: %s)"
+
+#: class-checkout.php:535
+msgid "Please scan the QR code with WeChat to finish the payment."
+msgstr ""
+
+#~ msgid " Wechatpay Sanbox Mode"
+#~ msgstr " 微信沙箱模式"
+
+#~ msgid "Enable Wechatpay Sanbox Mode"
+#~ msgstr "启用微信付费沙箱模式"
+
+#~ msgid ""
+#~ "Wechatpay sandbox can be used to test payments. Sign up for an account <a "
+#~ "href=\"%s\">here</a>"
+#~ msgstr "微信支付沙箱可用于测试付款。在<href=\" %s\" >这里</a>注册一个帐户"
+
+#~ msgid "Shipping Fee"
+#~ msgstr "快递费"
