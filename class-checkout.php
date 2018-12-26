@@ -472,25 +472,25 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
         try {
 
             $response = $request->send();
+            $data     = $response->getRequestData();
 
-            $order = wc_get_order($response->getRequestData()[ 'out_trade_no' ]);
+            $order = wc_get_order($data[ 'out_trade_no' ]);
 
             if ($response->isPaid()) {
 
-                $transaction_ref = $response->getTransactionReference();
                 $order->payment_complete();
 
                 // 添加订单备注
                 $order->add_order_note(
-                    sprintf(__('Wechatpay payment complete (Charge ID: %s)', 'wprs-wc-wechatpay'),
-                        $transaction_ref
+                    sprintf(__('Wechatpay payment complete (Transaction ID: %s)', 'wprs-wc-wechatpay'),
+                        $data[ 'transaction_id' ]
                     )
                 );
 
                 delete_post_meta($order->get_id(), 'wprs_wc_wechat_order_data');
                 delete_post_meta($order->get_id(), 'wprs_wc_wechat_code_url');
 
-                // wp_redirect($this->get_return_url($order));
+                echo exit('<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>');
 
             } else {
 
@@ -500,8 +500,6 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
                 wc_add_notice($error, 'error');
 
                 $this->log($error);
-
-                // wp_redirect(wc_get_checkout_url());
 
             }
 
