@@ -611,8 +611,10 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
         if ($form == 'wap') {
             // H5 支付需要手动检查订单是否完成
-            echo '<button class="button" id="js-wprs-wc-wechatpay" data-order_id="' . $order_id . '">已支付</button>';
-            echo '<a class="button" href="' . get_post_meta($order_id, 'wprs_wc_wechat_mweb_url', true) . '">继续支付</a>';
+            echo '<div class="buttons has-addons">';
+                echo '<button class="button u-width-50" id="js-wprs-wc-wechatpay" data-order_id="' . $order_id . '">已支付</button>';
+                echo '<a class="button u-width-50" href="' . get_post_meta($order_id, 'wprs_wc_wechat_mweb_url', true) . '">继续支付</a>';
+            echo '</div>';
 
         } else {
             if (wprs_is_wechat()) {

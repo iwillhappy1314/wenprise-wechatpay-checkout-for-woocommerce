@@ -45,6 +45,9 @@ add_action('plugins_loaded', function ()
 }, 0);
 
 
+/**
+ * 在微信中打开时，自动登录，以便获取微信 Open ID, 实现公众号 JS API 支付
+ */
 add_action('init', function ()
 {
     if (wprs_is_wechat() && ! is_user_logged_in()) {
@@ -53,3 +56,19 @@ add_action('init', function ()
         $Gateway->wechat_auth();
     }
 });
+
+
+/**
+ * 如果订单支付页面是从微信 H5 支付跳转回来的，设置正在处理中的订单也可以继续支付，以便页面可以继续查询订单状态，验证支付结果。
+ */
+add_filter('woocommerce_valid_order_statuses_for_payment', function ($status, $instance)
+{
+    $form = isset($_GET[ 'from' ]) ? $_GET[ 'from' ] : false;
+
+    $status_addon = [];
+    if ($form == 'wap') {
+        $status_addon = ['processing'];
+    }
+
+    return array_merge($status, $status_addon);
+}, 10, 2);
