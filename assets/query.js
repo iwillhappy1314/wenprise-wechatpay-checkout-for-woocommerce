@@ -29,4 +29,9 @@
 
   wprs_woo_wechatpay_query_order();
 
+  $('#js-wprs-wc-wechatpay').bind('click', function() {
+    alert('aaa');
+    wprs_woo_wechatpay_query_order();
+  });
+
 })(jQuery);

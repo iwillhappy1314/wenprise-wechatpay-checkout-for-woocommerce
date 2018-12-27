@@ -417,6 +417,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
                     $redirect_url = $order->get_checkout_payment_url(true);
                 } else {
                     $redirect_url = $response->getMwebUrl() . '&redirect_url=' . urlencode($order->get_checkout_payment_url(true) . '&from=wap');
+                    update_post_meta($order_id, 'wprs_wc_wechat_mweb_url', $redirect_url);
                 }
 
             } else {
@@ -459,9 +460,10 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
      *
      * @return bool|\WP_Error
      */
-    public function process_refund( $order_id, $amount = null, $reason = ''){
+    public function process_refund($order_id, $amount = null, $reason = '')
+    {
 
-        $order = wc_get_order($order_id);
+        $order   = wc_get_order($order_id);
         $gateway = $this->get_gateway();
 
         $gateway->setCertPath($certPath);
@@ -469,67 +471,67 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
         $request = $gateway->refund([
             'transaction_id' => '1217752501201407033233368018', //The wechat trade no
-            'out_refund_no' => $outRefundNo,
-            'total_fee' => 1, //=0.01
-            'refund_fee' => 1, //=0.01
+            'out_refund_no'  => $outRefundNo,
+            'total_fee'      => 1, //=0.01
+            'refund_fee'     => 1, //=0.01
         ]);
 
         $response = $request->send();
 
 
-        if(!$order){
-            return new WP_Error( 'invalid_order','错误的订单' );
+        if ( ! $order) {
+            return new WP_Error('invalid_order', '错误的订单');
         }
 
-        $trade_no =$order->get_transaction_id();
+        $trade_no = $order->get_transaction_id();
 
-        if (empty ( $trade_no )) {
-            return new WP_Error( 'invalid_order', '未找到微信支付交易号或订单未支付' );
+        if (empty ($trade_no)) {
+            return new WP_Error('invalid_order', '未找到微信支付交易号或订单未支付');
         }
 
-        $total = $order->get_total ();
+        $total = $order->get_total();
 
         //$amount = $amount;
-        $preTotal = $total;
+        $preTotal  = $total;
         $preAmount = $amount;
 
         $exchange_rate = floatval($this->get_option('exchange_rate'));
 
-        if($exchange_rate<=0){
-            $exchange_rate=1;
+        if ($exchange_rate <= 0) {
+            $exchange_rate = 1;
         }
 
-        $total = round ( $total * $exchange_rate, 2 );
-        $amount = round ( $amount * $exchange_rate, 2 );
+        $total  = round($total * $exchange_rate, 2);
+        $amount = round($amount * $exchange_rate, 2);
 
-        $total = ( int ) ( $total  * 100);
-        $amount = ( int ) ($amount * 100);
+        $total  = ( int )($total * 100);
+        $amount = ( int )($amount * 100);
 
-        if($amount<=0||$amount>$total){
-            return new WP_Error( 'invalid_order',__('Invalid refused amount!' ,XH_WECHAT) );
+        if ($amount <= 0 || $amount > $total) {
+            return new WP_Error('invalid_order', __('Invalid refused amount!', XH_WECHAT));
         }
 
         $transaction_id = $trade_no;
-        $total_fee = $total;
-        $refund_fee = $amount;
+        $total_fee      = $total;
+        $refund_fee     = $amount;
 
         $input = new WechatPaymentRefund ();
-        $input->SetTransaction_id ( $transaction_id );
-        $input->SetTotal_fee ( $total_fee );
-        $input->SetRefund_fee ( $refund_fee );
+        $input->SetTransaction_id($transaction_id);
+        $input->SetTotal_fee($total_fee);
+        $input->SetRefund_fee($refund_fee);
 
-        $input->SetOut_refund_no ( $order_id.time());
-        $input->SetOp_user_id ( $this->config->getMCHID());
+        $input->SetOut_refund_no($order_id . time());
+        $input->SetOp_user_id($this->config->getMCHID());
 
         try {
-            $result = WechatPaymentApi::refund ( $input,60 ,$this->config);
-            if ($result ['result_code'] == 'FAIL' || $result ['return_code'] == 'FAIL') {
-                Log::DEBUG ( " XHWechatPaymentApi::orderQuery:" . json_encode ( $result ) );
-                throw new Exception ("return_msg:". $result ['return_msg'].';err_code_des:'. $result ['err_code_des'] );
+            $result = WechatPaymentApi::refund($input, 60, $this->config);
+            if ($result [ 'result_code' ] == 'FAIL' || $result [ 'return_code' ] == 'FAIL') {
+                Log::DEBUG(" XHWechatPaymentApi::orderQuery:" . json_encode($result));
+                throw new Exception ("return_msg:" . $result [ 'return_msg' ] . ';err_code_des:' . $result [ 'err_code_des' ]);
             }
 
-        } catch ( Exception $e ) {
-            return new WP_Error( 'invalid_order',$e->getMessage ());
+        } catch (Exception $e) {
+            return new WP_Error('invalid_order', $e->getMessage());
         }
 
         return true;
@@ -573,6 +575,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
                 delete_post_meta($order->get_id(), 'wprs_wc_wechat_order_data');
                 delete_post_meta($order->get_id(), 'wprs_wc_wechat_code_url');
+                delete_post_meta($order->get_id(), 'wprs_wc_wechat_mweb_url');
 
                 echo exit('<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>');
 
@@ -602,16 +605,18 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
      */
     function receipt_page($order_id)
     {
+
         $form     = isset($_GET[ 'from' ]) ? $_GET[ 'from' ] : false;
         $code_url = get_post_meta($order_id, 'wprs_wc_wechat_code_url', true);
 
         if ($form == 'wap') {
             // H5 支付需要手动检查订单是否完成
-            echo '<button id="js-wprs-wc-wechatpay" data-order_id="' . $order_id . '" onclick="wprs_woo_wechatpay_query_order()" >已支付</button>';
+            echo '<button class="button" id="js-wprs-wc-wechatpay" data-order_id="' . $order_id . '">已支付</button>';
+            echo '<a class="button" href="' . get_post_meta($order_id, 'wprs_wc_wechat_mweb_url', true) . '">继续支付</a>';
 
         } else {
             if (wprs_is_wechat()) {
-                echo '<button onclick="wprs_wc_call_wechat_pay()" >立即支付</button>';
+                echo '<button class="button" onclick="wprs_wc_call_wechat_pay()" >立即支付</button>';
             }
 
             if ($code_url) {
