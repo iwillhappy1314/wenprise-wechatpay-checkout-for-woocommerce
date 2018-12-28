@@ -20,7 +20,6 @@ define('WENPRISE_WECHATPAY_URL', plugin_dir_url(__FILE__));
 define('WENPRISE_WECHATPAY_WOOCOMMERCE_ID', 'wprs-wc-wechatpay');
 define('WENPRISE_WECHATPAY_ASSETS_URL', WENPRISE_WECHATPAY_URL . 'assets/');
 
-require WENPRISE_WECHATPAY_PATH . 'vendor/autoload.php';
 
 add_action('plugins_loaded', function ()
 {
@@ -28,10 +27,11 @@ add_action('plugins_loaded', function ()
         return;
     }
 
-    load_plugin_textdomain('wprs-wc-wechatpay', false, dirname(plugin_basename(__FILE__)) . '/languages');
-
+    require WENPRISE_WECHATPAY_PATH . 'vendor/autoload.php';
     require WENPRISE_WECHATPAY_PATH . 'helpers.php';
     require WENPRISE_WECHATPAY_PATH . 'class-checkout.php';
+
+    load_plugin_textdomain('wprs-wc-wechatpay', false, dirname(plugin_basename(__FILE__)) . '/languages');
 
     add_action('woocommerce_receipt_wprs-wc-wechatpay', [new Wenprise_Wechat_Pay_Gateway(), 'receipt_page']);
 
@@ -41,6 +41,12 @@ add_action('plugins_loaded', function ()
 
         return $methods;
     });
+
+    Puc_v4_Factory::buildUpdateChecker(
+        'https://api.wpcio.com/api/plugin/info/wenprise-wechatpay-for-woocommerce',
+        __FILE__,
+        'wenprise-wechatpay-for-woocommerce'
+    );
 }, 0);
 
 
@@ -73,8 +79,3 @@ add_filter('woocommerce_valid_order_statuses_for_payment', function ($status, $i
 }, 10, 2);
 
 
-Puc_v4_Factory::buildUpdateChecker(
-    'https://api.wpcio.com/api/plugin/info/wenprise-wechatpay-for-woocommerce',
-    __FILE__,
-    'wenprise-wechatpay-for-woocommerce'
-);
