@@ -375,6 +375,9 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
         // 修改 Open ID 的获取方法，主要兼容其他微信登录
         $open_id = apply_filters('wprs_wc_wechat_open_id', get_user_meta(get_current_user_id(), 'wprs_wc_wechat_open_id', true));
 
+        // Remove cart.
+        WC()->cart->empty_cart();
+
         do_action('wenprise_woocommerce_wechatpay_before_process_payment');
 
         // 调用响应的方法来处理支付
@@ -462,78 +465,6 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
      */
     public function process_refund($order_id, $amount = null, $reason = '')
     {
-
-        $order   = wc_get_order($order_id);
-        $gateway = $this->get_gateway();
-
-        $gateway->setCertPath($certPath);
-        $gateway->setKeyPath($keyPath);
-
-        $request = $gateway->refund([
-            'transaction_id' => '1217752501201407033233368018', //The wechat trade no
-            'out_refund_no'  => $outRefundNo,
-            'total_fee'      => 1, //=0.01
-            'refund_fee'     => 1, //=0.01
-        ]);
-
-        $response = $request->send();
-
-
-        if ( ! $order) {
-            return new WP_Error('invalid_order', '错误的订单');
-        }
-
-        $trade_no = $order->get_transaction_id();
-
-        if (empty ($trade_no)) {
-            return new WP_Error('invalid_order', '未找到微信支付交易号或订单未支付');
-        }
-
-        $total = $order->get_total();
-
-        //$amount = $amount;
-        $preTotal  = $total;
-        $preAmount = $amount;
-
-        $exchange_rate = floatval($this->get_option('exchange_rate'));
-
-        if ($exchange_rate <= 0) {
-            $exchange_rate = 1;
-        }
-
-        $total  = round($total * $exchange_rate, 2);
-        $amount = round($amount * $exchange_rate, 2);
-
-        $total  = ( int )($total * 100);
-        $amount = ( int )($amount * 100);
-
-        if ($amount <= 0 || $amount > $total) {
-            return new WP_Error('invalid_order', __('Invalid refused amount!', XH_WECHAT));
-        }
-
-        $transaction_id = $trade_no;
-        $total_fee      = $total;
-        $refund_fee     = $amount;
-
-        $input = new WechatPaymentRefund ();
-        $input->SetTransaction_id($transaction_id);
-        $input->SetTotal_fee($total_fee);
-        $input->SetRefund_fee($refund_fee);
-
-        $input->SetOut_refund_no($order_id . time());
-        $input->SetOp_user_id($this->config->getMCHID());
-
-        try {
-            $result = WechatPaymentApi::refund($input, 60, $this->config);
-            if ($result [ 'result_code' ] == 'FAIL' || $result [ 'return_code' ] == 'FAIL') {
-                Log::DEBUG(" XHWechatPaymentApi::orderQuery:" . json_encode($result));
-                throw new Exception ("return_msg:" . $result [ 'return_msg' ] . ';err_code_des:' . $result [ 'err_code_des' ]);
-            }
-
-        } catch (Exception $e) {
-            return new WP_Error('invalid_order', $e->getMessage());
-        }
-
         return true;
     }
 
@@ -567,6 +498,9 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             if ($response->isPaid()) {
 
                 $order->payment_complete();
+
+                // Remove cart.
+                WC()->cart->empty_cart();
 
                 // 添加订单备注
                 $order->add_order_note(
