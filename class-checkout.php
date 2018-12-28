@@ -465,7 +465,29 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
      */
     public function process_refund($order_id, $amount = null, $reason = '')
     {
-        return true;
+        $gateway = $this->get_gateway();
+        $gateway->setCertPath($certPath);
+        $gateway->setKeyPath($keyPath);
+
+        $order          = wc_get_order($order_id);
+        $transaction_id = get_post_meta($order_id, 'transaction_id', true);
+
+        /** @var \Omnipay\WechatPay\Message\BaseAbstractRequest $request */
+        $request = $gateway->refund([
+            'transaction_id' => $transaction_id, //The wechat trade no
+            'out_refund_no'  => date('YmdHis') . mt_rand(1000, 9999),
+            'total_fee'      => $order->get_total() * 100, //=0.01
+            'refund_fee'     => $amount * 100, //=0.01
+        ])->send();
+
+        /** @var \Omnipay\WechatPay\Message\BaseAbstractResponse $response */
+        $response = $request->send();
+
+        if ($response->isSuccessful()) {
+            return true;
+        }
+
+        return false;
     }
 
 
@@ -498,6 +520,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             if ($response->isPaid()) {
 
                 $order->payment_complete();
+                update_post_meta($order->get_id(), 'transaction_id', $data[ 'transaction_id' ]);
 
                 // Remove cart.
                 WC()->cart->empty_cart();
@@ -546,8 +569,8 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
         if ($form == 'wap') {
             // H5 支付需要手动检查订单是否完成
             echo '<div class="buttons has-addons">';
-                echo '<button class="button u-width-50" id="js-wprs-wc-wechatpay" data-order_id="' . $order_id . '">已支付</button>';
-                echo '<a class="button u-width-50" href="' . get_post_meta($order_id, 'wprs_wc_wechat_mweb_url', true) . '">继续支付</a>';
+            echo '<button class="button u-width-50" id="js-wprs-wc-wechatpay" data-order_id="' . $order_id . '">已支付</button>';
+            echo '<a class="button u-width-50" href="' . get_post_meta($order_id, 'wprs_wc_wechat_mweb_url', true) . '">继续支付</a>';
             echo '</div>';
 
         } else {
