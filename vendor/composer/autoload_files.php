@@ -15,4 +15,5 @@ return array(
     '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => $vendorDir . '/symfony/polyfill-mbstring/bootstrap.php',
     '37a3dc5111fe8f707ab4c132ef1dbc62' => $vendorDir . '/guzzlehttp/guzzle/src/functions_include.php',
     'a9ed0d27b5a698798a89181429f162c5' => $vendorDir . '/khanamiryan/qrcode-detector-decoder/lib/Common/customFunctions.php',
+    '89ff252b349d4d088742a09c25f5dd74' => $vendorDir . '/yahnis-elsts/plugin-update-checker/plugin-update-checker.php',
 );
