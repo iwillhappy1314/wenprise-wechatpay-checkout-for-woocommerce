@@ -486,9 +486,9 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
         }
 
         $total  = round($total * $exchange_rate, 2);
-        $amount = round($amount * $exchange_rate, 2);
+        $refund_fee = round($amount * $exchange_rate, 2);
 
-        if ($amount <= 0 || $amount > $total) {
+        if ($refund_fee <= 0 || $refund_fee > $total) {
             false;
         }
 
@@ -498,19 +498,19 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             'out_trade_no'   => $order_id,
             'out_refund_no'  => date('YmdHis') . mt_rand(1000, 9999),
             'total_fee'      => $total * 100, //=0.01
-            'refund_fee'     => $amount * 100, //=0.01
-        ])->send();
-
-        file_put_contents(get_theme_file_path("request.log"), print_r($request, true));
+            'refund_fee'     => $refund_fee * 100, //=0.01
+        ]);
 
         /** @var \Omnipay\WechatPay\Message\BaseAbstractResponse $response */
         try {
             $response = $request->send();
             $data     = $response->getData();
 
-            file_put_contents(get_theme_file_path("refund.log"), print_r($response, true));
-
             if ($response->isSuccessful()) {
+                $order->add_order_note(
+                    sprintf(__('Refunded %1$s', 'woocommerce'), $amount)
+                );
+
                 update_post_meta($order_id, 'refund_id', $data[ 'refund_id' ]);
 
                 return true;
