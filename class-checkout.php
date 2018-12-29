@@ -87,7 +87,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
         // 支付网关标题
         $this->icon = apply_filters('omnipay_eechat_pay_icon', null);
 
-        $this->supports = [];
+        $this->supports = ['products', 'refunds'];
 
         // 被 init_settings() 加载的基础设置
         $this->init_form_fields();
@@ -371,6 +371,14 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
         $order    = wc_get_order($order_id);
         $order_no = $order->get_order_number();
+        $total    = $order->get_total();
+
+        $exchange_rate = floatval($this->get_option('exchange_rate'));
+        if ($exchange_rate <= 0) {
+            $exchange_rate = 1;
+        }
+
+        $total = round($total * $exchange_rate, 2);
 
         // 修改 Open ID 的获取方法，主要兼容其他微信登录
         $open_id = apply_filters('wprs_wc_wechat_open_id', get_user_meta(get_current_user_id(), 'wprs_wc_wechat_open_id', true));
@@ -388,7 +396,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             [
                 'body'             => '网站订单',
                 'out_trade_no'     => $order_no,
-                'total_fee'        => $order->get_total() * 100,
+                'total_fee'        => $total * 100,
                 'spbill_create_ip' => wprs_get_ip(),
                 'fee_type'         => 'CNY',
             ]
@@ -466,25 +474,52 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
     public function process_refund($order_id, $amount = null, $reason = '')
     {
         $gateway = $this->get_gateway();
-        $gateway->setCertPath($certPath);
-        $gateway->setKeyPath($keyPath);
+        $gateway->setCertPath(get_theme_file_path('apiclient_cert.pem'));
+        $gateway->setKeyPath(get_theme_file_path('apiclient_key.pem'));
 
-        $order          = wc_get_order($order_id);
-        $transaction_id = get_post_meta($order_id, 'transaction_id', true);
+        $order = wc_get_order($order_id);
+        $total = $order->get_total();
+
+        $exchange_rate = floatval($this->get_option('exchange_rate'));
+        if ($exchange_rate <= 0) {
+            $exchange_rate = 1;
+        }
+
+        $total  = round($total * $exchange_rate, 2);
+        $amount = round($amount * $exchange_rate, 2);
+
+        if ($amount <= 0 || $amount > $total) {
+            false;
+        }
 
         /** @var \Omnipay\WechatPay\Message\BaseAbstractRequest $request */
         $request = $gateway->refund([
-            'transaction_id' => $transaction_id, //The wechat trade no
+            'transaction_id' => $order->get_transaction_id(),
+            'out_trade_no'   => $order_id,
             'out_refund_no'  => date('YmdHis') . mt_rand(1000, 9999),
-            'total_fee'      => $order->get_total() * 100, //=0.01
+            'total_fee'      => $total * 100, //=0.01
             'refund_fee'     => $amount * 100, //=0.01
         ])->send();
 
-        /** @var \Omnipay\WechatPay\Message\BaseAbstractResponse $response */
-        $response = $request->send();
+        file_put_contents(get_theme_file_path("request.log"), print_r($request, true));
 
-        if ($response->isSuccessful()) {
-            return true;
+        /** @var \Omnipay\WechatPay\Message\BaseAbstractResponse $response */
+        try {
+            $response = $request->send();
+            $data     = $response->getData();
+
+            file_put_contents(get_theme_file_path("refund.log"), print_r($response, true));
+
+            if ($response->isSuccessful()) {
+                update_post_meta($order_id, 'refund_id', $data[ 'refund_id' ]);
+
+                return true;
+            }
+
+        } catch (\Exception $e) {
+            file_put_contents(get_theme_file_path("error.log"), print_r($e, true));
+
+            return false;
         }
 
         return false;
@@ -519,8 +554,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
             if ($response->isPaid()) {
 
-                $order->payment_complete();
-                update_post_meta($order->get_id(), 'transaction_id', $data[ 'transaction_id' ]);
+                $order->payment_complete($data[ 'transaction_id' ]);
 
                 // Remove cart.
                 WC()->cart->empty_cart();
