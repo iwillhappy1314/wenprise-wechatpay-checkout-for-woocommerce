@@ -485,7 +485,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             $exchange_rate = 1;
         }
 
-        $total  = round($total * $exchange_rate, 2);
+        $total      = round($total * $exchange_rate, 2);
         $refund_fee = round($amount * $exchange_rate, 2);
 
         if ($refund_fee <= 0 || $refund_fee > $total) {
@@ -676,8 +676,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
         if ( ! $code) {
 
-            $url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' . $this->app_id . '&redirect_uri=' . urlencode(WC()->api_request_url('wprs-wc-wechatpay-auth')) . '&response_type=code&scope=snsapi_userinfo&state=' . urlencode(wprs_get_current_url()) . '#wechat_redirect';
-
+            $url = $this->get_auth_url();
             wp_redirect($url);
 
         } else {

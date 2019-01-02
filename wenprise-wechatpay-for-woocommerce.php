@@ -70,7 +70,7 @@ add_action('plugins_loaded', function ()
  */
 add_action('init', function ()
 {
-    if (wprs_is_wechat() && ! is_user_logged_in()) {
+    if (wprs_is_wechat() && ! is_user_logged_in() && ! has_filter('wprs_wc_wechat_open_id')) {
         $Gateway = new Wenprise_Wechat_Pay_Gateway();
 
         $Gateway->wechat_auth();
@@ -92,5 +92,3 @@ add_filter('woocommerce_valid_order_statuses_for_payment', function ($status, $i
 
     return array_merge($status, $status_addon);
 }, 10, 2);
-
-
