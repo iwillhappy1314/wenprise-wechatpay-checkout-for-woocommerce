@@ -89,11 +89,6 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
         $this->supports = ['products', 'refunds'];
 
-        // 被 init_settings() 加载的基础设置
-        $this->init_form_fields();
-
-        $this->init_settings();
-
         $this->debug_active = false;
 
         $this->has_fields = false;
@@ -114,6 +109,11 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
         // 设置是否应该重命名按钮。
         $this->order_button_text = apply_filters('woocommerce_Wechatpay_button_text', __('Proceed to Wechatpay', 'wprs-wc-wechatpay'));
+
+        // 被 init_settings() 加载的基础设置
+        $this->init_form_fields();
+
+        $this->init_settings();
 
         // 保存设置
         if (is_admin()) {
