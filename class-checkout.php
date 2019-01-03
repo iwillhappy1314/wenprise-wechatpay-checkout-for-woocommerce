@@ -150,12 +150,12 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
                 'type'    => 'checkbox',
                 'default' => 'no',
             ],
-            'enabled_auto_login' => [
-                'title'   => __('Enable / Disable', 'wprs-wc-wechatpay'),
-                'label'   => __('Enable auto login in wechat Official Accounts', 'wprs-wc-wechatpay'),
-                'type'    => 'checkbox',
-                'default' => 'no',
-            ],
+            // 'enabled_auto_login' => [
+            //     'title'   => __('Enable / Disable', 'wprs-wc-wechatpay'),
+            //     'label'   => __('Enable auto login in wechat Official Accounts', 'wprs-wc-wechatpay'),
+            //     'type'    => 'checkbox',
+            //     'default' => 'no',
+            // ],
             // 'environment' => [
             //     'title'       => __(' Wechatpay Sanbox Mode', 'wprs-wc-wechatpay'),
             //     'label'       => __('Enable Wechatpay Sanbox Mode', 'wprs-wc-wechatpay'),
