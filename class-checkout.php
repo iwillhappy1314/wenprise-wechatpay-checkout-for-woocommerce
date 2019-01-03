@@ -62,6 +62,16 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
     public $exchange_rate = '';
 
     /**
+     * @var string
+     */
+    public $cert_path = '';
+
+    /**
+     * @var string
+     */
+    public $key_path = '';
+
+    /**
      * 网关支持的功能
      *
      * @var array
@@ -85,7 +95,8 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
         $this->title = __("Wechat Pay", 'wprs-wc-wechatpay');
 
         // 支付网关标题
-        $this->icon = apply_filters('omnipay_wechat_pay_icon', "data:image/svg+xml,%3Csvg t='1546482540101' class='icon' style='' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='6144' xmlns:xlink='http://www.w3.org/1999/xlink' width='32' height='32'%3E%3Cdefs%3E%3Cstyle type='text/css'%3E%3C/style%3E%3C/defs%3E%3Cpath d='M896.002399 0 127.997601 0C57.597193 0 0 57.597193 0 127.997601l0 768.004799c0 70.400408 57.597193 127.997601 127.997601 127.997601l768.004799 0c70.400408 0 127.997601-57.597193 127.997601-127.997601L1024 127.997601C1024 57.597193 966.402807 0 896.002399 0L896.002399 0zM512.003199 787.203863c-44.800376 0-83.203623-6.400968-121.603031-19.205463-25.600032 12.803215-63.99944 44.800376-76.801376 51.201344-25.601312 12.803215-19.199064-12.796817-19.199064-12.796817l12.801936-76.801376c-76.802655-51.201344-121.603031-134.399848-121.603031-224.0006 0-159.99988 147.197945-288.002599 326.403287-288.002599 108.798536 0 211.196105 51.201344 268.799696 121.601752L460.801856 486.401888c0 0-25.601312 12.798096-51.201344-6.400968l-51.201344-38.399408c0 0-38.399408-32.001-19.200344 19.200344l51.201344 115.200784c0 0 6.400968 31.995881 44.800376 12.798096 32.002279-12.798096 268.799696-159.99988 371.201104-217.598352 19.199064 38.399408 31.997161 83.198504 31.997161 127.997601C838.400088 652.798896 691.202143 787.203863 512.003199 787.203863L512.003199 787.203863zM512.003199 787.203863' p-id='6145' fill='%2344B449'%3E%3C/path%3E%3C/svg%3E");
+        $this->icon = apply_filters('omnipay_wechat_pay_icon',
+            "data:image/svg+xml,%3Csvg t='1546482540101' class='icon' style='' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='6144' xmlns:xlink='http://www.w3.org/1999/xlink' width='32' height='32'%3E%3Cdefs%3E%3Cstyle type='text/css'%3E%3C/style%3E%3C/defs%3E%3Cpath d='M896.002399 0 127.997601 0C57.597193 0 0 57.597193 0 127.997601l0 768.004799c0 70.400408 57.597193 127.997601 127.997601 127.997601l768.004799 0c70.400408 0 127.997601-57.597193 127.997601-127.997601L1024 127.997601C1024 57.597193 966.402807 0 896.002399 0L896.002399 0zM512.003199 787.203863c-44.800376 0-83.203623-6.400968-121.603031-19.205463-25.600032 12.803215-63.99944 44.800376-76.801376 51.201344-25.601312 12.803215-19.199064-12.796817-19.199064-12.796817l12.801936-76.801376c-76.802655-51.201344-121.603031-134.399848-121.603031-224.0006 0-159.99988 147.197945-288.002599 326.403287-288.002599 108.798536 0 211.196105 51.201344 268.799696 121.601752L460.801856 486.401888c0 0-25.601312 12.798096-51.201344-6.400968l-51.201344-38.399408c0 0-38.399408-32.001-19.200344 19.200344l51.201344 115.200784c0 0 6.400968 31.995881 44.800376 12.798096 32.002279-12.798096 268.799696-159.99988 371.201104-217.598352 19.199064 38.399408 31.997161 83.198504 31.997161 127.997601C838.400088 652.798896 691.202143 787.203863 512.003199 787.203863L512.003199 787.203863zM512.003199 787.203863' p-id='6145' fill='%2344B449'%3E%3C/path%3E%3C/svg%3E");
 
         $this->supports = ['products', 'refunds'];
 
@@ -144,7 +155,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
         // H5 支付域名: home_url()
 
         $this->form_fields = [
-            'enabled'            => [
+            'enabled'     => [
                 'title'   => __('Enable / Disable', 'wprs-wc-wechatpay'),
                 'label'   => __('Enable this payment gateway', 'wprs-wc-wechatpay'),
                 'type'    => 'checkbox',
@@ -165,36 +176,46 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             //         'https://sandbox.Wechatpay.com'),
             //     'default'     => 'no',
             // ],
-            'title'              => [
+            'title'       => [
                 'title'   => __('Title', 'wprs-wc-wechatpay'),
                 'type'    => 'text',
                 'default' => __('Wechatpay', 'wprs-wc-wechatpay'),
             ],
-            'description'        => [
+            'description' => [
                 'title'   => __('Description', 'wprs-wc-wechatpay'),
                 'type'    => 'textarea',
                 'default' => __('Pay securely using Wechat Pay', 'wprs-wc-wechatpay'),
                 'css'     => 'max-width:350px;',
             ],
-            'app_id'             => [
+            'app_id'      => [
                 'title'       => __('Wechat App Id', 'wprs-wc-wechatpay'),
                 'type'        => 'text',
                 'description' => __('Enter your Wechat App Id.', 'wprs-wc-wechatpay'),
             ],
-            'app_secret'         => [
+            'app_secret'  => [
                 'title'       => __('Wechat App Secret', 'wprs-wc-wechatpay'),
                 'type'        => 'text',
                 'description' => __('Enter your Wechat App Secret.', 'wprs-wc-wechatpay'),
             ],
-            'mch_id'             => [
+            'mch_id'      => [
                 'title'       => __('Wechat Mch Id', 'wprs-wc-wechatpay'),
                 'type'        => 'text',
                 'description' => __('Enter your Wechat Mch Id.', 'wprs-wc-wechatpay'),
             ],
-            'api_key'            => [
+            'api_key'     => [
                 'title'       => __('Wechat Api Key', 'wprs-wc-wechatpay'),
                 'type'        => 'text',
                 'description' => __('Enter your Wechat Api Key', 'wprs-wc-wechatpay'),
+            ],
+            'cert_path'   => [
+                'title'       => __('apiclient_cert.pem path', 'wprs-wc-wechatpay'),
+                'type'        => 'text',
+                'description' => __('Enter the absolute apiclient_cert.pem Path, Used when refund, Ex: /home/apiclient_cert.pem，For security *DO NOT* place it in public dir', 'wprs-wc-wechatpay'),
+            ],
+            'key_path'    => [
+                'title'       => __('apiclient_key.pem Path', 'wprs-wc-wechatpay'),
+                'type'        => 'text',
+                'description' => __('Enter the absolute apiclient_key.pem Path, Used when refund，Ex: /home/apiclient_key.pem，For security *DO NOT* place it in public dir', 'wprs-wc-wechatpay'),
             ],
         ];
 
@@ -474,8 +495,8 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
     public function process_refund($order_id, $amount = null, $reason = '')
     {
         $gateway = $this->get_gateway();
-        $gateway->setCertPath(get_theme_file_path('apiclient_cert.pem'));
-        $gateway->setKeyPath(get_theme_file_path('apiclient_key.pem'));
+        $gateway->setCertPath($this->cert_path);
+        $gateway->setKeyPath($this->key_path);
 
         $order = wc_get_order($order_id);
         $total = $order->get_total();
