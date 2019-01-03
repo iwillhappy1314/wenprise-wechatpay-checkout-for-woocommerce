@@ -210,12 +210,12 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             'cert_path'   => [
                 'title'       => __('apiclient_cert.pem path', 'wprs-wc-wechatpay'),
                 'type'        => 'text',
-                'description' => __('Enter the absolute apiclient_cert.pem Path, Used when refund, Ex: /home/apiclient_cert.pem，For security *DO NOT* place it in public dir', 'wprs-wc-wechatpay'),
+                'description' => __('Enter the absolute apiclient_cert.pem path that can access by the site, Used when refund, Ex: /home/apiclient_cert.pem，For security *DO NOT* place it in public dir', 'wprs-wc-wechatpay'),
             ],
             'key_path'    => [
                 'title'       => __('apiclient_key.pem Path', 'wprs-wc-wechatpay'),
                 'type'        => 'text',
-                'description' => __('Enter the absolute apiclient_key.pem Path, Used when refund，Ex: /home/apiclient_key.pem，For security *DO NOT* place it in public dir', 'wprs-wc-wechatpay'),
+                'description' => __('Enter the absolute apiclient_key.pem path that can access by the site, Used when refund，Ex: /home/apiclient_key.pem，For security *DO NOT* place it in public dir', 'wprs-wc-wechatpay'),
             ],
         ];
 
