@@ -18,6 +18,7 @@ Wechat payment gateway for WooCommerce, WooCommerce 微信支付网关。
 * 移动端浏览器 H5 调起微信支付
 * 微信端公众号支付，微信端微信自动登录，可兼容其他微信登录插件
 * 在 WooCommerce 订单中直接通过微信退款，退款原路返回
+* 货币不是人民币时，可以设置一个固定汇率
 
 
 ### Support 技术支持 ###
