@@ -319,7 +319,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
     {
         if ( ! in_array($this->current_currency, ['RMB', 'CNY']) && ! $this->exchange_rate) {
             echo '<div class="error"><p>' . sprintf(__('WeChatPay is enabled, but the store currency is not set to Chinese Yuan. Please <a href="%1s">set the %2s against the Chinese Yuan exchange rate</a>.',
-                    'wechatpay'), admin_url('admin.php?page=wc-settings&tab=checkout&section=wprs-wc-wechatpay#woocommerce_wprs-wc-wechatpay_exchange_rate'),
+                    'wprs-wc-wechatpay'), admin_url('admin.php?page=wc-settings&tab=checkout&section=wprs-wc-wechatpay#woocommerce_wprs-wc-wechatpay_exchange_rate'),
                     $this->current_currency) . '</p></div>';
         }
     }
