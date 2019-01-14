@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Wenprise WeChatPay Checkout For WooCommerce
- * Plugin URI: https://www.wpzhiku.com
+ * Plugin URI: https://www.wpzhiku.com/wenprise-wechatpay-for-woocommerce
  * Description: Wenprise WeChatPay Checkout For WooCommerce
  * Version: 1.0.1
  * Author: WenPrise Co., Ltd
