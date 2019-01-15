@@ -1,4 +1,4 @@
-﻿# Wenprise WeChatPay Gateway For WooCommerce #
+﻿# Wenprise WeChatPay Payment Gateway For WooCommerce #
 Contributors: iwillhappy1314
 Donate link: https://www.wpzhiku.com/
 Tags: Alipay, WooCommerce, woocommerce, payment, payment gateway, gateway, 微信, 微信支付, Wechat payment gateway, Wechat gateway, credit card, pay, online payment, shop, e-commerce, ecommerce
