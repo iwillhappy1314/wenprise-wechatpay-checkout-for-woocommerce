@@ -17,8 +17,9 @@ class BinaryWriter extends AbstractWriter
 {
     public function writeString(QrCodeInterface $qrCode): string
     {
+        $data = $this->getData($qrCode);
+
         $rows = [];
-        $data = $qrCode->getData();
         foreach ($data['matrix'] as $row) {
             $values = '';
             foreach ($row as $value) {

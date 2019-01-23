@@ -67,17 +67,9 @@ class ComposerStaticInit933ae72fdf1833f0ff08043d28cd6226
             'Endroid\\QrCode\\' => 15,
             'Endroid\\Installer\\' => 18,
         ),
-        'D' => 
-        array (
-            'DASPRiD\\Enum\\' => 13,
-        ),
         'C' => 
         array (
             'Clue\\StreamFilter\\' => 18,
-        ),
-        'B' => 
-        array (
-            'BaconQrCode\\' => 12,
         ),
     );
 
@@ -175,17 +167,19 @@ class ComposerStaticInit933ae72fdf1833f0ff08043d28cd6226
         array (
             0 => __DIR__ . '/..' . '/endroid/installer/src',
         ),
-        'DASPRiD\\Enum\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/dasprid/enum/src',
-        ),
         'Clue\\StreamFilter\\' => 
         array (
             0 => __DIR__ . '/..' . '/clue/stream-filter/src',
         ),
-        'BaconQrCode\\' => 
+    );
+
+    public static $prefixesPsr0 = array (
+        'B' => 
         array (
-            0 => __DIR__ . '/..' . '/bacon/bacon-qr-code/src',
+            'BaconQrCode' => 
+            array (
+                0 => __DIR__ . '/..' . '/bacon/bacon-qr-code/src',
+            ),
         ),
     );
 
@@ -198,6 +192,7 @@ class ComposerStaticInit933ae72fdf1833f0ff08043d28cd6226
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit933ae72fdf1833f0ff08043d28cd6226::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit933ae72fdf1833f0ff08043d28cd6226::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit933ae72fdf1833f0ff08043d28cd6226::$prefixesPsr0;
             $loader->classMap = ComposerStaticInit933ae72fdf1833f0ff08043d28cd6226::$classMap;
 
         }, null, ClassLoader::class);

@@ -27,7 +27,7 @@ interface QrCodeInterface
 
     public function getRoundBlockSize(): bool;
 
-    public function getErrorCorrectionLevel(): ErrorCorrectionLevel;
+    public function getErrorCorrectionLevel(): string;
 
     public function getLogoPath(): ?string;
 
@@ -58,6 +58,4 @@ interface QrCodeInterface
     public function writeDataUri(): string;
 
     public function writeFile(string $path): void;
-
-    public function getData(): array;
 }

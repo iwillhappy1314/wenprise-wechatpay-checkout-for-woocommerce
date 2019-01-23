@@ -25,7 +25,7 @@ class SvgWriter extends AbstractWriter
             throw new ValidationException('Built-in validation reader can not check SVG images: please disable via setValidateResult(false)');
         }
 
-        $data = $qrCode->getData();
+        $data = $this->getData($qrCode);
 
         $svg = new SimpleXMLElement('<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"/>');
         $svg->addAttribute('version', '1.1');

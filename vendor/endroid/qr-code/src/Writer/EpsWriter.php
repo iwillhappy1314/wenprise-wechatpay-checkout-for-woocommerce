@@ -17,7 +17,7 @@ class EpsWriter extends AbstractWriter
 {
     public function writeString(QrCodeInterface $qrCode): string
     {
-        $data = $qrCode->getData();
+        $data = $this->getData($qrCode);
 
         $epsData = [];
         $epsData[] = '%!PS-Adobe-3.0 EPSF-3.0';
