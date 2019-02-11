@@ -190,7 +190,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             'app_id'      => [
                 'title'       => __('Wechat App Id', 'wprs-wc-wechatpay'),
                 'type'        => 'text',
-                'description' => __('Enter your Wechat App Id.', 'wprs-wc-wechatpay'),
+                'description' => __('Enter your Wechat App Id. 支付授权目录和 H5 支付域名为网站首页地址，扫码回调链接：', 'wprs-wc-wechatpay') . home_url('wc-api/wprs-wc-wechatpay-notify/'),
             ],
             'app_secret'  => [
                 'title'       => __('Wechat App Secret', 'wprs-wc-wechatpay'),
