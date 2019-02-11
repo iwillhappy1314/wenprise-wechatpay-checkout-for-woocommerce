@@ -21,9 +21,7 @@ class PngWriter extends AbstractWriter
 {
     public function writeString(QrCodeInterface $qrCode): string
     {
-        $data = $this->getData($qrCode);
-
-        $image = $this->createImage($data, $qrCode);
+        $image = $this->createImage($qrCode->getData(), $qrCode);
 
         if ($qrCode->getLogoPath()) {
             $image = $this->addLogo($image, $qrCode->getLogoPath(), $qrCode->getLogoWidth(), $qrCode->getLogoHeight());
@@ -81,7 +79,7 @@ class PngWriter extends AbstractWriter
         $image = imagecreatetruecolor($data['outer_width'], $data['outer_height']);
         $backgroundColor = imagecolorallocatealpha($image, $qrCode->getBackgroundColor()['r'], $qrCode->getBackgroundColor()['g'], $qrCode->getBackgroundColor()['b'], $qrCode->getBackgroundColor()['a']);
         imagefill($image, 0, 0, $backgroundColor);
-        imagecopyresampled($image, $baseImage, $data['margin_left'], $data['margin_left'], 0, 0, $data['inner_width'], $data['inner_height'], imagesx($baseImage), imagesy($baseImage));
+        imagecopyresampled($image, $baseImage, (int) $data['margin_left'], (int) $data['margin_left'], 0, 0, (int) $data['inner_width'], (int) $data['inner_height'], imagesx($baseImage), imagesy($baseImage));
         imagesavealpha($image, true);
 
         return $image;
@@ -105,7 +103,7 @@ class PngWriter extends AbstractWriter
         $logoX = imagesx($sourceImage) / 2 - $logoWidth / 2;
         $logoY = imagesy($sourceImage) / 2 - $logoHeight / 2;
 
-        imagecopyresampled($sourceImage, $logoImage, (int)$logoX, (int)$logoY, 0, 0, $logoWidth, $logoHeight, $logoSourceWidth, $logoSourceHeight);
+        imagecopyresampled($sourceImage, $logoImage, (int) $logoX, (int) $logoY, 0, 0, $logoWidth, $logoHeight, $logoSourceWidth, $logoSourceHeight);
 
         return $sourceImage;
     }

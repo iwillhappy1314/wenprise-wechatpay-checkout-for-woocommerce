@@ -404,7 +404,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
         // 修改 Open ID 的获取方法，主要兼容其他微信登录
         $open_id = apply_filters('wprs_wc_wechat_open_id', get_user_meta(get_current_user_id(), 'wprs_wc_wechat_open_id', true));
 
-        // Remove cart.
+        // Empty cart.
         WC()->cart->empty_cart();
 
         do_action('wenprise_woocommerce_wechatpay_before_process_payment');
@@ -577,7 +577,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
                 $order->payment_complete($data[ 'transaction_id' ]);
 
-                // Remove cart.
+                // Empty cart.
                 WC()->cart->empty_cart();
 
                 // 添加订单备注

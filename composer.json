@@ -1,7 +1,7 @@
 {
     "require": {
         "lokielse/omnipay-wechatpay": "^3.0",
-        "endroid/qr-code": "3.4.*",
+        "endroid/qr-code": "^3.0",
         "yahnis-elsts/plugin-update-checker": "^4.4"
     }
 }

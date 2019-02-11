@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Endroid\QrCode;
 
+use BaconQrCode\Encoder\Encoder;
 use Endroid\QrCode\Exception\InvalidPathException;
 use Endroid\QrCode\Exception\UnsupportedExtensionException;
 use Endroid\QrCode\Writer\WriterInterface;
@@ -148,14 +149,14 @@ class QrCode implements QrCodeInterface
         return $this->roundBlockSize;
     }
 
-    public function setErrorCorrectionLevel(string $errorCorrectionLevel): void
+    public function setErrorCorrectionLevel(ErrorCorrectionLevel $errorCorrectionLevel): void
     {
-        $this->errorCorrectionLevel = new ErrorCorrectionLevel($errorCorrectionLevel);
+        $this->errorCorrectionLevel = $errorCorrectionLevel;
     }
 
-    public function getErrorCorrectionLevel(): string
+    public function getErrorCorrectionLevel(): ErrorCorrectionLevel
     {
-        return $this->errorCorrectionLevel->getValue();
+        return $this->errorCorrectionLevel;
     }
 
     public function setLogoPath(string $logoPath): void
@@ -368,5 +369,36 @@ class QrCode implements QrCodeInterface
     public function getValidateResult(): bool
     {
         return $this->validateResult;
+    }
+
+    public function getData(): array
+    {
+        $baconErrorCorrectionLevel = $this->errorCorrectionLevel->toBaconErrorCorrectionLevel();
+
+        $baconQrCode = Encoder::encode($this->text, $baconErrorCorrectionLevel, $this->encoding);
+
+        $matrix = $baconQrCode->getMatrix()->getArray()->toArray();
+
+        foreach ($matrix as &$row) {
+            $row = $row->toArray();
+        }
+
+        $data = ['matrix' => $matrix];
+        $data['block_count'] = count($matrix[0]);
+        $data['block_size'] = $this->size / $data['block_count'];
+        if ($this->roundBlockSize) {
+            $data['block_size'] = intval(floor($data['block_size']));
+        }
+        $data['inner_width'] = $data['block_size'] * $data['block_count'];
+        $data['inner_height'] = $data['block_size'] * $data['block_count'];
+        $data['outer_width'] = $this->size + 2 * $this->margin;
+        $data['outer_height'] = $this->size + 2 * $this->margin;
+        $data['margin_left'] = ($data['outer_width'] - $data['inner_width']) / 2;
+        if ($this->roundBlockSize) {
+            $data['margin_left'] = intval(floor($data['margin_left']));
+        }
+        $data['margin_right'] = $data['outer_width'] - $data['inner_width'] - $data['margin_left'];
+
+        return $data;
     }
 }
