@@ -21,7 +21,7 @@ class TraversableArrayObject implements \ArrayAccess, \IteratorAggregate, \Count
 
     public function __construct(array $array = null)
     {
-        $this->array = $array ?: [];
+        $this->array = $array ?: array();
     }
 
     public function offsetExists($offset)

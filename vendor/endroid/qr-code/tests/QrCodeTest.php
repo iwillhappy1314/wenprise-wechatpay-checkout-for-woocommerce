@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * (c) Jeroen van den Enden <info@endroid.nl>
  *
@@ -14,11 +12,10 @@ namespace Endroid\QrCode\Tests;
 use Endroid\QrCode\Factory\QrCodeFactory;
 use Endroid\QrCode\QrCode;
 use PHPUnit\Framework\TestCase;
-use Zxing\QrReader;
 
 class QrCodeTest extends TestCase
 {
-    public function testReadable(): void
+    public function testReadable()
     {
         $messages = [
             'Tiny',
@@ -31,18 +28,16 @@ class QrCodeTest extends TestCase
             '有限公司',
         ];
 
-        $qrCode = new QrCode();
-        $qrCode->setSize(300);
         foreach ($messages as $message) {
-            $qrCode->setText($message);
+            $qrCode = new QrCode($message);
+            $qrCode->setSize(300);
+            $qrCode->setValidateResult(true);
             $pngData = $qrCode->writeString();
             $this->assertTrue(is_string($pngData));
-            $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
-            $this->assertEquals($message, $reader->text());
         }
     }
 
-    public function testFactory(): void
+    public function testFactory()
     {
         $qrCodeFactory = new QrCodeFactory();
         $qrCode = $qrCodeFactory->create('QR Code', [
@@ -53,15 +48,11 @@ class QrCodeTest extends TestCase
 
         $pngData = $qrCode->writeString();
         $this->assertTrue(is_string($pngData));
-        $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
-        $this->assertEquals('QR Code', $reader->text());
     }
 
-    public function testWriteQrCode(): void
+    public function testWriteQrCode()
     {
-        $qrCode = new QrCode('QR Code');
-        $qrCode->setLogoPath(__DIR__.'/../assets/images/symfony.png');
-        $qrCode->setLogoWidth(100);
+        $qrCode = new QrCode('QrCode');
 
         $qrCode->setWriterByName('binary');
         $binData = $qrCode->writeString();
@@ -88,12 +79,12 @@ class QrCodeTest extends TestCase
         $this->assertTrue(0 === strpos($svgDataUriData, 'data:image/svg+xml;base64'));
     }
 
-    public function testSetSize(): void
+    public function testSetSize()
     {
         $size = 400;
         $margin = 10;
 
-        $qrCode = new QrCode('QR Code');
+        $qrCode = new QrCode('QrCode');
         $qrCode->setSize($size);
         $qrCode->setMargin($margin);
 
@@ -104,55 +95,28 @@ class QrCodeTest extends TestCase
         $this->assertTrue(imagesy($image) === $size + 2 * $margin);
     }
 
-    public function testSetLabel(): void
+    public function testSetLabel()
     {
-        $qrCode = new QrCode('QR Code');
-        $qrCode->setSize(300);
-        $qrCode->setLabel('Scan the code', 15);
-
-        $pngData = $qrCode->writeString();
-        $this->assertTrue(is_string($pngData));
-        $reader = new QrReader($pngData, QrReader::SOURCE_TYPE_BLOB);
-        $this->assertEquals('QR Code', $reader->text());
-    }
-
-    public function testSetLogo(): void
-    {
-        $qrCode = new QrCode('QR Code');
-        $qrCode->setSize(500);
-        $qrCode->setLogoPath(__DIR__.'/../assets/images/symfony.png');
-        $qrCode->setLogoWidth(100);
-        $qrCode->setValidateResult(true);
+        $qrCode = new QrCode('QrCode');
+        $qrCode
+            ->setSize(300)
+            ->setLabel('Scan the code', 15)
+        ;
 
         $pngData = $qrCode->writeString();
         $this->assertTrue(is_string($pngData));
     }
 
-    public function testWriteFile(): void
+    public function testSetLogo()
     {
-        $filename = __DIR__.'/output/qr-code.png';
+        $qrCode = new QrCode('QrCode');
+        $qrCode
+            ->setSize(400)
+            ->setLogoPath(__DIR__.'/../assets/symfony.png')
+            ->setLogoWidth(150)
+            ->setValidateResult(true);
 
-        $qrCode = new QrCode('QR Code');
-        $qrCode->writeFile($filename);
-
-        $image = imagecreatefromstring(file_get_contents($filename));
-
-        $this->assertTrue(is_resource($image));
-    }
-
-    public function testData(): void
-    {
-        $qrCode = new QrCode('QR Code');
-
-        $data = $qrCode->getData();
-
-        $this->assertArrayHasKey('block_count', $data);
-        $this->assertArrayHasKey('block_size', $data);
-        $this->assertArrayHasKey('inner_width', $data);
-        $this->assertArrayHasKey('inner_height', $data);
-        $this->assertArrayHasKey('outer_width', $data);
-        $this->assertArrayHasKey('outer_height', $data);
-        $this->assertArrayHasKey('margin_left', $data);
-        $this->assertArrayHasKey('margin_right', $data);
+        $pngData = $qrCode->writeString();
+        $this->assertTrue(is_string($pngData));
     }
 }

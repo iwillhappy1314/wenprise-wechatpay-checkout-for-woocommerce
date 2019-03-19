@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.6.1 - 2019-02-23
+
+### Fixed
+
+- MockClientStrategy also provides the mock client when requesting an async client
+
 ## 1.6.0 - 2019-01-23
 
 ### Added

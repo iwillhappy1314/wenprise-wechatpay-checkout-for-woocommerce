@@ -18,8 +18,8 @@ use Symfony\Component\PropertyAccess\Exception\OutOfBoundsException;
  */
 class PropertyPathBuilder
 {
-    private $elements = [];
-    private $isIndex = [];
+    private $elements = array();
+    private $isIndex = array();
 
     /**
      * Creates a new property path builder.

@@ -46,7 +46,7 @@ class HeaderBag implements \IteratorAggregate, \Countable
         $max = max(array_map('strlen', array_keys($headers))) + 1;
         $content = '';
         foreach ($headers as $name => $values) {
-            $name = ucwords($name, '-');
+            $name = implode('-', array_map('ucfirst', explode('-', $name)));
             foreach ($values as $value) {
                 $content .= sprintf("%-{$max}s %s\r\n", $name.':', $value);
             }
@@ -112,7 +112,7 @@ class HeaderBag implements \IteratorAggregate, \Countable
         $key = str_replace('_', '-', strtolower($key));
         $headers = $this->all();
 
-        if (!array_key_exists($key, $headers)) {
+        if (!\array_key_exists($key, $headers)) {
             if (null === $default) {
                 return $first ? null : [];
             }
@@ -168,7 +168,7 @@ class HeaderBag implements \IteratorAggregate, \Countable
      */
     public function has($key)
     {
-        return array_key_exists(str_replace('_', '-', strtolower($key)), $this->all());
+        return \array_key_exists(str_replace('_', '-', strtolower($key)), $this->all());
     }
 
     /**
@@ -245,7 +245,7 @@ class HeaderBag implements \IteratorAggregate, \Countable
      */
     public function hasCacheControlDirective($key)
     {
-        return array_key_exists($key, $this->cacheControl);
+        return \array_key_exists($key, $this->cacheControl);
     }
 
     /**
@@ -257,7 +257,7 @@ class HeaderBag implements \IteratorAggregate, \Countable
      */
     public function getCacheControlDirective($key)
     {
-        return array_key_exists($key, $this->cacheControl) ? $this->cacheControl[$key] : null;
+        return \array_key_exists($key, $this->cacheControl) ? $this->cacheControl[$key] : null;
     }
 
     /**
@@ -294,9 +294,21 @@ class HeaderBag implements \IteratorAggregate, \Countable
 
     protected function getCacheControlHeader()
     {
+        $parts = [];
         ksort($this->cacheControl);
+        foreach ($this->cacheControl as $key => $value) {
+            if (true === $value) {
+                $parts[] = $key;
+            } else {
+                if (preg_match('#[^a-zA-Z0-9._-]#', $value)) {
+                    $value = '"'.$value.'"';
+                }
 
-        return HeaderUtils::toString($this->cacheControl, ',');
+                $parts[] = "$key=$value";
+            }
+        }
+
+        return implode(', ', $parts);
     }
 
     /**
@@ -308,8 +320,12 @@ class HeaderBag implements \IteratorAggregate, \Countable
      */
     protected function parseCacheControl($header)
     {
-        $parts = HeaderUtils::split($header, ',=');
+        $cacheControl = [];
+        preg_match_all('#([a-zA-Z][a-zA-Z_-]*)\s*(?:=(?:"([^"]*)"|([^ \t",;]*)))?#', $header, $matches, PREG_SET_ORDER);
+        foreach ($matches as $match) {
+            $cacheControl[strtolower($match[1])] = isset($match[3]) ? $match[3] : (isset($match[2]) ? $match[2] : true);
+        }
 
-        return HeaderUtils::combine($parts);
+        return $cacheControl;
     }
 }

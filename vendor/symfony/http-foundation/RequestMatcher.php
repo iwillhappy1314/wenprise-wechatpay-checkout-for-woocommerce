@@ -29,11 +29,6 @@ class RequestMatcher implements RequestMatcherInterface
     private $host;
 
     /**
-     * @var int|null
-     */
-    private $port;
-
-    /**
      * @var string[]
      */
     private $methods = [];
@@ -61,14 +56,13 @@ class RequestMatcher implements RequestMatcherInterface
      * @param array                $attributes
      * @param string|string[]|null $schemes
      */
-    public function __construct(string $path = null, string $host = null, $methods = null, $ips = null, array $attributes = [], $schemes = null, int $port = null)
+    public function __construct($path = null, $host = null, $methods = null, $ips = null, array $attributes = [], $schemes = null)
     {
         $this->matchPath($path);
         $this->matchHost($host);
         $this->matchMethod($methods);
         $this->matchIps($ips);
         $this->matchScheme($schemes);
-        $this->matchPort($port);
 
         foreach ($attributes as $k => $v) {
             $this->matchAttribute($k, $v);
@@ -93,16 +87,6 @@ class RequestMatcher implements RequestMatcherInterface
     public function matchHost($regexp)
     {
         $this->host = $regexp;
-    }
-
-    /**
-     * Adds a check for the the URL port.
-     *
-     * @param int|null $port The port number to connect to
-     */
-    public function matchPort(int $port = null)
-    {
-        $this->port = $port;
     }
 
     /**
@@ -180,10 +164,6 @@ class RequestMatcher implements RequestMatcherInterface
         }
 
         if (null !== $this->host && !preg_match('{'.$this->host.'}i', $request->getHost())) {
-            return false;
-        }
-
-        if (null !== $this->port && 0 < $this->port && $request->getPort() !== $this->port) {
             return false;
         }
 
