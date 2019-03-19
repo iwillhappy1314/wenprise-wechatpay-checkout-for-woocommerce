@@ -13,7 +13,6 @@ return array(
     'Symfony\\Component\\OptionsResolver\\' => array($vendorDir . '/symfony/options-resolver'),
     'Symfony\\Component\\HttpFoundation\\' => array($vendorDir . '/symfony/http-foundation'),
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
-    'Psr\\Http\\Client\\' => array($vendorDir . '/psr/http-client/src'),
     'Omnipay\\WechatPay\\' => array($vendorDir . '/lokielse/omnipay-wechatpay/src'),
     'Omnipay\\Common\\' => array($vendorDir . '/omnipay/common/src/Common'),
     'MyCLabs\\Enum\\' => array($vendorDir . '/myclabs/php-enum/src'),
