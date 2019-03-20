@@ -57,11 +57,6 @@ add_action('plugins_loaded', function ()
         return $methods;
     });
 
-    Puc_v4_Factory::buildUpdateChecker(
-        'https://api.wpcio.com/api/plugin/info/wenprise-wechatpay-for-woocommerce',
-        __FILE__,
-        'wenprise-wechatpay-for-woocommerce'
-    );
 }, 0);
 
 
