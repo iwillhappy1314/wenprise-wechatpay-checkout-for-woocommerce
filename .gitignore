@@ -1,2 +1,3 @@
 .idea/*
-/vendor/endroid/qr-code/assets/fonts
+vendor/endroid/qr-code/.vscode/
+vendor/endroid/qr-code/assets/noto_sans.otf
