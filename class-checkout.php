@@ -264,7 +264,6 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             }
         }
 
-
     }
 
 
@@ -538,7 +537,8 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             }
 
         } catch (\Exception $e) {
-            file_put_contents(get_theme_file_path("error.log"), print_r($e, true));
+
+            $this->log($e);
 
             return false;
         }
