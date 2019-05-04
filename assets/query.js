@@ -2,6 +2,14 @@
   var loopCnt = 50;
   var looptime = 300; //ms
 
+  $.blockUI({
+    message: $('#js-wechatpay-confirm-modal'),
+    css    : {
+      width : '500px',
+      height: '400px',
+    },
+  });
+
   function wprs_woo_wechatpay_query_order() {
     var order_id = $('#js-wprs-wc-wechatpay').data('order_id');
     $.ajax({
@@ -30,7 +38,6 @@
   wprs_woo_wechatpay_query_order();
 
   $('#js-wprs-wc-wechatpay').bind('click', function() {
-    alert('aaa');
     wprs_woo_wechatpay_query_order();
   });
 
