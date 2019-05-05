@@ -480,12 +480,10 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
         } else {
 
             $error = $response->getData();
-
-            $order->add_order_note(sprintf("%s Payments Failed: %s", $this->method_title, $error[ 'return_msg' ]));
-            $this->log($response);
+            $this->log($error);
 
             if ($this->is_debug_mod == 'yes') {
-                wc_add_notice($error[ 'return_msg' ], 'error');
+                wc_add_notice($error[ 'err_code_des' ], 'error');
             }
 
         }
@@ -604,11 +602,11 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             } else {
 
                 $error = $response->getData();
-
-                $order->add_order_note(sprintf("%s Payments Failed: '%s'", $this->method_title, $error));
-                wc_add_notice($error, 'error');
-
                 $this->log($error);
+
+                if ($this->is_debug_mod == 'yes') {
+                    wc_add_notice($error, 'error');
+                }
 
             }
 
@@ -659,8 +657,8 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
                                  alt="微信支付二维码" />
                         </div>
                         <footer class="rs-modal__footer">
-                            <input type="button" id="js-alipay-success" class="button alt is-primary" value="支付成功" />
-                            <input type="button" id="js-alipay-fail" class="button" value="支付失败" />
+                            <input type="button" id="js-wechatpay-success" class="button alt is-primary" value="支付成功" />
+                            <input type="button" id="js-wechatpay-fail" class="button" value="支付失败" />
                         </footer>
                     </div>
 
@@ -681,12 +679,12 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
         if ($order) {
             if ($order->is_paid()) {
-                wp_send_json_success($this->get_return_url($order));
+                wp_send_json_success($order->get_checkout_order_received_url());
             } else {
-                wp_send_json_error();
+                wp_send_json_error($order->get_checkout_payment_url());
             }
         } else {
-            wp_send_json_error();
+            wp_send_json_error($order->get_checkout_payment_url());
         }
 
     }
