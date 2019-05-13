@@ -35,6 +35,7 @@ define('WENPRISE_WECHATPAY_URL', plugin_dir_url(__FILE__));
 define('WENPRISE_WECHATPAY_WOOCOMMERCE_ID', 'wprs-wc-wechatpay');
 define('WENPRISE_WECHATPAY_ASSETS_URL', WENPRISE_WECHATPAY_URL . 'assets/');
 
+require WENPRISE_WECHATPAY_PATH . 'helpers.php';
 
 add_action('plugins_loaded', function ()
 {
@@ -43,7 +44,6 @@ add_action('plugins_loaded', function ()
     }
 
     require WENPRISE_WECHATPAY_PATH . 'vendor/autoload.php';
-    require WENPRISE_WECHATPAY_PATH . 'helpers.php';
     require WENPRISE_WECHATPAY_PATH . 'class-checkout.php';
 
     load_plugin_textdomain('wprs-wc-wechatpay', false, dirname(plugin_basename(__FILE__)) . '/languages');
