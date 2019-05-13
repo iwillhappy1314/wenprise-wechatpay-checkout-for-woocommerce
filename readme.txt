@@ -8,7 +8,7 @@ Tested up to: 5.0
 Stable tag: 1.0.3
 License: GPL-2.0+
 
-Wechat payment gateway for WooCommerce, WooCommerce 微信全功能支付网关。
+Wechat payment gateway for WooCommerce, WooCommerce 微信免费全功能支付网关。
 
 ## Description ##
 **功能更全面的 WooCommerce 免费微信支付网关**，企业版，需要微信企业认证才可以使用。支持功能如下：
