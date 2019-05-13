@@ -264,11 +264,11 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
                 if (wprs_is_wechat()) {
                     wp_enqueue_script('wprs-wc-wechatpay-js-sdk', 'https://res.wx.qq.com/open/js/jweixin-1.4.0.js', ['jquery'], null, true);
-                    wp_enqueue_script('wprs-wc-wechatpay-scripts', plugins_url('/assets/mpweb.js', __FILE__), ['jquery'], null, true);
+                    wp_enqueue_script('wprs-wc-wechatpay-scripts', plugins_url('/frontend/mpweb.js', __FILE__), ['jquery'], null, true);
                 }
 
-                wp_enqueue_style('wprs-wc-wechatpay-style', plugins_url('/assets/styles.css', __FILE__), [], null, false);
-                wp_enqueue_script('wprs-wc-wechatpay-scripts', plugins_url('/assets/query.js', __FILE__), ['jquery', 'jquery-blockui'], null, true);
+                wp_enqueue_style('wprs-wc-wechatpay-style', plugins_url('/frontend/styles.css', __FILE__), [], null, false);
+                wp_enqueue_script('wprs-wc-wechatpay-scripts', plugins_url('/frontend/query.js', __FILE__), ['jquery', 'jquery-blockui'], null, true);
 
                 wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatPaySign', $signPackage);
                 wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatPayOrder', $order_data);
