@@ -5,7 +5,7 @@ Tags: Alipay, WooCommerce, woocommerce, payment, payment gateway, gateway, 微�
 Requires PHP: 5.6.0
 Requires at least: 4.7
 Tested up to: 5.2
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPL-2.0+
 
 Wechat payment gateway for WooCommerce, WooCommerce 微信免费全功能支付网关。
@@ -54,6 +54,9 @@ add_filter('wprs_wc_wechat_open_id', function(){
 * payment
 
 ## Changelog ##
+
+### 1.0.3 ###
+* 修复某些情况下图标不显示的问题
 
 ### 1.0.3 ###
 * 初次发布
