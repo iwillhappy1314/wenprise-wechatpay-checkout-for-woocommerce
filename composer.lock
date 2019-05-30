@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6cfcd0b6312bd862edddfa0d7a4cb5a5",
+    "content-hash": "dee99fae66b894c3aa5ce912a6e7a84f",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1444,46 +1444,6 @@
                 "reflection"
             ],
             "time": "2018-11-11T11:18:13+00:00"
-        },
-        {
-            "name": "wenprise/wordpress-dispatcher",
-            "version": "1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/iwillhappy1314/wordpress-dispatcher.git",
-                "reference": "dde5420386aa7f4fdb3abde9845c700451c772d5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/iwillhappy1314/wordpress-dispatcher/zipball/dde5420386aa7f4fdb3abde9845c700451c772d5",
-                "reference": "dde5420386aa7f4fdb3abde9845c700451c772d5",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Wenprise\\Dispatcher\\": "/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Tim Field",
-                    "email": "field.tim@gmail.com"
-                },
-                {
-                    "name": "Amos Lee",
-                    "email": "iwillhappy1314@gmail.com"
-                }
-            ],
-            "description": "Create URL endpoints within WordPress",
-            "time": "2018-12-17T07:34:20+00:00"
         }
     ],
     "packages-dev": [],
