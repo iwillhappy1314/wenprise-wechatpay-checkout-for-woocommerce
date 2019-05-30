@@ -6,7 +6,7 @@
 
 ## Why?
 
-First, and mainly, `SplEnum` is not integrated to PHP, you have to install the extension separately.
+First, and mainly, `SplEnum` is not integrated to PHP, you have to install it separately.
 
 Using an enum instead of class constants provides the following advantages:
 
@@ -33,10 +33,11 @@ use MyCLabs\Enum\Enum;
  */
 class Action extends Enum
 {
-    private const VIEW = 'view';
-    private const EDIT = 'edit';
+    const VIEW = 'view';
+    const EDIT = 'edit';
 }
 ```
+
 
 ## Usage
 
@@ -79,8 +80,8 @@ Static methods:
 ```php
 class Action extends Enum
 {
-    private const VIEW = 'view';
-    private const EDIT = 'edit';
+    const VIEW = 'view';
+    const EDIT = 'edit';
 }
 
 // Static method:
@@ -95,7 +96,7 @@ If you care about IDE autocompletion, you can either implement the static method
 ```php
 class Action extends Enum
 {
-    private const VIEW = 'view';
+    const VIEW = 'view';
 
     /**
      * @return Action
@@ -115,13 +116,11 @@ or you can use phpdoc (this is supported in PhpStorm for example):
  */
 class Action extends Enum
 {
-    private const VIEW = 'view';
-    private const EDIT = 'edit';
+    const VIEW = 'view';
+    const EDIT = 'edit';
 }
 ```
 
 ## Related projects
 
 - [Doctrine enum mapping](https://github.com/acelaya/doctrine-enum-type)
-- [Symfony ParamConverter integration](https://github.com/Ex3v/MyCLabsEnumParamConverter)
-- [PHPStan integration](https://github.com/timeweb/phpstan-enum)

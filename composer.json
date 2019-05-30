@@ -3,7 +3,8 @@
     "lokielse/omnipay-wechatpay": "^3.0",
     "symfony/http-foundation": "3.3.*",
     "php-http/guzzle6-adapter": "^1.1",
-    "endroid/qr-code": "^2.0",
+    "myclabs/php-enum": "1.5.*",
+    "endroid/qr-code": "2.*",
     "paragonie/random_compat": "<9.99"
   }
 }

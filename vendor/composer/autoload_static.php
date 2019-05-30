@@ -426,7 +426,6 @@ class ComposerStaticInit933ae72fdf1833f0ff08043d28cd6226
         'Money\\Parser\\IntlLocalizedDecimalParser' => __DIR__ . '/..' . '/moneyphp/money/src/Parser/IntlLocalizedDecimalParser.php',
         'Money\\Parser\\IntlMoneyParser' => __DIR__ . '/..' . '/moneyphp/money/src/Parser/IntlMoneyParser.php',
         'MyCLabs\\Enum\\Enum' => __DIR__ . '/..' . '/myclabs/php-enum/src/Enum.php',
-        'MyCLabs\\Enum\\PHPUnit\\Comparator' => __DIR__ . '/..' . '/myclabs/php-enum/src/PHPUnit/Comparator.php',
         'Omnipay\\Common\\AbstractGateway' => __DIR__ . '/..' . '/omnipay/common/src/Common/AbstractGateway.php',
         'Omnipay\\Common\\CreditCard' => __DIR__ . '/..' . '/omnipay/common/src/Common/CreditCard.php',
         'Omnipay\\Common\\Exception\\BadMethodCallException' => __DIR__ . '/..' . '/omnipay/common/src/Common/Exception/BadMethodCallException.php',

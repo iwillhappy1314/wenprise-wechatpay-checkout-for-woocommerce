@@ -271,7 +271,6 @@ return array(
     'Money\\Parser\\IntlLocalizedDecimalParser' => $vendorDir . '/moneyphp/money/src/Parser/IntlLocalizedDecimalParser.php',
     'Money\\Parser\\IntlMoneyParser' => $vendorDir . '/moneyphp/money/src/Parser/IntlMoneyParser.php',
     'MyCLabs\\Enum\\Enum' => $vendorDir . '/myclabs/php-enum/src/Enum.php',
-    'MyCLabs\\Enum\\PHPUnit\\Comparator' => $vendorDir . '/myclabs/php-enum/src/PHPUnit/Comparator.php',
     'Omnipay\\Common\\AbstractGateway' => $vendorDir . '/omnipay/common/src/Common/AbstractGateway.php',
     'Omnipay\\Common\\CreditCard' => $vendorDir . '/omnipay/common/src/Common/CreditCard.php',
     'Omnipay\\Common\\Exception\\BadMethodCallException' => $vendorDir . '/omnipay/common/src/Common/Exception/BadMethodCallException.php',
