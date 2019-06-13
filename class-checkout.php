@@ -258,7 +258,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
         $signPackage = $jssdk->GetSignPackage();
         $order_data  = get_post_meta($order_id, 'wprs_wc_wechat_order_data', true);
 
-        if ("wprs-wc-wechatpay" == $order->payment_method) {
+        if (isset($order->payment_method) && "wprs-wc-wechatpay" == $order->payment_method) {
             if (is_checkout_pay_page() && ! isset($_GET[ 'pay_for_order' ])) {
 
                 if (wprs_is_wechat()) {

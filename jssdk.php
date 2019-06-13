@@ -56,7 +56,7 @@ class JSSDK
         // jsapi_ticket 应该全局存储与更新，以下代码以写入到文件中做示例
         $data = get_option('wprs-wc-wechat-jsapi_ticket');
 
-        if ($data->expire_time < time()) {
+        if (isset($data->expire_time) && $data->expire_time < time()) {
 
             $accessToken = $this->getAccessToken();
 
@@ -74,7 +74,7 @@ class JSSDK
 
         } else {
 
-            $ticket = $data->jsapi_ticket;
+            $ticket = isset($data->jsapi_ticket) ? $data->jsapi_ticket : '';
 
         }
 
