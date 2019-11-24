@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Wenprise WechatPay for WooCommerce\n"
-"POT-Creation-Date: 2019-01-15 09:48+0800\n"
-"PO-Revision-Date: 2019-01-15 09:48+0800\n"
+"POT-Creation-Date: 2019-11-24 18:31+0800\n"
+"PO-Revision-Date: 2019-11-24 18:32+0800\n"
 "Last-Translator: Amos Lee <iwillhappy1314@gmail.com>\n"
 "Language-Team: Amos Lee (amos@wpcio.com)\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.12\n"
+"X-Generator: Poedit 2.2.4\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
@@ -18,79 +18,81 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: class-checkout.php:89 class-checkout.php:95
+#: class-checkout.php:94 class-checkout.php:100
 msgid "Wechat Pay"
 msgstr "微信支付"
 
-#: class-checkout.php:92
+#: class-checkout.php:97
 msgid "Wechat Pay payment gateway for WooCommerce"
 msgstr "WooCommerce 的微信支付支付网关"
 
-#: class-checkout.php:122
+#: class-checkout.php:126
 msgid "Proceed to Wechatpay"
 msgstr "前往微信支付"
 
-#: class-checkout.php:159
+#: class-checkout.php:163
 msgid "Enable / Disable"
 msgstr "启用/停用"
 
-#: class-checkout.php:160
+#: class-checkout.php:164
 msgid "Enable this payment gateway"
 msgstr "启用此付款网关"
 
-#: class-checkout.php:180
+#: class-checkout.php:184
 msgid "Title"
 msgstr "标题"
 
-#: class-checkout.php:182
+#: class-checkout.php:186
 msgid "Wechatpay"
 msgstr "微信支付"
 
-#: class-checkout.php:185
+#: class-checkout.php:189
 msgid "Description"
 msgstr "描述"
 
-#: class-checkout.php:187
+#: class-checkout.php:191
 msgid "Pay securely using Wechat Pay"
 msgstr "使用微信支付安全快捷的支付"
 
-#: class-checkout.php:191
+#: class-checkout.php:195
 msgid "Wechat App Id"
 msgstr "微信公众号 App ID"
 
-#: class-checkout.php:193
-msgid "Enter your Wechat App Id."
-msgstr "输入微信公众号 App ID。"
+#: class-checkout.php:197
+msgid ""
+"Enter your Wechat App Id. 支付授权目录和 H5 支付域名为网站首页地址，扫码回调"
+"链接："
+msgstr ""
 
-#: class-checkout.php:196
+#: class-checkout.php:201
 msgid "Wechat App Secret"
 msgstr "微信 App 密钥"
 
-#: class-checkout.php:198
+#: class-checkout.php:203
 msgid "Enter your Wechat App Secret."
 msgstr "输入微信公众号 App 密钥。"
 
-#: class-checkout.php:201
+#: class-checkout.php:206
 msgid "Wechat Mch Id"
 msgstr "微信商户 ID"
 
-#: class-checkout.php:203
+#: class-checkout.php:208
 msgid "Enter your Wechat Mch Id."
 msgstr "输入微信商户 ID。"
 
-#: class-checkout.php:206
+#: class-checkout.php:211
 msgid "Wechat Api Key"
 msgstr "微信支付应用密钥"
 
-#: class-checkout.php:208
+#: class-checkout.php:213
 msgid "Enter your Wechat Api Key"
 msgstr "输入微信支付应用密钥"
 
-#: class-checkout.php:211
+#: class-checkout.php:216
 msgid "apiclient_cert.pem path"
 msgstr "apiclient_cert.pem 路径"
 
-#: class-checkout.php:213
+#: class-checkout.php:218
 msgid ""
 "Enter the absolute apiclient_cert.pem path that can access by the site, Used "
 "when refund, Ex: /home/apiclient_cert.pem，For security *DO NOT* place it in "
@@ -99,11 +101,11 @@ msgstr ""
 "输入站点可以访问的 apiclient_cert.pem 的绝对路径，退款时使用，例如：/home/"
 "apiclient_cert.pem，安全起见，*不要* 把证书放在用户可访问的网站目录。"
 
-#: class-checkout.php:216
+#: class-checkout.php:222
 msgid "apiclient_key.pem Path"
 msgstr "apiclient_key.pem 路径"
 
-#: class-checkout.php:218
+#: class-checkout.php:224
 msgid ""
 "Enter the absolute apiclient_key.pem path that can access by the site, Used "
 "when refund，Ex: /home/apiclient_key.pem，For security *DO NOT* place it in "
@@ -112,22 +114,34 @@ msgstr ""
 "输入站点可以访问的 apiclient_key.pem 的绝对路径，退款时使用，例如：/home/"
 "apiclient_key.pem，安全起见，*不要* 把证书放在用户可访问的网站目录。"
 
-#: class-checkout.php:225
+#: class-checkout.php:228
+msgid "Debug Mode"
+msgstr "调试模式"
+
+#: class-checkout.php:229
+msgid "Enable debug mod"
+msgstr "启用调试模式"
+
+#: class-checkout.php:231
+msgid "If checked, plugin will show program errors in frontend."
+msgstr "如果启用，会在前端显示详情的错误信息。"
+
+#: class-checkout.php:239
 msgid "Exchange Rate"
 msgstr "汇率"
 
-#: class-checkout.php:227
+#: class-checkout.php:241
 #, php-format
 msgid ""
 "Please set the %s against Chinese Yuan exchange rate, eg if your currency is "
 "US Dollar, then you should enter 6.19"
 msgstr "请设置 %s 转人民币的汇率，例如您的商店货币时美元，请填写 6.19"
 
-#: class-checkout.php:277
+#: class-checkout.php:291
 msgid "Settings"
 msgstr "设置"
 
-#: class-checkout.php:321
+#: class-checkout.php:335
 #, php-format
 msgid ""
 "WeChatPay is enabled, but the store currency is not set to Chinese Yuan. "
@@ -137,61 +151,29 @@ msgstr ""
 "微信支付已启用，但是您的商店货币不是人民币，请<a href=\"%1s\">设置 %2s 转人民"
 "币的汇率</a>。"
 
-#: class-checkout.php:532
+#: class-checkout.php:494
+msgid "WeChat payment configuration error, please contact us."
+msgstr "微信支付配置错误，请联系我们。"
+
+#: class-checkout.php:548
 #, php-format
 msgid "Refunded %1$s"
 msgstr "退款 %1$s"
 
-#: class-checkout.php:585
+#: class-checkout.php:601
 #, php-format
 msgid "Wechatpay payment complete (Transaction ID: %s)"
 msgstr "微信支付已完成(微信订单号: %s)"
 
-#: class-checkout.php:640
+#: class-checkout.php:661
 msgid "Please scan the QR code with WeChat to finish the payment."
 msgstr "请使用微信扫描二维码完成支付。"
 
-#: vendor/yahnis-elsts/plugin-update-checker/Puc/v4p4/Plugin/UpdateChecker.php:395
-msgid "Check for updates"
-msgstr "检查更新"
+#: class-checkout.php:746
+msgid "Wechat auth failed, please try again later or contact us."
+msgstr "微信授权错误，请稍后重试或联系我们。"
 
-#: vendor/yahnis-elsts/plugin-update-checker/Puc/v4p4/Plugin/UpdateChecker.php:432
-msgid "View details"
-msgstr "查看详情"
-
-#: vendor/yahnis-elsts/plugin-update-checker/Puc/v4p4/Plugin/UpdateChecker.php:455
-#, php-format
-msgid "More information about %s"
-msgstr "有关 %s的更多信息"
-
-#: vendor/yahnis-elsts/plugin-update-checker/Puc/v4p4/Plugin/UpdateChecker.php:548
-#, php-format
-msgctxt "the plugin title"
-msgid "The %s plugin is up to date."
-msgstr "插件 %s 已更新。"
-
-#: vendor/yahnis-elsts/plugin-update-checker/Puc/v4p4/Plugin/UpdateChecker.php:550
-#, php-format
-msgctxt "the plugin title"
-msgid "A new version of the %s plugin is available."
-msgstr "您的插件 %s 有新版本可用。"
-
-#: vendor/yahnis-elsts/plugin-update-checker/Puc/v4p4/Plugin/UpdateChecker.php:552
-#, php-format
-msgctxt "the plugin title"
-msgid "Could not determine if updates are available for %s."
-msgstr "无法确定%s是否有更新。"
-
-#: vendor/yahnis-elsts/plugin-update-checker/Puc/v4p4/Plugin/UpdateChecker.php:558
-#, php-format
-msgid "Unknown update checker status \"%s\""
-msgstr "未知的更新检查程序状态 \"%s\""
-
-#: vendor/yahnis-elsts/plugin-update-checker/Puc/v4p4/Vcs/PluginUpdateChecker.php:98
-msgid "There is no changelog available."
-msgstr "没有可用的更新日志。"
-
-#: wenprise-wechatpay-for-woocommerce.php:23
+#: wenprise-wechatpay-checkout-for-woocommerce.php:23
 #, php-format
 msgid ""
 "Wenprise WeChatPay Payment Gateway For WooCommerce 需要 PHP %1$s 以上版本才能"
@@ -201,6 +183,41 @@ msgstr ""
 "Wenprise WeChatPay Payment Gateway For WooCommerce 需要 PHP %1$s 以上版本才能"
 "运行，您当前的 PHP 版本为 %2$s， 请升级到 PHP 到 %1$s 或更新的版本， 否则插件"
 "没有任何作用。"
+
+#~ msgid "Enter your Wechat App Id."
+#~ msgstr "输入微信公众号 App ID。"
+
+#~ msgid "Check for updates"
+#~ msgstr "检查更新"
+
+#~ msgid "View details"
+#~ msgstr "查看详情"
+
+#, php-format
+#~ msgid "More information about %s"
+#~ msgstr "有关 %s的更多信息"
+
+#, php-format
+#~ msgctxt "the plugin title"
+#~ msgid "The %s plugin is up to date."
+#~ msgstr "插件 %s 已更新。"
+
+#, php-format
+#~ msgctxt "the plugin title"
+#~ msgid "A new version of the %s plugin is available."
+#~ msgstr "您的插件 %s 有新版本可用。"
+
+#, php-format
+#~ msgctxt "the plugin title"
+#~ msgid "Could not determine if updates are available for %s."
+#~ msgstr "无法确定%s是否有更新。"
+
+#, php-format
+#~ msgid "Unknown update checker status \"%s\""
+#~ msgstr "未知的更新检查程序状态 \"%s\""
+
+#~ msgid "There is no changelog available."
+#~ msgstr "没有可用的更新日志。"
 
 #~ msgid "Enable auto login in wechat Official Accounts"
 #~ msgstr "在微信中打开时自动登录"

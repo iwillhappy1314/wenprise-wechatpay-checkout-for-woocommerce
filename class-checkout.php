@@ -481,8 +481,18 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             $this->log($error);
 
             if ($this->is_debug_mod == 'yes') {
-                wc_add_notice($error[ 'err_code_des' ], 'error');
+                wc_add_notice($error[ 'return_msg' ], 'error');
+
+                return [
+                    'result'   => 'failure',
+                    'redirect' => $error[ 'return_msg' ],
+                ];
             }
+
+            return [
+                'result'   => 'failure',
+                'redirect' => __('WeChat payment configuration error, please contact us.', 'wprs-wc-wechatpay'),
+            ];
 
         }
 
