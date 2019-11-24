@@ -123,7 +123,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
         }
 
         // 设置是否应该重命名按钮。
-        $this->order_button_text = apply_filters('woocommerce_Wechatpay_button_text', __('Proceed to Wechatpay', 'wprs-wc-wechatpay'));
+        $this->order_button_text = apply_filters('woocommerce_wechatpay_button_text', __('Proceed to Wechatpay', 'wprs-wc-wechatpay'));
 
         // 被 init_settings() 加载的基础设置
         $this->init_form_fields();
@@ -422,7 +422,6 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
         do_action('wenprise_woocommerce_wechatpay_before_process_payment');
 
         // 调用响应的方法来处理支付
-
         $gateway = $this->get_gateway();
 
         $order_data = apply_filters('woocommerce_wenprise_wechatpay_args',
@@ -525,7 +524,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             'transaction_id' => $order->get_transaction_id(),
             'out_trade_no'   => $order_id,
             'out_refund_no'  => date('YmdHis') . mt_rand(1000, 9999),
-            'total_fee'      => $total * 100, //=0.01
+            'total_fee'      => $total * 100,      //=0.01
             'refund_fee'     => $refund_fee * 100, //=0.01
         ]);
 
@@ -727,11 +726,16 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
             $json_token = $this->get_access_token($code);
 
-            // print_r($json_token[ 'access_token' ]);
-            //
-            // if ( ! $json_token[ 'openid' ]) {
-            //     wp_die('授权失败，请尝试重新授权');
-            // }
+            // 微信公众号授权失败时的提示信息
+            if ( ! isset($json_token[ 'access_token' ])) {
+                $this->log($json_token[ 'errmsg' ]);
+
+                if ($this->is_debug_mod == 'yes') {
+                    wp_die($json_token[ 'errmsg' ]);
+                } else {
+                    wp_die(__('Wechat auth failed, please try again later or contact us.', 'wprs-wc-wechatpay'));
+                }
+            }
 
             $info_url  = 'https://api.weixin.qq.com/sns/userinfo?access_token=' . $json_token[ 'access_token' ] . '&openid=' . $json_token[ 'openid' ];
             $user_info = json_decode(file_get_contents($info_url), true);
@@ -811,7 +815,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
      */
     public function log($message)
     {
-        if ($this->is_debug_mod) {
+        if ($this->is_debug_mod == 'yes') {
             if ( ! ($this->log)) {
                 $this->log = new WC_Logger();
             }
