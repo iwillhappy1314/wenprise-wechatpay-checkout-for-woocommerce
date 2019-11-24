@@ -515,7 +515,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
         $gateway->setKeyPath($this->key_path);
 
         $order = wc_get_order($order_id);
-        $total = $this->get_order_total();
+        $total = $order->get_total();
 
         $exchange_rate = floatval($this->get_option('exchange_rate'));
         if ($exchange_rate <= 0) {
@@ -533,7 +533,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
         $request = $gateway->refund([
             'transaction_id' => $order->get_transaction_id(),
             'out_trade_no'   => $order_id,
-            'out_refund_no'  => date('YmdHis') . mt_rand(1000, 9999),
+            'out_refund_no'  => 'refund_' . $order_id . '_' . mt_rand(1000, 9999),
             'total_fee'      => $total * 100,      //=0.01
             'refund_fee'     => $refund_fee * 100, //=0.01
         ]);
