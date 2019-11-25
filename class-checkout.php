@@ -699,6 +699,21 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
 
     /**
+     * 获取授权 URL
+     *
+     * @return string
+     */
+    public function get_auth_url()
+    {
+
+        $url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' . $this->app_id . '&redirect_uri=' . urlencode(WC()->api_request_url('wprs-wc-wechatpay-auth')) . '&response_type=code&scope=snsapi_userinfo&state=' . urlencode(wprs_get_current_url()) . '#wechat_redirect';
+
+        return $url;
+
+    }
+
+
+    /**
      * 获取微信 Code
      *
      * @param null $code
@@ -711,20 +726,25 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             return false;
         }
 
-        $url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=' . $this->app_id . '&secret=' . $this->app_secret . '&code=' . $code . '&grant_type=authorization_code';
+        $response = get_transient($code);
 
-        $response = file_get_contents($url);
+        if ( ! $response) {
+            $url      = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=' . $this->app_id . '&secret=' . $this->app_secret . '&code=' . $code . '&grant_type=authorization_code';
+            $response = $this->http_get($url);
 
-        return json_decode($response, true);
+            set_transient($code, $response);
+        }
+
+        return $response;
     }
 
 
     /**
      * 微信公众号授权
+     * 1、如果未登录，跳转获取 code 2、如果已经有 code 跳转获取 access token 3、如果已有 accesss token，跳转获取用户信息
      */
     function wechat_auth()
     {
-
         $code = isset($_GET[ 'code' ]) ? $_GET[ 'code' ] : false;
 
         if ( ! $code) {
@@ -737,26 +757,27 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             $json_token = $this->get_access_token($code);
 
             // 微信公众号授权失败时的提示信息
-            if ( ! isset($json_token[ 'access_token' ])) {
-                $this->log($json_token[ 'errmsg' ]);
+            if ( ! isset($json_token->access_token)) {
+                $this->log($json_token->errmsg);
 
                 if ($this->is_debug_mod == 'yes') {
-                    wp_die($json_token[ 'errmsg' ]);
+                    wp_die($json_token->errmsg);
                 } else {
                     wp_die(__('Wechat auth failed, please try again later or contact us.', 'wprs-wc-wechatpay'));
                 }
             }
 
-            $info_url  = 'https://api.weixin.qq.com/sns/userinfo?access_token=' . $json_token[ 'access_token' ] . '&openid=' . $json_token[ 'openid' ];
-            $user_info = json_decode(file_get_contents($info_url), true);
-            $wechat_id = $user_info[ "openid" ];
+            $info_url  = 'https://api.weixin.qq.com/sns/userinfo?access_token=' . $json_token->access_token . '&openid=' . $json_token->openid;
+            $user_info = $this->http_get($info_url);
+
+            $wechat_id = $user_info->openid;
 
             if (is_user_logged_in()) {
 
                 $this_user = wp_get_current_user();
 
                 update_user_meta($this_user->ID, $this->app_id, $wechat_id);
-                update_user_meta($this_user->ID, 'wechat_avatar', $user_info[ 'headimgurl' ]);
+                update_user_meta($this_user->ID, 'wechat_avatar', $user_info->headimgurl);
 
                 wp_redirect(home_url());
 
@@ -766,7 +787,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
                 if (is_wp_error($oauth_user) || ! count($oauth_user)) {
 
-                    $username        = $user_info[ 'nickname' ];
+                    $username        = $user_info->nickname;
                     $login_name      = 'wx' . wp_create_nonce($wechat_id);
                     $random_password = wp_generate_password($length = 12, $include_standard_special_chars = false);
 
@@ -784,7 +805,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
                     wp_set_auth_cookie($user_id, true);
 
                     update_user_meta($user_id, 'wprs_wc_wechat_open_id', $wechat_id);
-                    update_user_meta($user_id, 'wechat_avatar', $user_info[ 'headimgurl' ]);
+                    update_user_meta($user_id, 'wechat_avatar', $user_info->headimgurl);
 
                     wp_redirect(home_url());
 
@@ -804,21 +825,6 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
 
     /**
-     * 获取授权 URL
-     *
-     * @return string
-     */
-    public function get_auth_url()
-    {
-
-        $url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' . $this->app_id . '&redirect_uri=' . urlencode(WC()->api_request_url('wprs-wc-wechatpay-auth')) . '&response_type=code&scope=snsapi_userinfo&state=' . urlencode(wprs_get_current_url()) . '#wechat_redirect';
-
-        return $url;
-
-    }
-
-
-    /**
      * Logger 辅助功能
      *
      * @param $message
@@ -831,6 +837,25 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             }
             $this->log->add('wprs-wc-wechatpay', $message);
         }
+    }
+
+
+    /**
+     * 获取远程内容，如果失败，报错，如果成功，返回 decode 后的对象
+     *
+     * @param $url
+     *
+     * @return array|mixed|object
+     */
+    public function http_get($url)
+    {
+        $response = wp_remote_get($url);
+
+        if (is_wp_error($response)) {
+            wp_die(__('request failed, please try again', 'wprs-wc-wechatpay'));
+        }
+
+        return json_decode(wp_remote_retrieve_body($response));
     }
 
 }

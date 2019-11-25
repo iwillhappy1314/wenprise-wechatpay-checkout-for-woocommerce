@@ -80,7 +80,7 @@ add_action('init', function ()
 
         $Gateway->wechat_auth();
     }
-});
+}, 99);
 
 
 /**
