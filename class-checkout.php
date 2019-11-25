@@ -7,6 +7,11 @@ if ( ! defined('ABSPATH')) {
 use Endroid\QrCode\QrCode;
 use Omnipay\Omnipay;
 
+use BaconQrCode\Renderer\ImageRenderer;
+use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
+use BaconQrCode\Renderer\RendererStyle\RendererStyle;
+use BaconQrCode\Writer;
+
 require WENPRISE_WECHATPAY_PATH . 'jssdk.php';
 
 /**
@@ -649,6 +654,13 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             }
 
             if ($code_url) {
+
+                $renderer = new ImageRenderer(
+                    new RendererStyle(400),
+                    new ImagickImageBackEnd()
+                );
+                $writer = new Writer($renderer);
+
                 $qrCode = new QrCode($code_url);
                 $qrCode->setSize(256);
                 $qrCode->setMargin(0);
