@@ -7,11 +7,6 @@ if ( ! defined('ABSPATH')) {
 use Endroid\QrCode\QrCode;
 use Omnipay\Omnipay;
 
-use BaconQrCode\Renderer\ImageRenderer;
-use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
-use BaconQrCode\Renderer\RendererStyle\RendererStyle;
-use BaconQrCode\Writer;
-
 require WENPRISE_WECHATPAY_PATH . 'jssdk.php';
 
 /**
@@ -654,13 +649,6 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             }
 
             if ($code_url) {
-
-                $renderer = new ImageRenderer(
-                    new RendererStyle(400),
-                    new ImagickImageBackEnd()
-                );
-                $writer = new Writer($renderer);
-
                 $qrCode = new QrCode($code_url);
                 $qrCode->setSize(256);
                 $qrCode->setMargin(0);
@@ -673,7 +661,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
                             <?= __('Please scan the QR code with WeChat to finish the payment.', 'wprs-wc-wechatpay'); ?>
                         </header>
                         <div class="rs-modal__content">
-                            <img id="js-wprs-wc-wechatpay" class="rs-image" data-order_id="<?= $order_id; ?>" src="<?= $qrCode->writeDataUri(); ?>"
+                            <img id="js-wprs-wc-wechatpay" class="rs-image skip-lazy" data-order_id="<?= $order_id; ?>" src="<?= $qrCode->writeDataUri(); ?>"
                                  alt="微信支付二维码" />
                         </div>
                         <footer class="rs-modal__footer">

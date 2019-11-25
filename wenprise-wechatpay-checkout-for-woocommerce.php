@@ -30,7 +30,7 @@ if (version_compare(phpversion(), '5.6.0', '<')) {
 }
 
 // 添加 GD 扩展提示信息
-if ( ! get_extension_funcs('gd1') && is_admin()) {
+if ( ! get_extension_funcs('gd') && is_admin()) {
     add_action('admin_notices', function ()
     {
         printf('<div class="error"><p>' . __('Wenprise WeChatPay Payment Gateway plugin require php gd extension enabled, please install and enable it.', 'wprs') . '</p></div>');
