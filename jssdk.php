@@ -35,11 +35,11 @@ class JSSDK
      */
     private function createNonceStr($length = 16)
     {
-        $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        $str   = "";
+        $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        $str   = '';
 
         for ($i = 0; $i < $length; $i++) {
-            $str .= substr($chars, mt_rand(0, strlen($chars) - 1), 1);
+            $str .= $chars[ wp_rand(0, strlen($chars) - 1) ];
         }
 
         return $str;
@@ -97,7 +97,7 @@ class JSSDK
             // 如果是企业号用以下URL获取access_token
             // $url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=$this->appId&corpsecret=$this->appSecret";
             $url          = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=$this->appId&secret=$this->appSecret";
-            $res          = json_decode(wp_remote_retrieve_body(wp_remote_post($url)));
+            $res          = json_decode(wp_remote_retrieve_body(wp_remote_post($url)), true);
             $access_token = $res->access_token;
 
             if ($access_token) {
@@ -126,7 +126,7 @@ class JSSDK
         $jsapiTicket = $this->getJsApiTicket();
 
         // 注意 URL 一定要动态获取，不能 hardcode.
-        $protocol = ( ! empty($_SERVER[ 'HTTPS' ]) && $_SERVER[ 'HTTPS' ] !== 'off' || $_SERVER[ 'SERVER_PORT' ] == 443) ? "https://" : "http://";
+        $protocol = (( ! empty($_SERVER[ 'HTTPS' ]) && $_SERVER[ 'HTTPS' ] !== 'off') || $_SERVER[ 'SERVER_PORT' ] === 443) ? 'https://' : 'http://';
         $url      = "$protocol$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 
         $timestamp = time();
@@ -137,16 +137,14 @@ class JSSDK
 
         $signature = sha1($string);
 
-        $signPackage = [
-            "appId"     => $this->appId,
-            "nonceStr"  => $nonceStr,
-            "timestamp" => $timestamp,
-            "url"       => $url,
-            "signature" => $signature,
-            "rawString" => $string,
+        return [
+            'appId'     => $this->appId,
+            'nonceStr'  => $nonceStr,
+            'timestamp' => $timestamp,
+            'url'       => $url,
+            'signature' => $signature,
+            'rawString' => $string,
         ];
-
-        return $signPackage;
     }
 
 }

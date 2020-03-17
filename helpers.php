@@ -6,11 +6,7 @@ if ( ! function_exists('wprs_is_wechat')) {
      */
     function wprs_is_wechat()
     {
-        if ( ! empty($_SERVER[ 'HTTP_USER_AGENT' ]) && strpos($_SERVER[ 'HTTP_USER_AGENT' ], 'MicroMessenger') !== false) {
-            return true;
-        }
-
-        return false;
+        return ! empty($_SERVER[ 'HTTP_USER_AGENT' ]) && strpos($_SERVER[ 'HTTP_USER_AGENT' ], 'MicroMessenger') !== false;
     }
 }
 
@@ -23,9 +19,9 @@ if ( ! function_exists('wprs_get_ip')) {
      */
     function wprs_get_ip()
     {
-        if (isset($_SERVER[ "HTTP_CF_CONNECTING_IP" ])) {
-            $_SERVER[ 'REMOTE_ADDR' ]    = $_SERVER[ "HTTP_CF_CONNECTING_IP" ];
-            $_SERVER[ 'HTTP_CLIENT_IP' ] = $_SERVER[ "HTTP_CF_CONNECTING_IP" ];
+        if (isset($_SERVER[ 'HTTP_CF_CONNECTING_IP' ])) {
+            $_SERVER[ 'REMOTE_ADDR' ]    = $_SERVER[ 'HTTP_CF_CONNECTING_IP' ];
+            $_SERVER[ 'HTTP_CLIENT_IP' ] = $_SERVER[ 'HTTP_CF_CONNECTING_IP' ];
         }
 
         $client  = @$_SERVER[ 'HTTP_CLIENT_IP' ];
@@ -56,20 +52,16 @@ if ( ! function_exists('wprs_get_current_url')) {
         $url = false;
 
         if (isset($_SERVER[ 'SERVER_ADDR' ])) {
-            $is_https   = isset($_SERVER[ 'HTTPS' ]) && 'on' == $_SERVER[ 'HTTPS' ];
+            $is_https   = isset($_SERVER[ 'HTTPS' ]) && 'on' === $_SERVER[ 'HTTPS' ];
             $protocol   = 'http' . ($is_https ? 's' : '');
-            $host       = isset($_SERVER[ 'HTTP_HOST' ])
-                ? $_SERVER[ 'HTTP_HOST' ]
-                : $_SERVER[ 'SERVER_ADDR' ];
+            $host       = isset($_SERVER[ 'HTTP_HOST' ]) ? $_SERVER[ 'HTTP_HOST' ] : $_SERVER[ 'SERVER_ADDR' ];
             $port       = $_SERVER[ 'SERVER_PORT' ];
             $path_query = $_SERVER[ 'REQUEST_URI' ];
 
             $url = sprintf('%s://%s%s%s',
                 $protocol,
                 $host,
-                $is_https
-                    ? (443 != $port ? ':' . $port : '')
-                    : (80 != $port ? ':' . $port : ''),
+                $is_https ? (443 != $port ? ':' . $port : '') : (80 != $port ? ':' . $port : ''),
                 $path_query
             );
         }
