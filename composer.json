@@ -2,9 +2,7 @@
   "require": {
     "lokielse/omnipay-wechatpay": "^3.0",
     "symfony/http-foundation": "3.3.*",
-    "php-http/guzzle6-adapter": "^1.1",
-    "myclabs/php-enum": "1.5.*",
-    "paragonie/random_compat": "<9.99"
+    "php-http/guzzle6-adapter": "^1.1"
   },
   "config": {
     "preferred-install": {

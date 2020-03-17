@@ -11,7 +11,6 @@ return array(
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
     'Omnipay\\WechatPay\\' => array($vendorDir . '/lokielse/omnipay-wechatpay/src'),
     'Omnipay\\Common\\' => array($vendorDir . '/omnipay/common/src/Common'),
-    'MyCLabs\\Enum\\' => array($vendorDir . '/myclabs/php-enum/src'),
     'Money\\' => array($vendorDir . '/moneyphp/money/src'),
     'Http\\Promise\\' => array($vendorDir . '/php-http/promise/src'),
     'Http\\Message\\' => array($vendorDir . '/php-http/message/src', $vendorDir . '/php-http/message-factory/src'),

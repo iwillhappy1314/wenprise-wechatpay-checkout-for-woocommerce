@@ -14,7 +14,6 @@ class ComposerStaticInit3f9026e53ff740044f53036ba48f40ae
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
-        '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -34,7 +33,6 @@ class ComposerStaticInit3f9026e53ff740044f53036ba48f40ae
         ),
         'M' => 
         array (
-            'MyCLabs\\Enum\\' => 13,
             'Money\\' => 6,
         ),
         'H' => 
@@ -77,10 +75,6 @@ class ComposerStaticInit3f9026e53ff740044f53036ba48f40ae
         'Omnipay\\Common\\' => 
         array (
             0 => __DIR__ . '/..' . '/omnipay/common/src/Common',
-        ),
-        'MyCLabs\\Enum\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/myclabs/php-enum/src',
         ),
         'Money\\' => 
         array (
