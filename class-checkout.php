@@ -256,8 +256,9 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
                 }
 
                 wp_enqueue_style('wprs-wc-wechatpay-style', plugins_url('/frontend/styles.css', __FILE__), [], WENPRISE_WECHATPAY_VERSION, false);
-                wp_enqueue_script('wprs-wc-wechatpay-scripts', plugins_url('/frontend/query.js', __FILE__), ['jquery', 'jquery-blockui'], WENPRISE_WECHATPAY_VERSION, true);
-                wp_enqueue_script( 'qrcode', WC()->plugin_url() . '/assets/js/jquery-qrcode/jquery.qrcode.js', array( 'jquery' ), WENPRISE_WECHATPAY_VERSION );
+                wp_enqueue_script('wprs-wc-wechatpay-scripts', plugins_url('/frontend/query.js', __FILE__), ['jquery',
+                    'jquery-blockui'], WENPRISE_WECHATPAY_VERSION, true);
+                wp_enqueue_script('qrcode', WC()->plugin_url() . '/assets/js/jquery-qrcode/jquery.qrcode.js', ['jquery'], WENPRISE_WECHATPAY_VERSION);
 
                 wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatPaySign', $signPackage);
                 wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatPayOrder', $order_data);
@@ -381,9 +382,6 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
 
         $total = round($total * $exchange_rate, 2);
 
-        // 修改 Open ID 的获取方法，主要兼容其他微信登录
-        $open_id = apply_filters('wprs_wc_wechat_open_idopen_id', get_user_meta(get_current_user_id(), 'wprs_wc_wechat_open_id', true));
-
         do_action('wenprise_woocommerce_wechatpay_before_process_payment');
 
         // 调用响应的方法来处理支付
@@ -400,6 +398,8 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         );
 
         if (wprs_is_wechat()) {
+            // 修改 Open ID 的获取方法，主要兼容其他微信登录
+            $open_id                 = apply_filters('wprs_wc_wechat_open_idopen_id', get_user_meta(get_current_user_id(), 'wprs_wc_wechat_open_id', true));
             $order_data[ 'open_id' ] = $open_id;
         }
 
@@ -633,8 +633,8 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
 
                 </div>
 
-                <script >
-                    jQuery(document).ready(function($){
+                <script>
+                    jQuery(document).ready(function($) {
                         $('#js-wprs-wc-wechatpay').qrcode('<?= $code_url; ?>');
                     });
                 </script>
