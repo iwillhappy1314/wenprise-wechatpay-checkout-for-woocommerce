@@ -92,6 +92,11 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         // 支付网关设置页面显示的支付网关标题
         $this->method_description = __('Wechat Pay payment gateway for WooCommerce', 'wprs-wc-wechatpay');
 
+        // 转换设置为变量以方便使用
+        foreach ($this->settings as $setting_key => $value) {
+            $this->$setting_key = $value;
+        }
+
         // 前端显示的支付网关名称
         $this->title = __('Wechat Pay', 'wprs-wc-wechatpay');
 
@@ -111,11 +116,6 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         $this->multi_currency_enabled = in_array('woocommerce-multilingual/wpml-woocommerce.php', apply_filters('active_plugins', get_option('active_plugins')), true) && get_option('icl_enable_multi_currency') === 'yes';
 
         $this->exchange_rate = $this->get_option('exchange_rate');
-
-        // 转换设置为变量以方便使用
-        foreach ($this->settings as $setting_key => $value) {
-            $this->$setting_key = $value;
-        }
 
         // 设置是否应该重命名按钮。
         $this->order_button_text = apply_filters('woocommerce_wechatpay_button_text', __('Proceed to Wechatpay', 'wprs-wc-wechatpay'));
