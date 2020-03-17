@@ -15,16 +15,13 @@ require WENPRISE_WECHATPAY_PATH . 'jssdk.php';
 class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 {
 
-    /** @var bool 日志是否启用 */
-    public $debug_active = false;
-
     /** @var WC_Logger Logger 实例 */
     public $log = false;
 
     /**
      * @var bool
      */
-    public $environment = false;
+    public $enabled_auto_login = false;
 
     /**
      * @var string
@@ -74,7 +71,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
     /**
      * @var string
      */
-    public $is_debug_mod = '';
+    public $is_debug_mod = false;
 
     /**
      * 网关支持的功能
@@ -104,9 +101,11 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
 
         $this->supports = ['products', 'refunds'];
 
-        $this->debug_active = false;
+        $this->is_debug_mod = 'yes' === $this->get_option('is_debug_mod');
 
         $this->has_fields = false;
+
+        $this->enabled_auto_login = 'yes' === $this->get_option('enabled_auto_login');
 
         $this->description = $this->get_option('description');
 
@@ -140,7 +139,10 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
         // 添加 URL
         add_action('woocommerce_api_wprs-wc-wechatpay-query', [$this, 'query_order']);
         add_action('woocommerce_api_wprs-wc-wechatpay-notify', [$this, 'listen_notify']);
-        add_action('woocommerce_api_wprs-wc-wechatpay-auth', [$this, 'wechat_auth']);
+
+        if ($this->enabled_auto_login) {
+            add_action('woocommerce_api_wprs-wc-wechatpay-auth', [$this, 'wechat_auth']);
+        }
 
         // 添加前端脚本
         add_action('wp_enqueue_scripts', [$this, 'enqueue_script']);
@@ -170,15 +172,6 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
                 'type'    => 'checkbox',
                 'default' => 'no',
             ],
-            // 'environment' => [
-            //     'title'       => __(' Wechatpay Sanbox Mode', 'wprs-wc-wechatpay'),
-            //     'label'       => __('Enable Wechatpay Sanbox Mode', 'wprs-wc-wechatpay'),
-            //     'type'        => 'checkbox',
-            //     'description' => sprintf(__('Wechatpay sandbox can be used to test payments. Sign up for an account <a href="%s">here</a>',
-            //         'wprs-wc-wechatpay'),
-            //         'https://sandbox.Wechatpay.com'),
-            //     'default'     => 'no',
-            // ],
             'title'              => [
                 'title'   => __('Title', 'wprs-wc-wechatpay'),
                 'type'    => 'text',
@@ -294,31 +287,6 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
         <table class="form-table">
         <?php $this->generate_settings_html(); ?>
         </table><?php
-    }
-
-
-    /**
-     * 是否为测试模式
-     *
-     * @return bool
-     */
-    public function is_test_mode()
-    {
-        return $this->environment === 'yes';
-    }
-
-
-    /**
-     * 是否为测试模式
-     * to the payment parameter before redirecting offsite to 2co for payment.
-     *
-     * This filter controls enabling testing via sandbox account.
-     *
-     * @return bool
-     */
-    public function is_sandbox_test()
-    {
-        return apply_filters('woocommerce_wenprise_wechatpay_enable_sandbox', false);
     }
 
 
@@ -479,7 +447,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             $error = $response->getData();
             $this->log($error);
 
-            if ($this->is_debug_mod === 'yes') {
+            if ($this->is_debug_mod) {
                 wc_add_notice($error[ 'return_msg' ], 'error');
 
                 return [
@@ -611,7 +579,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
                 $error = $response->getData();
                 $this->log($error);
 
-                if ($this->is_debug_mod === 'yes') {
+                if ($this->is_debug_mod) {
                     wc_add_notice($error, 'error');
                 }
 
@@ -755,7 +723,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
             if ( ! isset($json_token->access_token)) {
                 $this->log($json_token->errmsg);
 
-                if ($this->is_debug_mod === 'yes') {
+                if ($this->is_debug_mod) {
                     wp_die($json_token->errmsg);
                 } else {
                     wp_die(__('Wechat auth failed, please try again later or contact us.', 'wprs-wc-wechatpay'));
@@ -826,7 +794,7 @@ class Wenprise_Wechat_Pay_Gateway extends \WC_Payment_Gateway
      */
     public function log($message)
     {
-        if ($this->is_debug_mod === 'yes') {
+        if ($this->is_debug_mod) {
             if ( ! ($this->log)) {
                 $this->log = new WC_Logger();
             }
