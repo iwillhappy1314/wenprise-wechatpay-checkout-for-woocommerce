@@ -8,6 +8,7 @@
  * Author URI: https://www.wpzhiku.com
  * Text Domain: wprs-wc-wechatpay
  * Domain Path: /languages
+ * Requires PHP: 5.6
  */
 
 if ( ! defined('ABSPATH')) {
@@ -15,7 +16,6 @@ if ( ! defined('ABSPATH')) {
 }
 
 if (PHP_VERSION_ID < 50600) {
-
     // 显示警告信息
     if (is_admin()) {
         add_action('admin_notices', function ()
@@ -25,16 +25,6 @@ if (PHP_VERSION_ID < 50600) {
                 '5.6.0', PHP_VERSION);
         });
     }
-
-    return;
-}
-
-// 添加 GD 扩展提示信息
-if ( ! get_extension_funcs('gd') && is_admin()) {
-    add_action('admin_notices', function ()
-    {
-        printf('<div class="error"><p>' . __('Wenprise WeChatPay Payment Gateway plugin require php gd extension enabled, please install and enable it.', 'wprs') . '</p></div>');
-    });
 
     return;
 }
@@ -74,14 +64,16 @@ add_action('plugins_loaded', function ()
 /**
  * 在微信中打开时，自动登录，以便获取微信 Open ID, 实现公众号 JS API 支付
  */
-// add_action('init', function ()
-// {
-//     if (wprs_is_wechat() && ! is_user_logged_in() && ! has_filter('wprs_wc_wechat_open_id')) {
-//         $Gateway = new Wenprise_Wechat_Pay_Gateway();
-//
-//         $Gateway->wechat_auth();
-//     }
-// }, 99);
+add_action('init', function ()
+{
+    if (wprs_is_wechat() && ! is_user_logged_in() && ! has_filter('wprs_wc_wechat_open_id')) {
+        $gateway = new Wenprise_Wechat_Pay_Gateway();
+
+        if ($gateway->enabled_auto_login) {
+            $gateway->wechat_auth();
+        }
+    }
+}, 99);
 
 
 /**
