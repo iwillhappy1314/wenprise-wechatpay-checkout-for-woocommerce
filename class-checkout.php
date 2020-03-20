@@ -92,6 +92,11 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         // 支付网关设置页面显示的支付网关标题
         $this->method_description = __('Wechat Pay payment gateway for WooCommerce', 'wprs-wc-wechatpay');
 
+        // 被 init_settings() 加载的基础设置
+        $this->init_form_fields();
+
+        $this->init_settings();
+
         // 转换设置为变量以方便使用
         foreach ($this->settings as $setting_key => $value) {
             $this->$setting_key = $value;
@@ -120,10 +125,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         // 设置是否应该重命名按钮。
         $this->order_button_text = apply_filters('woocommerce_wechatpay_button_text', __('Proceed to Wechatpay', 'wprs-wc-wechatpay'));
 
-        // 被 init_settings() 加载的基础设置
-        $this->init_form_fields();
 
-        $this->init_settings();
 
         // 保存设置
         if (is_admin()) {
