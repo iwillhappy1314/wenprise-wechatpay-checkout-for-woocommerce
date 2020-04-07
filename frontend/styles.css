@@ -76,3 +76,11 @@
     background-color: #f2dede;
     border-color: #ebccd1;
 }
+
+#js-wprs-wc-wechatpay canvas{
+    display: inline-block !important;
+}
+
+.rs-modal__footer .button{
+    margin-left: .5rem;
+}

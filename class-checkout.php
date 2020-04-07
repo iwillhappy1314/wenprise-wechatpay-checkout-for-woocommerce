@@ -126,7 +126,6 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         $this->order_button_text = apply_filters('woocommerce_wechatpay_button_text', __('Proceed to Wechatpay', 'wprs-wc-wechatpay'));
 
 
-
         // 保存设置
         if (is_admin()) {
             add_action('woocommerce_update_options_payment_gateways_' . $this->id, [$this, 'process_admin_options']);
@@ -401,7 +400,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
 
         if (wprs_is_wechat()) {
             // 修改 Open ID 的获取方法，主要兼容其他微信登录
-            $open_id                 = apply_filters('wprs_wc_wechat_open_idopen_id', get_user_meta(get_current_user_id(), 'wprs_wc_wechat_open_id', true));
+            $open_id                 = apply_filters('wprs_wc_wechat_open_id', get_user_meta(get_current_user_id(), 'wprs_wc_wechat_open_id', true));
             $order_data[ 'open_id' ] = $open_id;
         }
 
@@ -423,8 +422,8 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
             if (wp_is_mobile()) {
                 if (wprs_is_wechat()) {
                     update_post_meta($order_id, 'wprs_wc_wechat_order_data', $response->getJsOrderData());
+                    $redirect_url = add_query_arg(['order-pay' => $order->get_id(), 'key' => $order->get_order_key()], wc_get_checkout_url());
 
-                    $redirect_url = $order->get_checkout_payment_url(true);
                 } else {
                     $redirect_url = $response->getMwebUrl() . '&redirect_url=' . urlencode($order->get_checkout_payment_url(true) . '&from=wap');
                     update_post_meta($order_id, 'wprs_wc_wechat_mweb_url', $redirect_url);
