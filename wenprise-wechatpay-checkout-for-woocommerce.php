@@ -81,10 +81,10 @@ add_action('init', function ()
  */
 add_filter('woocommerce_valid_order_statuses_for_payment', function ($status, $instance)
 {
-    $form = isset($_GET[ 'from' ]) ? $_GET[ 'from' ] : false;
+    $from = isset($_GET[ 'from' ]) ? $_GET[ 'from' ] : false;
 
     $status_addon = [];
-    if ($form === 'wap') {
+    if ($from === 'wap') {
         $status_addon = ['processing'];
     }
 
