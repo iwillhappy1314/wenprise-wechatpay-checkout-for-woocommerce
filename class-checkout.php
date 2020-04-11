@@ -25,6 +25,11 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
     /**
      * @var string
      */
+    private $order_prefix = '';
+
+    /**
+     * @var string
+     */
     public $app_id = '';
 
     /**
@@ -181,6 +186,12 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
                 'default' => __('Pay securely using Wechat Pay', 'wprs-wc-wechatpay'),
                 'css'     => 'max-width:350px;',
             ],
+            'order_prefix'       => [
+                'title'       => __('Order Number Prefix', 'wprs-wc-wechatpay'),
+                'type'        => 'text',
+                'description' => __('Only alphabet or number Allowed', 'wprs-wc-wechatpay'),
+                'default'     => __('WC-', 'wprs-wc-wechatpay'),
+            ],
             'app_id'             => [
                 'title'       => __('Wechat App Id', 'wprs-wc-wechatpay'),
                 'type'        => 'text',
@@ -309,6 +320,19 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
 
 
     /**
+     * 获取订单号
+     *
+     * @param $order_id
+     *
+     * @return string
+     */
+    public function get_order_number($order_id)
+    {
+        return $this->order_prefix . ltrim($order_id, '#');
+    }
+
+
+    /**
      * 检查是否可用
      *
      * @return bool
@@ -373,7 +397,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
     public function process_payment($order_id)
     {
         $order    = wc_get_order($order_id);
-        $order_no = $order->get_order_number();
+        $order_no = $this->get_order_number($order_id);
         $total    = $this->get_order_total();
 
         $exchange_rate = (float)$this->get_option('exchange_rate');
@@ -390,7 +414,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
 
         $order_data = apply_filters('woocommerce_wenprise_wechatpay_args',
             [
-                'body'             => '网站订单',
+                'body'             => __('Pay for order ', 'wprs-wc-wechatpay') . $order_no . __(' At ', 'wprs-wc-wechatpay') . get_bloginfo('name'),
                 'out_trade_no'     => $order_no,
                 'total_fee'        => $total * 100,
                 'spbill_create_ip' => wprs_get_ip(),
@@ -498,7 +522,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         /** @var \Omnipay\WechatPay\Message\BaseAbstractRequest $request */
         $request = $gateway->refund([
             'transaction_id' => $order->get_transaction_id(),
-            'out_trade_no'   => $order_id,
+            'out_trade_no'   => $this->get_order_number($order_id),
             'out_refund_no'  => 'refund_' . $order_id . '_' . wp_rand(1000, 9999),
             'total_fee'      => $total * 100,      //=0.01
             'refund_fee'     => $refund_fee * 100, //=0.01
@@ -553,7 +577,19 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
             $response = $request->send();
             $data     = $response->getRequestData();
 
-            $order = wc_get_order($data[ 'out_trade_no' ]);
+            $out_trade_no = $data[ 'out_trade_no' ];
+
+            if (is_numeric($out_trade_no)) {
+                if ( ! empty($this->order_prefix)) {
+                    $order_id = (int)str_replace($this->order_prefix, '', $out_trade_no);
+                } else {
+                    $order_id = (int)$out_trade_no;
+                }
+            } else {
+                $order_id = (int)str_replace($this->order_prefix, '', $out_trade_no);
+            }
+
+            $order = wc_get_order($order_id);
 
             if ($response->isPaid()) {
 
