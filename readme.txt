@@ -57,6 +57,11 @@ add_filter('wprs_wc_wechat_open_id', function(){
 
 ## Changelog ##
 
+### 1.0.12 ###
+* 优化订单号显示方式
+* 添加订单号前缀设置选项
+* 微信登录启用设置问题修复
+
 ### 1.0.9 ###
 * Wechat auth bugfix
 
