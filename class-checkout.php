@@ -438,7 +438,8 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
 
         do_action('woocommerce_wenprise_wechatpay_before_payment_redirect', $response);
 
-        wc_empty_cart();
+        // 生成订单后清空购物车，以免订单重复
+        WC()->cart->empty_cart();
 
         // 微信支付, 显示二维码
         if ($response->isSuccessful()) {
