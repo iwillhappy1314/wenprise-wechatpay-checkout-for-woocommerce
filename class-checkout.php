@@ -451,7 +451,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
 
                 return [
                     'result'   => 'failure',
-                    'redirect' => $error[ 'return_msg' ],
+                    'redirect' => $error[ 'err_code' ] . $error[ 'err_code_des' ],
                 ];
             }
 
