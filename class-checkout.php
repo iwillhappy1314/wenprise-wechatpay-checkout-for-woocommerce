@@ -414,7 +414,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
 
         $order_data = apply_filters('woocommerce_wenprise_wechatpay_args',
             [
-                'body'             => __('Pay for order ', 'wprs-wc-wechatpay') . $order_no . __(' At ', 'wprs-wc-wechatpay') . get_bloginfo('name'),
+                'body'             => sprintf(__('Pay for order %1$s at %2$s', 'wprs-wc-wechatpay'), $order_no, get_bloginfo('name')),
                 'out_trade_no'     => $order_no,
                 'total_fee'        => $total * 100,
                 'spbill_create_ip' => wprs_get_ip(),
