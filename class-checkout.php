@@ -468,10 +468,10 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
 
         } else {
 
-            $error = $response->getData();
-            $this->log($error);
-
             if ($this->is_debug_mod) {
+                $error = $response->getData();
+                $this->log($error);
+
                 wc_add_notice($error[ 'return_msg' ], 'error');
 
                 return [
