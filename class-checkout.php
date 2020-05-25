@@ -195,35 +195,32 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
             'app_id'             => [
                 'title'       => __('Wechat App Id', 'wprs-wc-wechatpay'),
                 'type'        => 'text',
-                'description' => __('Enter your Wechat App Id. 支付授权目录和 H5 支付域名为网站首页地址，扫码回调链接：',
-                        'wprs-wc-wechatpay') . home_url('wc-api/wprs-wc-wechatpay-notify/'),
+                'description' => sprintf(__('Enter your Wechat App Id. Setup and obtain it in 「开发 > 基本配置」。', 'wprs-wc-wechatpay'), home_url(), home_url('wc-api/wprs-wc-wechatpay-notify/')),
             ],
             'app_secret'         => [
                 'title'       => __('Wechat App Secret', 'wprs-wc-wechatpay'),
                 'type'        => 'text',
-                'description' => __('Enter your Wechat App Secret.', 'wprs-wc-wechatpay'),
+                'description' => sprintf(__('Enter your Wechat App Secret. Setup and obtain it in 「开发 > 基本配置」。', 'wprs-wc-wechatpay'), home_url(), home_url('wc-api/wprs-wc-wechatpay-notify/')),
             ],
             'mch_id'             => [
                 'title'       => __('Wechat Mch Id', 'wprs-wc-wechatpay'),
                 'type'        => 'text',
-                'description' => __('Enter your Wechat Mch Id.', 'wprs-wc-wechatpay'),
+                'description' => sprintf(__('Enter your Wechat Mch Id. obtain it in <a target=_blank href="%s">here</a>', 'wprs-wc-wechatpay'), 'https://pay.weixin.qq.com/index.php/core/account/info'),
             ],
             'api_key'            => [
                 'title'       => __('Wechat Api Key', 'wprs-wc-wechatpay'),
                 'type'        => 'text',
-                'description' => __('Enter your Wechat Api Key', 'wprs-wc-wechatpay'),
+                'description' => sprintf(__('Enter your Wechat Api Key that Setup in <a target=_blank href="%s">here</a>。支付授权目录和 H5 支付域名为： %s, 扫码回调链接为: %s', 'wprs-wc-wechatpay'), 'https://pay.weixin.qq.com/index.php/core/cert/api_cert', home_url(), home_url('wc-api/wprs-wc-wechatpay-notify/')),
             ],
             'cert_path'          => [
                 'title'       => __('apiclient_cert.pem path', 'wprs-wc-wechatpay'),
                 'type'        => 'text',
-                'description' => __('Enter the absolute apiclient_cert.pem path that can access by the site, Used when refund, Ex: /home/apiclient_cert.pem，For security *DO NOT* place it in public dir',
-                    'wprs-wc-wechatpay'),
+                'description' => sprintf(__('Enter the absolute path of apiclient_cert.pem file that can access by the site, used by refund action。<br/>Ex: <code>/home/apiclient_cert.pem</code>，For security *DO NOT* place it in public dir. Setup in <a target=_blank href="%s">here</a>', 'wprs-wc-wechatpay'), 'https://pay.weixin.qq.com/index.php/core/cert/api_cert'),
             ],
             'key_path'           => [
                 'title'       => __('apiclient_key.pem Path', 'wprs-wc-wechatpay'),
                 'type'        => 'text',
-                'description' => __('Enter the absolute apiclient_key.pem path that can access by the site, Used when refund，Ex: /home/apiclient_key.pem，For security *DO NOT* place it in public dir',
-                    'wprs-wc-wechatpay'),
+                'description' => sprintf(__('Enter the absolute path of apiclient_key.pem file that can access by the site, used by refund action. <br/>Ex: <code>/home/apiclient_key.pem</code>，For security *DO NOT* place it in public dir. Setup in <a target=_blank href="%s">here</a>', 'wprs-wc-wechatpay'), 'https://pay.weixin.qq.com/index.php/core/cert/api_cert'),
             ],
             'is_debug_mod'       => [
                 'title'       => __('Debug Mode', 'wprs-wc-wechatpay'),
@@ -268,8 +265,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
                 }
 
                 wp_enqueue_style('wprs-wc-wechatpay-style', plugins_url('/frontend/styles.css', __FILE__), [], WENPRISE_WECHATPAY_VERSION, false);
-                wp_enqueue_script('wprs-wc-wechatpay-scripts', plugins_url('/frontend/query.js', __FILE__), ['jquery',
-                    'jquery-blockui'], WENPRISE_WECHATPAY_VERSION, true);
+                wp_enqueue_script('wprs-wc-wechatpay-scripts', plugins_url('/frontend/query.js', __FILE__), ['jquery', 'jquery-blockui'], WENPRISE_WECHATPAY_VERSION, true);
                 wp_enqueue_script('qrcode', WC()->plugin_url() . '/assets/js/jquery-qrcode/jquery.qrcode.js', ['jquery'], WENPRISE_WECHATPAY_VERSION);
 
                 wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatPaySign', $signPackage);
@@ -376,7 +372,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         $gateway->setAppId(trim($this->app_id));
         $gateway->setMchId(trim($this->mch_id));
 
-        // 这个 key 需要在微信商户里面单独设置，而吧是微信服务号里面的 key
+        // 这个 key 需要在微信商户里面单独设置，而不是微信服务号里面的 key
         $gateway->setApiKey(trim($this->api_key));
 
         $gateway->setNotifyUrl(WC()->api_request_url('wprs-wc-wechatpay-notify'));
@@ -472,12 +468,14 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
                 $error = $response->getData();
                 $this->log($error);
 
-                wc_add_notice($error[ 'return_msg' ], 'error');
+                if ($this->is_debug_mod) {
+                    wc_add_notice($error[ 'err_code' ] . ': ' . $error[ 'err_code_des' ], 'error');
 
-                return [
-                    'result'   => 'failure',
-                    'redirect' => $error[ 'err_code' ] . $error[ 'err_code_des' ],
-                ];
+                    return [
+                        'result'   => 'failure',
+                        'redirect' => $error[ 'err_code' ] . ': ' . $error[ 'err_code_des' ],
+                    ];
+                }
             }
 
             return [

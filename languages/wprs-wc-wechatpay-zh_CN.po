@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Wenprise WechatPay for WooCommerce\n"
-"POT-Creation-Date: 2020-04-11 17:08+0800\n"
-"PO-Revision-Date: 2020-04-11 17:10+0800\n"
+"POT-Creation-Date: 2020-05-25 14:44+0800\n"
+"PO-Revision-Date: 2020-05-25 14:44+0800\n"
 "Last-Translator: Amos Lee <iwillhappy1314@gmail.com>\n"
 "Language-Team: Amos Lee (amos@wpcio.com)\n"
 "Language: zh_CN\n"
@@ -75,89 +75,103 @@ msgid "Wechat App Id"
 msgstr "微信公众号 App ID"
 
 #: class-checkout.php:198
-msgid ""
-"Enter your Wechat App Id. 支付授权目录和 H5 支付域名为网站首页地址，扫码回调"
-"链接："
-msgstr ""
+msgid "Enter your Wechat App Id. Setup and obtain it in 「开发 > 基本配置」。"
+msgstr "输入您的微信应用 ID，在微信公众号的「开发 > 基本配置」页面中获取。"
 
-#: class-checkout.php:202
+#: class-checkout.php:201
 msgid "Wechat App Secret"
 msgstr "微信 App 密钥"
 
-#: class-checkout.php:204
-msgid "Enter your Wechat App Secret."
-msgstr "输入微信公众号 App 密钥。"
+#: class-checkout.php:203
+msgid ""
+"Enter your Wechat App Secret. Setup and obtain it in 「开发 > 基本配置」。"
+msgstr "输入您的微信应用密钥，在微信公众号的「开发 > 基本配置」页面中获取。"
 
-#: class-checkout.php:207
+#: class-checkout.php:206
 msgid "Wechat Mch Id"
 msgstr "微信商户 ID"
 
-#: class-checkout.php:209
-msgid "Enter your Wechat Mch Id."
-msgstr "输入微信商户 ID。"
+#: class-checkout.php:208
+#, php-format
+msgid ""
+"Enter your Wechat Mch Id. obtain it in <a target=_blank href=\"%s\">here</a>"
+msgstr "输入微信商户号。在<a target=_blank href=\"%s\">这里</a>获取。"
 
-#: class-checkout.php:212
+#: class-checkout.php:211
 msgid "Wechat Api Key"
 msgstr "微信支付应用密钥"
 
-#: class-checkout.php:214
-msgid "Enter your Wechat Api Key"
-msgstr "输入微信支付应用密钥"
+#: class-checkout.php:213
+#, php-format
+msgid ""
+"Enter your Wechat Api Key that Setup in <a target=_blank href=\"%s\">here</"
+"a>。支付授权目录和 H5 支付域名为： %s, 扫码回调链接为: %s"
+msgstr ""
+"输入微信 API 密钥，在<a target=_blank href=\"%s\">这里</a>设置。支付授权目录"
+"和 H5 支付域名为：<code>%s</code>,  <code>扫码回调链接为: %s</code>。"
 
-#: class-checkout.php:217
+#: class-checkout.php:216
 msgid "apiclient_cert.pem path"
 msgstr "apiclient_cert.pem 路径"
 
-#: class-checkout.php:219
+#: class-checkout.php:218
+#, php-format
 msgid ""
-"Enter the absolute apiclient_cert.pem path that can access by the site, Used "
-"when refund, Ex: /home/apiclient_cert.pem，For security *DO NOT* place it in "
-"public dir"
+"Enter the absolute path of apiclient_cert.pem file that can access by the "
+"site, used by refund action。<br/>Ex: <code>/home/apiclient_cert.pem</code>，"
+"For security *DO NOT* place it in public dir. Setup in <a target=_blank href="
+"\"%s\">here</a>"
 msgstr ""
-"输入站点可以访问的 apiclient_cert.pem 的绝对路径，退款时使用，例如：/home/"
-"apiclient_cert.pem，安全起见，*不要* 把证书放在用户可访问的网站目录。"
+"输入退款时使用的 apiclient_cert.pem 文件的绝对路径，确保 Web 服务器程序可以正"
+"常访问该路径.<br/> 如： <code>/home/apiclient_cert.pem</code>，安全起见，请**"
+"不要** 把该文件放在公共目录。<a target=_blank href=\"%s\">在这里</a>设置和获"
+"取 apiclient_cert.pem 文件。"
 
-#: class-checkout.php:223
+#: class-checkout.php:221
 msgid "apiclient_key.pem Path"
 msgstr "apiclient_key.pem 路径"
 
-#: class-checkout.php:225
+#: class-checkout.php:223
+#, php-format
 msgid ""
-"Enter the absolute apiclient_key.pem path that can access by the site, Used "
-"when refund，Ex: /home/apiclient_key.pem，For security *DO NOT* place it in "
-"public dir"
+"Enter the absolute path of apiclient_key.pem file that can access by the "
+"site, used by refund action. <br/>Ex: <code>/home/apiclient_key.pem</code>，"
+"For security *DO NOT* place it in public dir. Setup in <a target=_blank href="
+"\"%s\">here</a>"
 msgstr ""
-"输入站点可以访问的 apiclient_key.pem 的绝对路径，退款时使用，例如：/home/"
-"apiclient_key.pem，安全起见，*不要* 把证书放在用户可访问的网站目录。"
+"输入退款时使用的 apiclient_key.pem 文件的绝对路径，确保 Web 服务器程序可以正"
+"常访问该路径.<br/> 如： <code>/home/apiclient_key.pem</code>，安全起见，请**"
+"不要** 把该文件放在公共目录。<a target=_blank href=\"%s\">在这里</a>设置和获"
+"取 apiclient_key.pem 文件。"
 
-#: class-checkout.php:229
+#: class-checkout.php:226
 msgid "Debug Mode"
 msgstr "调试模式"
 
-#: class-checkout.php:230
+#: class-checkout.php:227
 msgid "Enable debug mod"
 msgstr "启用调试模式"
 
-#: class-checkout.php:232
+#: class-checkout.php:229
 msgid "If checked, plugin will show program errors in frontend."
 msgstr "如果启用，会在前端显示详情的错误信息。"
 
-#: class-checkout.php:240
+#: class-checkout.php:237
 msgid "Exchange Rate"
 msgstr "汇率"
 
-#: class-checkout.php:242
+#: class-checkout.php:239
 #, php-format
 msgid ""
 "Please set the %s against Chinese Yuan exchange rate, eg if your currency is "
 "US Dollar, then you should enter 6.19"
 msgstr "请设置 %s 转人民币的汇率，例如您的商店货币时美元，请填写 6.19"
 
-#: class-checkout.php:294
+#: class-checkout.php:290
 msgid "Settings"
 msgstr "设置"
 
-#: class-checkout.php:315
+#: class-checkout.php:311
 #, php-format
 msgid ""
 "WeChatPay is enabled, but the store currency is not set to Chinese Yuan. "
@@ -167,34 +181,34 @@ msgstr ""
 "微信支付已启用，但是您的商店货币不是人民币，请<a href=\"%1s\">设置 %2s 转人民"
 "币的汇率</a>。"
 
-#: class-checkout.php:417
+#: class-checkout.php:413
 #, php-format
 msgid "Pay for order %1$s at %2$s"
 msgstr "支付网站「%2$s」中的订单：%1$s "
 
-#: class-checkout.php:484
+#: class-checkout.php:483
 msgid "WeChat payment configuration error, please contact us."
 msgstr "微信支付配置错误，请联系我们。"
 
-#: class-checkout.php:538
+#: class-checkout.php:537
 #, php-format
 msgid "Refunded %1$s"
 msgstr "退款 %1$s"
 
-#: class-checkout.php:603
+#: class-checkout.php:602
 #, php-format
 msgid "Wechatpay payment complete (Transaction ID: %s)"
 msgstr "微信支付已完成(微信订单号: %s)"
 
-#: class-checkout.php:660
+#: class-checkout.php:659
 msgid "Please scan the QR code with WeChat to finish the payment."
 msgstr "请使用微信扫描二维码完成支付。"
 
-#: class-checkout.php:766
+#: class-checkout.php:765
 msgid "Wechat auth failed, please try again later or contact us."
 msgstr "微信授权错误，请稍后重试或联系我们。"
 
-#: class-checkout.php:855
+#: class-checkout.php:854
 msgid "request failed, please try again"
 msgstr "请求失败，请重试"
 
@@ -208,6 +222,77 @@ msgstr ""
 "Wenprise WeChatPay Payment Gateway For WooCommerce 需要 PHP %1$s 以上版本才能"
 "运行，您当前的 PHP 版本为 %2$s， 请升级到 PHP 到 %1$s 或更新的版本， 否则插件"
 "没有任何作用。"
+
+#, php-format
+#~ msgid ""
+#~ "Enter your Wechat Api Key that Setup in <a target=_blank href=\"%s"
+#~ "\">here</a>，支付授权目录和 H5 支付域名为： %s, 扫码回调链接为: %s"
+#~ msgstr ""
+#~ "输入微信 API 密钥，在<a target=_blank href=\"%s\">这里</a>设置，支付授权目"
+#~ "录和 H5 支付域名为： %s, 扫码回调链接为: %s"
+
+#, php-format
+#~ msgid ""
+#~ "Enter your Wechat Api Key that Setup in <a target=_blank href=\"%s"
+#~ "\">here</a>"
+#~ msgstr "输入微信 Api Key，<a target=_blank href=\"%s\">在这里</a>设置和获取"
+
+#, php-format
+#~ msgid ""
+#~ "Enter your Wechat App Id. Setup and obtain it in 「开发 > 基本配置」支付授"
+#~ "权目录和 H5 支付域名为: <code>%s</code>，扫码回调链接为: <code>%s</code>"
+#~ msgstr ""
+#~ "输入微信应用 ID. 在微信公众号的「开发 > 基本配置」中获取。支付授权目录和 "
+#~ "H5 支付域名为: <code>%s</code>，扫码回调链接为: <code>%s</code>"
+
+#~ msgid "Enter your Wechat App Secret."
+#~ msgstr "输入微信公众号 App 密钥。"
+
+#, php-format
+#~ msgid ""
+#~ "Enter the absolute path of apiclient_cert.pem file that can access by the "
+#~ "site, used by refund action, Ex: <code>/home/apiclient_cert.pem</code>，"
+#~ "For security *DO NOT* place it in public dir. Setup in <a target=_blank "
+#~ "href=\"%s\">here</a>"
+#~ msgstr ""
+#~ "输入退款时使用的 apiclient_cert.pem 文件的绝对路径，确保 Web 服务器程序可"
+#~ "以正常访问该路径，Ex： <code>/home/apiclient_cert.pem</code>，安全起见，请"
+#~ "**不要** 把该文件放在公共目录。<a target=_blank href=\"%s\">在这里</a>设置"
+#~ "和获取 apiclient_cert.pem 文件。"
+
+#, php-format
+#~ msgid ""
+#~ "Enter the absolute path of apiclient_key.pem file that can access by the "
+#~ "site, used by refund action，Ex: <code>/home/apiclient_key.pem</code>，"
+#~ "For security *DO NOT* place it in public dir. Setup in <a target=_blank "
+#~ "href=\"%s\">here</a>"
+#~ msgstr ""
+#~ "输入退款时使用的 apiclient_key.pem 文件的绝对路径，确保 Web 服务器程序可以"
+#~ "正常访问该路径，Ex： <code>/home/apiclient_key.pem</code>，安全起见，请**"
+#~ "不要** 把该文件放在公共目录。<a target=_blank href=\"%s\">在这里</a>设置和"
+#~ "获取 apiclient_key.pem 文件。"
+
+#~ msgid "Enter your Wechat Mch Id."
+#~ msgstr "输入微信商户 ID。"
+
+#~ msgid "Enter your Wechat Api Key"
+#~ msgstr "输入微信支付应用密钥"
+
+#~ msgid ""
+#~ "Enter the absolute apiclient_cert.pem path that can access by the site, "
+#~ "Used when refund, Ex: /home/apiclient_cert.pem，For security *DO NOT* "
+#~ "place it in public dir"
+#~ msgstr ""
+#~ "输入站点可以访问的 apiclient_cert.pem 的绝对路径，退款时使用，例如：/home/"
+#~ "apiclient_cert.pem，安全起见，*不要* 把证书放在用户可访问的网站目录。"
+
+#~ msgid ""
+#~ "Enter the absolute apiclient_key.pem path that can access by the site, "
+#~ "Used when refund，Ex: /home/apiclient_key.pem，For security *DO NOT* "
+#~ "place it in public dir"
+#~ msgstr ""
+#~ "输入站点可以访问的 apiclient_key.pem 的绝对路径，退款时使用，例如：/home/"
+#~ "apiclient_key.pem，安全起见，*不要* 把证书放在用户可访问的网站目录。"
 
 #~ msgid "Pay for order "
 #~ msgstr "支付订单"
