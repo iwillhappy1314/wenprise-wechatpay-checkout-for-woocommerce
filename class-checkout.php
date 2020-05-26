@@ -269,7 +269,11 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
                 wp_enqueue_script('qrcode', WC()->plugin_url() . '/assets/js/jquery-qrcode/jquery.qrcode.js', ['jquery'], WENPRISE_WECHATPAY_VERSION);
 
                 wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatPaySign', $signPackage);
-                wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatPayOrder', $order_data);
+
+                if(!empty($order_data)){
+                    wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatPayOrder', $order_data);
+                }
+
                 wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatData', [
                     'return_url' => $this->get_return_url($order),
                     'query_url'  => WC()->api_request_url('wprs-wc-wechatpay-query'),
