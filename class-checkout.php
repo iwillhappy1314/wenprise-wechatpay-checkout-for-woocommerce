@@ -270,7 +270,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
 
                 wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatPaySign', $signPackage);
 
-                if(!empty($order_data)){
+                if ( ! empty($order_data)) {
                     wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatPayOrder', $order_data);
                 }
 
@@ -522,7 +522,6 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
             false;
         }
 
-        /** @var \Omnipay\WechatPay\Message\BaseAbstractRequest $request */
         $request = $gateway->refund([
             'transaction_id' => $order->get_transaction_id(),
             'out_trade_no'   => $this->get_order_number($order_id),
@@ -572,7 +571,6 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         ];
 
         /** @var \Omnipay\WechatPay\Message\CompletePurchaseResponse $response */
-        /** @var \Omnipay\WechatPay\Message\CompletePurchaseRequest $request */
         $request = $gateway->completePurchase($options);
 
         try {
@@ -638,10 +636,10 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
     function receipt_page($order_id)
     {
 
-        $form     = isset($_GET[ 'from' ]) ? $_GET[ 'from' ] : false;
+        $from     = isset($_GET[ 'from' ]) ? (string)$_GET[ 'from' ] : false;
         $code_url = get_post_meta($order_id, 'wprs_wc_wechat_code_url', true);
 
-        if ($form === 'wap') {
+        if ($from === 'wap') {
             // H5 支付需要手动检查订单是否完成
             echo '<div class="buttons has-addons">';
             echo '<button class="button u-width-50" id="js-wprs-wc-wechatpay" data-order_id="' . $order_id . '">已支付</button>';
@@ -689,7 +687,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
      */
     public function query_order()
     {
-        $order_id = isset($_GET[ 'order_id' ]) ? $_GET[ 'order_id' ] : false;
+        $order_id = isset($_GET[ 'order_id' ]) ? (int)$_GET[ 'order_id' ] : false;
         $order    = wc_get_order($order_id);
 
         if ($order && $order->is_paid()) {
@@ -709,9 +707,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
     public function get_auth_url()
     {
 
-        $url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' . $this->app_id . '&redirect_uri=' . urlencode(WC()->api_request_url('wprs-wc-wechatpay-auth')) . '&response_type=code&scope=snsapi_userinfo&state=' . urlencode(wprs_get_current_url()) . '#wechat_redirect';
-
-        return $url;
+        return 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' . $this->app_id . '&redirect_uri=' . urlencode(WC()->api_request_url('wprs-wc-wechatpay-auth')) . '&response_type=code&scope=snsapi_userinfo&state=' . urlencode(wprs_get_current_url()) . '#wechat_redirect';
 
     }
 
