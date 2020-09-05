@@ -171,7 +171,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
             ],
             'enabled_auto_login' => [
                 'title'   => __('Enable / Disable', 'wprs-wc-wechatpay'),
-                'label'   => __('Enable auto login in wechat Official Accounts', 'wprs-wc-wechatpay'),
+                'label'   => __('Enable auto login in wechat Official Accounts (此功能将被弃用，不建议使用)', 'wprs-wc-wechatpay'),
                 'type'    => 'checkbox',
                 'default' => 'no',
             ],
@@ -744,7 +744,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
 
     /**
      * 微信公众号授权
-     * 1、如果未登录，跳转获取 code 2、如果已经有 code 跳转获取 access token 3、如果已有 accesss token，跳转获取用户信息
+     * 1、如果未登录，跳转获取 code 2、如果已经有 code 跳转获取 access token 3、如果已有 access token，跳转获取用户信息
      */
     function wechat_auth()
     {

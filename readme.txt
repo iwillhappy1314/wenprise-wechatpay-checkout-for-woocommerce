@@ -4,10 +4,10 @@ Donate link: https://www.wpzhiku.com/
 Tags: Alipay, WooCommerce, woocommerce, payment, payment gateway, gateway, 微信, 微信支付, Wechat payment gateway, Wechat gateway, credit card, pay, online payment, shop, e-commerce, ecommerce
 Requires PHP: 5.6.0
 Requires at least: 4.7
-Tested up to: 5.4
+Tested up to: 5.5
 WC requires at least: 3.5
-WC tested up to: 4.0
-Stable tag: 1.0.13
+WC tested up to: 4.4
+Stable tag: 1.0.14
 License: GPL-2.0+
 
 Wechat payment gateway for WooCommerce, WooCommerce 微信免费全功能支付网关。
@@ -42,20 +42,31 @@ Email: amos@wpcio.com
 
 ## Frequently Asked Questions ##
 
+
+### 无法在微信公众号中支付？ ###
+
+在微信公众号中，需要获取 open_id 才能使用此插件进行支付，如果您的网站已经实现了微信公众号授权登录，请参考下一个问题中的代码进行兼容。
+
+
 ### 怎么兼容其他微信登录插件？ ###
 如果已经使用了其他微信登录插件，可以通过`wprs_wc_wechat_open_id` 这个 Filter 来修改支付插件使用的 open_id，修改下面代码中获取 open_id 的代码为对应登录插件中的代码即可。
-```php
-add_filter('wprs_wc_wechat_open_id', function(){
-    $open_id = '';
-    return $open_id;
-});
-```
+`<?php
+    add_filter('wprs_wc_wechat_open_id', function(){
+        $open_id = '';
+        return $open_id;
+    });
+?>
+`
+
+
 
 ## Screenshots ##
 * Setting
 * payment
 
 ## Changelog ##
+### 1.0.14 ###
+* 更新 readme
 
 ### 1.0.13 ###
 * 小错误修复
