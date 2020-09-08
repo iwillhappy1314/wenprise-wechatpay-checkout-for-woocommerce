@@ -77,6 +77,19 @@ add_action('init', function ()
 
 
 /**
+ * 插件插件设置链接
+ */
+add_filter('plugin_action_links_' . plugin_basename(__FILE__), function ($links)
+{
+    $url = admin_url('admin.php?page=wc-settings&tab=checkout&section=wprs-wc-wechatpay');
+    $url = '<a href="' . esc_url($url) . '">' . __('Settings', 'wprs-wc-wechatpay') . '</a>';
+    array_unshift($links, $url);
+
+    return $links;
+});
+
+
+/**
  * 如果订单支付页面是从微信 H5 支付跳转回来的，设置正在处理中的订单也可以继续支付，以便页面可以继续查询订单状态，验证支付结果。
  */
 add_filter('woocommerce_valid_order_statuses_for_payment', function ($status, $instance)
