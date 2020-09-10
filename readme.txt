@@ -18,7 +18,7 @@ Wechat payment gateway for WooCommerce, WooCommerce 微信免费全功能支付�
 * 支持所有 WooCommerce 产品类型
 * PC 端扫描二维码支付
 * 移动端浏览器 H5 调起微信支付
-* 微信端公众号支付，微信端微信自动登录，可兼容其他微信登录插件
+* 微信端公众号支付，需要安装微信登录插件，设置 open_id
 * 在 WooCommerce 订单中直接通过微信退款，退款原路返回
 * 货币不是人民币时，可以设置一个固定汇率
 
@@ -43,7 +43,7 @@ Email: amos@wpcio.com
 ## Frequently Asked Questions ##
 
 
-### 无法在微信公众号中支付？ ###
+### 无法在微信公众号中支付？在微信中支付，提示「微信支付配置错误」？ ###
 
 在微信公众号中，需要获取 open_id 才能使用此插件进行支付，如果您的网站已经实现了微信公众号授权登录，请参考下一个问题中的代码进行兼容。
 
@@ -57,13 +57,12 @@ Email: amos@wpcio.com
     });
 ```
 
-
-
 ## Screenshots ##
 * Setting
 * payment
 
 ## Changelog ##
+
 ### 1.0.14 ###
 * 更新 readme
 
@@ -75,7 +74,7 @@ Email: amos@wpcio.com
 * 添加订单号前缀设置选项
 * 微信登录启用设置问题修复
 
-### 1.0.9 ###
+### 1.0.10 ###
 * Wechat auth bugfix
 
 ### 1.0.9 ###
