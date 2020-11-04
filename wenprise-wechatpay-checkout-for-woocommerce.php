@@ -38,6 +38,23 @@ define('WENPRISE_WECHATPAY_ASSETS_URL', WENPRISE_WECHATPAY_URL . 'frontend/');
 
 require WENPRISE_WECHATPAY_PATH . 'helpers.php';
 
+
+add_action('wp_enqueue_scripts', function ()
+{
+    if ( ! class_exists('WC_Payment_Gateway')) {
+        return;
+    }
+
+    if ((is_checkout() || is_checkout_pay_page()) && wp_is_mobile() && ! wprs_is_wechat()) {
+        wp_enqueue_script('wprs-wc-wechatpay-scripts', plugins_url('/frontend/script.js', __FILE__), ['jquery', 'jquery-blockui'], WENPRISE_WECHATPAY_VERSION, true);
+
+        wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatData', [
+            'bridge_url' => WC()->api_request_url('wprs-wc-wechatpay-bridge'),
+            'query_url'  => WC()->api_request_url('wprs-wc-wechatpay-query'),
+        ]);
+    }
+});
+
 add_action('plugins_loaded', function ()
 {
     if ( ! class_exists('WC_Payment_Gateway')) {

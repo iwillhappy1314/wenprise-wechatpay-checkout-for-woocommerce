@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Wenprise WechatPay for WooCommerce\n"
-"POT-Creation-Date: 2020-05-25 14:44+0800\n"
-"PO-Revision-Date: 2020-05-25 14:44+0800\n"
+"POT-Creation-Date: 2020-11-04 18:23+0800\n"
+"PO-Revision-Date: 2020-11-04 18:23+0800\n"
 "Last-Translator: Amos Lee <iwillhappy1314@gmail.com>\n"
 "Language-Team: Amos Lee (amos@wpcio.com)\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.4\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
@@ -30,78 +30,79 @@ msgstr "WooCommerce 的微信支付支付网关"
 msgid "Proceed to Wechatpay"
 msgstr "前往微信支付"
 
-#: class-checkout.php:167 class-checkout.php:173
+#: class-checkout.php:168 class-checkout.php:174
 msgid "Enable / Disable"
 msgstr "启用/停用"
 
-#: class-checkout.php:168
+#: class-checkout.php:169
 msgid "Enable this payment gateway"
 msgstr "启用此付款网关"
 
-#: class-checkout.php:174
-msgid "Enable auto login in wechat Official Accounts"
-msgstr "在微信中打开时自动登录"
+#: class-checkout.php:175
+msgid ""
+"Enable auto login in wechat Official Accounts (此功能将被弃用，不建议使用)"
+msgstr ""
 
-#: class-checkout.php:179
+#: class-checkout.php:180
 msgid "Title"
 msgstr "标题"
 
-#: class-checkout.php:181
+#: class-checkout.php:182
 msgid "Wechatpay"
 msgstr "微信支付"
 
-#: class-checkout.php:184
+#: class-checkout.php:185
 msgid "Description"
 msgstr "描述"
 
-#: class-checkout.php:186
+#: class-checkout.php:187
 msgid "Pay securely using Wechat Pay"
 msgstr "使用微信支付安全快捷的支付"
 
-#: class-checkout.php:190
+#: class-checkout.php:191
 msgid "Order Number Prefix"
 msgstr "订单号前缀"
 
-#: class-checkout.php:192
+#: class-checkout.php:193
 msgid "Only alphabet or number Allowed"
 msgstr "仅允许字母或数字"
 
-#: class-checkout.php:193
+#: class-checkout.php:194
 msgid "WC-"
 msgstr "WC-"
 
-#: class-checkout.php:196
+#: class-checkout.php:197
 msgid "Wechat App Id"
 msgstr "微信公众号 App ID"
 
-#: class-checkout.php:198
+#: class-checkout.php:199
 msgid "Enter your Wechat App Id. Setup and obtain it in 「开发 > 基本配置」。"
 msgstr "输入您的微信应用 ID，在微信公众号的「开发 > 基本配置」页面中获取。"
 
-#: class-checkout.php:201
+#: class-checkout.php:202
 msgid "Wechat App Secret"
 msgstr "微信 App 密钥"
 
-#: class-checkout.php:203
+#: class-checkout.php:204
 msgid ""
 "Enter your Wechat App Secret. Setup and obtain it in 「开发 > 基本配置」。"
 msgstr "输入您的微信应用密钥，在微信公众号的「开发 > 基本配置」页面中获取。"
 
-#: class-checkout.php:206
+#: class-checkout.php:207
 msgid "Wechat Mch Id"
 msgstr "微信商户 ID"
 
-#: class-checkout.php:208
+#: class-checkout.php:209
 #, php-format
 msgid ""
 "Enter your Wechat Mch Id. obtain it in <a target=_blank href=\"%s\">here</a>"
 msgstr "输入微信商户号。在<a target=_blank href=\"%s\">这里</a>获取。"
 
-#: class-checkout.php:211
+#: class-checkout.php:212
 msgid "Wechat Api Key"
 msgstr "微信支付应用密钥"
 
-#: class-checkout.php:213
+#: class-checkout.php:214
 #, php-format
 msgid ""
 "Enter your Wechat Api Key that Setup in <a target=_blank href=\"%s\">here</"
@@ -110,11 +111,11 @@ msgstr ""
 "输入微信 API 密钥，在<a target=_blank href=\"%s\">这里</a>设置。支付授权目录"
 "和 H5 支付域名为：<code>%s</code>,  <code>扫码回调链接为: %s</code>。"
 
-#: class-checkout.php:216
+#: class-checkout.php:217
 msgid "apiclient_cert.pem path"
 msgstr "apiclient_cert.pem 路径"
 
-#: class-checkout.php:218
+#: class-checkout.php:219
 #, php-format
 msgid ""
 "Enter the absolute path of apiclient_cert.pem file that can access by the "
@@ -127,11 +128,11 @@ msgstr ""
 "不要** 把该文件放在公共目录。<a target=_blank href=\"%s\">在这里</a>设置和获"
 "取 apiclient_cert.pem 文件。"
 
-#: class-checkout.php:221
+#: class-checkout.php:222
 msgid "apiclient_key.pem Path"
 msgstr "apiclient_key.pem 路径"
 
-#: class-checkout.php:223
+#: class-checkout.php:224
 #, php-format
 msgid ""
 "Enter the absolute path of apiclient_key.pem file that can access by the "
@@ -144,34 +145,34 @@ msgstr ""
 "不要** 把该文件放在公共目录。<a target=_blank href=\"%s\">在这里</a>设置和获"
 "取 apiclient_key.pem 文件。"
 
-#: class-checkout.php:226
+#: class-checkout.php:227
 msgid "Debug Mode"
 msgstr "调试模式"
 
-#: class-checkout.php:227
+#: class-checkout.php:228
 msgid "Enable debug mod"
 msgstr "启用调试模式"
 
-#: class-checkout.php:229
+#: class-checkout.php:230
 msgid "If checked, plugin will show program errors in frontend."
 msgstr "如果启用，会在前端显示详情的错误信息。"
 
-#: class-checkout.php:237
+#: class-checkout.php:238
 msgid "Exchange Rate"
 msgstr "汇率"
 
-#: class-checkout.php:239
+#: class-checkout.php:240
 #, php-format
 msgid ""
 "Please set the %s against Chinese Yuan exchange rate, eg if your currency is "
 "US Dollar, then you should enter 6.19"
 msgstr "请设置 %s 转人民币的汇率，例如您的商店货币时美元，请填写 6.19"
 
-#: class-checkout.php:290
+#: class-checkout.php:296 wenprise-wechatpay-checkout-for-woocommerce.php:102
 msgid "Settings"
 msgstr "设置"
 
-#: class-checkout.php:311
+#: class-checkout.php:317
 #, php-format
 msgid ""
 "WeChatPay is enabled, but the store currency is not set to Chinese Yuan. "
@@ -181,34 +182,38 @@ msgstr ""
 "微信支付已启用，但是您的商店货币不是人民币，请<a href=\"%1s\">设置 %2s 转人民"
 "币的汇率</a>。"
 
-#: class-checkout.php:413
+#: class-checkout.php:326
+msgid "Calling Wechat Pay..., please wait a moment..."
+msgstr "正在拉起微信支付，请稍候..."
+
+#: class-checkout.php:425
 #, php-format
 msgid "Pay for order %1$s at %2$s"
 msgstr "支付网站「%2$s」中的订单：%1$s "
 
-#: class-checkout.php:483
+#: class-checkout.php:513
 msgid "WeChat payment configuration error, please contact us."
 msgstr "微信支付配置错误，请联系我们。"
 
-#: class-checkout.php:537
+#: class-checkout.php:569
 #, php-format
 msgid "Refunded %1$s"
 msgstr "退款 %1$s"
 
-#: class-checkout.php:602
+#: class-checkout.php:633
 #, php-format
 msgid "Wechatpay payment complete (Transaction ID: %s)"
 msgstr "微信支付已完成(微信订单号: %s)"
 
-#: class-checkout.php:659
+#: class-checkout.php:693
 msgid "Please scan the QR code with WeChat to finish the payment."
 msgstr "请使用微信扫描二维码完成支付。"
 
-#: class-checkout.php:765
+#: class-checkout.php:801
 msgid "Wechat auth failed, please try again later or contact us."
 msgstr "微信授权错误，请稍后重试或联系我们。"
 
-#: class-checkout.php:854
+#: class-checkout.php:890
 msgid "request failed, please try again"
 msgstr "请求失败，请重试"
 
@@ -222,6 +227,9 @@ msgstr ""
 "Wenprise WeChatPay Payment Gateway For WooCommerce 需要 PHP %1$s 以上版本才能"
 "运行，您当前的 PHP 版本为 %2$s， 请升级到 PHP 到 %1$s 或更新的版本， 否则插件"
 "没有任何作用。"
+
+#~ msgid "Enable auto login in wechat Official Accounts"
+#~ msgstr "在微信中打开时自动登录"
 
 #, php-format
 #~ msgid ""

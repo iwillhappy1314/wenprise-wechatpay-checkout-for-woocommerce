@@ -142,6 +142,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         // 添加 URL
         add_action('woocommerce_api_wprs-wc-wechatpay-query', [$this, 'query_order']);
         add_action('woocommerce_api_wprs-wc-wechatpay-notify', [$this, 'listen_notify']);
+        add_action('woocommerce_api_wprs-wc-wechatpay-bridge', [$this, 'bridge']);
 
         if ($this->enabled_auto_login) {
             add_action('woocommerce_api_wprs-wc-wechatpay-auth', [$this, 'wechat_auth']);
@@ -265,7 +266,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
                 }
 
                 wp_enqueue_style('wprs-wc-wechatpay-style', plugins_url('/frontend/styles.css', __FILE__), [], WENPRISE_WECHATPAY_VERSION, false);
-                wp_enqueue_script('wprs-wc-wechatpay-scripts', plugins_url('/frontend/query.js', __FILE__), ['jquery', 'jquery-blockui'], WENPRISE_WECHATPAY_VERSION, true);
+                wp_enqueue_script('wprs-wc-wechatpay-scripts', plugins_url('/frontend/script.js', __FILE__), ['jquery', 'jquery-blockui'], WENPRISE_WECHATPAY_VERSION, true);
                 wp_enqueue_script('qrcode', WC()->plugin_url() . '/assets/js/jquery-qrcode/jquery.qrcode.js', ['jquery'], WENPRISE_WECHATPAY_VERSION);
 
                 wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatPaySign', $signPackage);
@@ -276,6 +277,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
 
                 wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatData', [
                     'return_url' => $this->get_return_url($order),
+                    'bridge_url' => WC()->api_request_url('wprs-wc-wechatpay-bridge'),
                     'query_url'  => WC()->api_request_url('wprs-wc-wechatpay-query'),
                 ]);
 
@@ -316,6 +318,12 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
                     admin_url('admin.php?page=wc-settings&tab=checkout&section=wprs-wc-wechatpay#woocommerce_wprs-wc-wechatpay_exchange_rate'),
                     $this->current_currency) . '</p></div>';
         }
+    }
+
+
+    public function bridge()
+    {
+        wp_die(__('Calling Wechat Pay..., please wait a moment...', 'wprs-wc-wechatpay'), __('Calling Wechat Pay..., please wait a moment...', 'wprs-wc-alipay'));
     }
 
 
@@ -445,16 +453,33 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         if ($response->isSuccessful()) {
 
             if (wp_is_mobile()) {
+
                 if (wprs_is_wechat()) {
+                    // 微信中，返回跳转 URL，带上支付数据，由微信拉起支付
                     update_post_meta($order_id, 'wprs_wc_wechat_order_data', $response->getJsOrderData());
                     $redirect_url = add_query_arg(['order-pay' => $order->get_id(), 'key' => $order->get_order_key()], wc_get_checkout_url());
 
                 } else {
-                    $redirect_url = $response->getMwebUrl() . '&redirect_url=' . urlencode($order->get_checkout_payment_url(true) . '&from=wap');
-                    update_post_meta($order_id, 'wprs_wc_wechat_mweb_url', $redirect_url);
+                    // 移动浏览器中，返回跳转 URL，跳转 URl 中包含支付 URL，由 JS 跳转到支付 URL 进行支付
+                    // 支付后，微信支付服务器推送支付成功数据到网站
+                    // 在跳转URL中，JS 轮询支付状态，检测到支付成功后，跳转到支付成功页面
+                    $payment_url = $response->getMwebUrl() . '&redirect_url=' . urlencode($order->get_checkout_payment_url(true) . '&from=wap');
+
+                    $redirect_url = $redirect_url = add_query_arg(['order-pay' => $order->get_id(), 'key' => $order->get_order_key(), 'from' => 'wap'], wc_get_checkout_url());
+
+                    update_post_meta($order_id, 'wprs_wc_wechat_mweb_url', $payment_url);
+
+                    return [
+                        'result'      => 'success',
+                        'redirect'    => $redirect_url,
+                        'payment_url' => $payment_url,
+                    ];
                 }
 
             } else {
+                // PC端，返回跳转URL，跳转页面中包含原生支付二维码
+                // 用户支付成功后，微信服务器推送支付成功数据到网站
+                // 在跳转URL中，JS 轮询支付状态，检测到支付成功后，跳转到支付成功页面
                 $code_url = $response->getCodeUrl();
                 update_post_meta($order_id, 'wprs_wc_wechat_code_url', $code_url);
 
@@ -644,14 +669,17 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         $code_url = get_post_meta($order_id, 'wprs_wc_wechat_code_url', true);
 
         if ($from === 'wap') {
-            // H5 支付需要手动检查订单是否完成
+            // 移动浏览器中，显示已支付和继续支付的按钮没，功能和 Modal 类似
+
             echo '<div class="buttons has-addons">';
             echo '<button class="button u-width-50" id="js-wprs-wc-wechatpay" data-order_id="' . $order_id . '">已支付</button>';
-            echo '<a class="button u-width-50" href="' . get_post_meta($order_id, 'wprs_wc_wechat_mweb_url', true) . '">继续支付</a>';
+            echo '<a target="_blank" class="button u-width-50" href="' . get_post_meta($order_id, 'wprs_wc_wechat_mweb_url', true) . '">继续支付</a>';
             echo '</div>';
 
         } else {
+
             if (wprs_is_wechat()) {
+                // 微信中，用户需要点击支付按钮调起支付窗口
                 echo '<button class="button" onclick="wprs_wc_call_wechat_pay()" >立即支付</button>';
             }
 
@@ -692,14 +720,18 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
     public function query_order()
     {
         $order_id = isset($_GET[ 'order_id' ]) ? (int)$_GET[ 'order_id' ] : false;
-        $order    = wc_get_order($order_id);
 
-        if ($order && $order->is_paid()) {
-            wp_send_json_success($order->get_checkout_order_received_url());
+        if ($order_id) {
+            $order = wc_get_order($order_id);
+
+            if ($order && $order->is_paid()) {
+                wp_send_json_success($order->get_checkout_order_received_url());
+            } else {
+                wp_send_json_error($order->get_checkout_payment_url());
+            }
         } else {
-            wp_send_json_error($order->get_checkout_payment_url());
+            wp_send_json_error();
         }
-
     }
 
 
