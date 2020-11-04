@@ -19,6 +19,8 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
 
     /**
      * @var bool
+     *
+     * @deprecated
      */
     public $enabled_auto_login = false;
 
@@ -321,6 +323,9 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
     }
 
 
+    /**
+     * 手机浏览器跳转微信支付中间页面，为了解决浏览器屏蔽而存在
+     */
     public function bridge()
     {
         wp_die(__('Calling Wechat Pay..., please wait a moment...', 'wprs-wc-wechatpay'), __('Calling Wechat Pay..., please wait a moment...', 'wprs-wc-alipay'));
@@ -671,9 +676,9 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         if ($from === 'wap') {
             // 移动浏览器中，显示已支付和继续支付的按钮没，功能和 Modal 类似
 
-            echo '<div class="buttons has-addons">';
-            echo '<button class="button u-width-50" id="js-wprs-wc-wechatpay" data-order_id="' . $order_id . '">已支付</button>';
-            echo '<a target="_blank" class="button u-width-50" href="' . get_post_meta($order_id, 'wprs_wc_wechat_mweb_url', true) . '">继续支付</a>';
+            echo '<div class="wprs-wc-buttons">';
+            echo '<button class="button" id="js-wprs-wc-wechatpay" data-order_id="' . $order_id . '">已支付</button>';
+            echo '<a target="_blank" class="button" href="' . get_post_meta($order_id, 'wprs_wc_wechat_mweb_url', true) . '">继续支付</a>';
             echo '</div>';
 
         } else {
@@ -739,6 +744,8 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
      * 获取授权 URL
      *
      * @return string
+     *
+     * @deprecated
      */
     public function get_auth_url()
     {
@@ -754,6 +761,8 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
      * @param null $code
      *
      * @return array|bool|mixed|object
+     *
+     * @deprecated
      */
     function get_access_token($code = null)
     {
@@ -777,6 +786,8 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
     /**
      * 微信公众号授权
      * 1、如果未登录，跳转获取 code 2、如果已经有 code 跳转获取 access token 3、如果已有 access token，跳转获取用户信息
+     *
+     * @deprecated
      */
     function wechat_auth()
     {
