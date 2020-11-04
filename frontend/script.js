@@ -208,9 +208,7 @@
 
     };
 
-    console.log(typeof WpWooWechatData.bridge_url);
-
-    if (WpWooWechatData.bridge_url) {
+    if('bridge_url' in WpWooWechatData){
         wc_wechatpay_checkout.init();
     }
 
