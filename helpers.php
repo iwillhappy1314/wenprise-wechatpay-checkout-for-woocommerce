@@ -1,23 +1,35 @@
 <?php
 
-if ( ! function_exists('wprs_is_wechat')) {
+namespace WenpriseWechatPay;
+
+class Helper
+{
+
     /**
      * 判断是否在微信中打开
      */
-    function wprs_is_wechat()
+    public static function is_wechat()
     {
         return ! empty($_SERVER[ 'HTTP_USER_AGENT' ]) && strpos($_SERVER[ 'HTTP_USER_AGENT' ], 'MicroMessenger') !== false;
     }
-}
 
 
-if ( ! function_exists('wprs_get_ip')) {
+    /**
+     * 判断客户端是否为小程序
+     *
+     * @return bool
+     */
+    public static function is_weapp()
+    {
+        return ! empty($_SERVER[ 'HTTP_USER_AGENT' ]) && strpos($_SERVER[ 'HTTP_USER_AGENT' ], 'miniprogram') !== false;
+    }
+
     /**
      * 获取用户的真实 IP
      *
      * @return mixed
      */
-    function wprs_get_ip()
+    public static function get_client_ip()
     {
         if (isset($_SERVER[ 'HTTP_CF_CONNECTING_IP' ])) {
             $_SERVER[ 'REMOTE_ADDR' ]    = $_SERVER[ 'HTTP_CF_CONNECTING_IP' ];
@@ -38,16 +50,14 @@ if ( ! function_exists('wprs_get_ip')) {
 
         return $ip;
     }
-}
 
 
-if ( ! function_exists('wprs_get_current_url')) {
     /**
      * 获取当前 URL
      *
      * @return bool|string
      */
-    function wprs_get_current_url()
+    public static function get_current_url()
     {
         $url = false;
 
@@ -68,4 +78,24 @@ if ( ! function_exists('wprs_get_current_url')) {
 
         return $url;
     }
+
+
+    /**
+     * 获取远程内容，如果失败，报错，如果成功，返回 decode 后的对象
+     *
+     * @param $url
+     *
+     * @return array|mixed|object
+     */
+    public static function http_get($url)
+    {
+        $response = wp_remote_get($url);
+
+        if (is_wp_error($response)) {
+            wp_die(__('request failed, please try again', 'wprs-wc-wechatpay'));
+        }
+
+        return json_decode(wp_remote_retrieve_body($response), true);
+    }
+
 }

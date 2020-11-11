@@ -5,6 +5,7 @@ if ( ! defined('ABSPATH')) {
 }
 
 use Omnipay\Omnipay;
+use WenpriseWechatPay\Helper;
 
 require WENPRISE_WECHATPAY_PATH . 'jssdk.php';
 
@@ -262,7 +263,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         if ($order && 'wprs-wc-wechatpay' === $order->get_payment_method()) {
             if ( ! isset($_GET[ 'pay_for_order' ]) && is_checkout_pay_page()) {
 
-                if (wprs_is_wechat()) {
+                if (Helper::is_wechat()) {
                     wp_enqueue_script('wprs-wc-wechatpay-js-sdk', 'https://res.wx.qq.com/open/js/jweixin-1.4.0.js', ['jquery'], WENPRISE_WECHATPAY_VERSION, true);
                     wp_enqueue_script('wprs-wc-wechatpay-scripts', plugins_url('/frontend/mpweb.js', __FILE__), ['jquery'], WENPRISE_WECHATPAY_VERSION, true);
                 }
@@ -377,7 +378,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
 
         /** @var \Omnipay\WechatPay\BaseAbstractGateway $gateway */
         if (wp_is_mobile()) {
-            if (wprs_is_wechat()) {
+            if (Helper::is_wechat()) {
                 $gateway = Omnipay::create('WechatPay_Js');
             } else {
                 $gateway = Omnipay::create('WechatPay_Mweb');
@@ -430,12 +431,12 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
                 'body'             => sprintf(__('Pay for order %1$s at %2$s', 'wprs-wc-wechatpay'), $order_no, get_bloginfo('name')),
                 'out_trade_no'     => $order_no,
                 'total_fee'        => $total * 100,
-                'spbill_create_ip' => wprs_get_ip(),
+                'spbill_create_ip' => Helper::get_client_ip(),
                 'fee_type'         => 'CNY',
             ]
         );
 
-        if (wprs_is_wechat()) {
+        if (Helper::is_wechat()) {
             // 修改 Open ID 的获取方法，主要兼容其他微信登录
             $open_id                 = apply_filters('wprs_wc_wechat_open_id', get_user_meta(get_current_user_id(), 'wprs_wc_wechat_open_id', true));
             $order_data[ 'open_id' ] = $open_id;
@@ -451,15 +452,15 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
 
         do_action('woocommerce_wenprise_wechatpay_before_payment_redirect', $response);
 
-        // 生成订单后清空购物车，以免订单重复
-        WC()->cart->empty_cart();
-
         // 微信支付, 显示二维码
         if ($response->isSuccessful()) {
 
+            // 生成支付订单后清空购物车，以免订单重复
+            WC()->cart->empty_cart();
+
             if (wp_is_mobile()) {
 
-                if (wprs_is_wechat()) {
+                if (Helper::is_wechat()) {
                     // 微信中，返回跳转 URL，带上支付数据，由微信拉起支付
                     update_post_meta($order_id, 'wprs_wc_wechat_order_data', $response->getJsOrderData());
                     $redirect_url = add_query_arg(['order-pay' => $order->get_id(), 'key' => $order->get_order_key()], wc_get_checkout_url());
@@ -683,7 +684,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
 
         } else {
 
-            if (wprs_is_wechat()) {
+            if (Helper::is_wechat()) {
                 // 微信中，用户需要点击支付按钮调起支付窗口
                 echo '<button class="button" onclick="wprs_wc_call_wechat_pay()" >立即支付</button>';
             }
@@ -774,7 +775,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
 
         if ( ! $response) {
             $url      = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=' . $this->app_id . '&secret=' . $this->app_secret . '&code=' . $code . '&grant_type=authorization_code';
-            $response = $this->http_get($url);
+            $response = Helper::http_get($url);
 
             set_transient($code, $response);
         }
@@ -814,7 +815,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
             }
 
             $info_url  = 'https://api.weixin.qq.com/sns/userinfo?access_token=' . $json_token->access_token . '&openid=' . $json_token->openid;
-            $user_info = $this->http_get($info_url);
+            $user_info = Helper::http_get($info_url);
 
             $wechat_id = $user_info->openid;
 
@@ -883,25 +884,6 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
             }
             $this->log->add('wprs-wc-wechatpay', $message);
         }
-    }
-
-
-    /**
-     * 获取远程内容，如果失败，报错，如果成功，返回 decode 后的对象
-     *
-     * @param $url
-     *
-     * @return array|mixed|object
-     */
-    public function http_get($url)
-    {
-        $response = wp_remote_get($url);
-
-        if (is_wp_error($response)) {
-            wp_die(__('request failed, please try again', 'wprs-wc-wechatpay'));
-        }
-
-        return json_decode(wp_remote_retrieve_body($response), true);
     }
 
 }
