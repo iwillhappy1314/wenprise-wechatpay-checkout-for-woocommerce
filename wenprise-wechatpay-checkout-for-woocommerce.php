@@ -85,9 +85,10 @@ add_action('init', function ()
 {
     if (wprs_is_wechat() && ! is_user_logged_in() && ! has_filter('wprs_wc_wechat_open_id')) {
         $gateway = new Wenprise_Wechat_Pay_Gateway();
+        $auth    = new \WenpriseWechatPay\Auth();
 
         if ($gateway->enabled_auto_login) {
-            $gateway->wechat_auth();
+            $auth->auth();
         }
     }
 }, 99);
