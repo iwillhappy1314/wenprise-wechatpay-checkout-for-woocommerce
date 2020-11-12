@@ -43,6 +43,16 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
     /**
      * @var string
      */
+    public $mini_app_id = '';
+
+    /**
+     * @var string
+     */
+    public $mini_app_secret = '';
+
+    /**
+     * @var string
+     */
     public $mch_id = '';
 
     /**
@@ -195,12 +205,22 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
             'app_id'             => [
                 'title'       => __('Wechat App Id', 'wprs-wc-wechatpay'),
                 'type'        => 'text',
-                'description' => sprintf(__('Enter your Wechat App Id. Setup and obtain it in 「开发 > 基本配置」。', 'wprs-wc-wechatpay'), home_url(), home_url('wc-api/wprs-wc-wechatpay-notify/')),
+                'description' => sprintf(__('Enter your Wechat App Id. Setup and obtain it in 「开发 > 基本配置」。', 'wprs-wc-wechatpay')),
             ],
             'app_secret'         => [
                 'title'       => __('Wechat App Secret', 'wprs-wc-wechatpay'),
                 'type'        => 'text',
-                'description' => sprintf(__('Enter your Wechat App Secret. Setup and obtain it in 「开发 > 基本配置」。', 'wprs-wc-wechatpay'), home_url(), home_url('wc-api/wprs-wc-wechatpay-notify/')),
+                'description' => sprintf(__('Enter your Wechat App Secret. Setup and obtain it in 「开发 > 基本配置」。', 'wprs-wc-wechatpay')),
+            ],
+            'mini_app_id'        => [
+                'title'       => __('Wechat miniApp App Id', 'wprs-wc-wechatpay'),
+                'type'        => 'text',
+                'description' => sprintf(__('Enter your Wechat Mini App Id. Setup and obtain it in 「开发 > 开发配置」。', 'wprs-wc-wechatpay')),
+            ],
+            'mini_app_secret'    => [
+                'title'       => __('Wechat MiniApp Secret', 'wprs-wc-wechatpay'),
+                'type'        => 'text',
+                'description' => sprintf(__('Enter your Wechat App Secret. Setup and obtain it in 「开发 > 开发配置」。', 'wprs-wc-wechatpay')),
             ],
             'mch_id'             => [
                 'title'       => __('Wechat Mch Id', 'wprs-wc-wechatpay'),
@@ -252,7 +272,12 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         $order_id = get_query_var('order-pay');
         $order    = wc_get_order($order_id);
 
-        $jssdk       = new JSSDK($this->app_id, $this->app_secret);
+        if (Helper::is_weapp()) {
+            $jssdk = new JSSDK($this->mini_app_id, $this->mini_app_secret);
+        } else {
+            $jssdk = new JSSDK($this->app_id, $this->app_secret);
+        }
+
         $signPackage = $jssdk->GetSignPackage();
         $order_data  = get_post_meta($order_id, 'wprs_wc_wechat_order_data', true);
 
@@ -383,7 +408,12 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
             $gateway = Omnipay::create('WechatPay_Native');
         }
 
-        $gateway->setAppId(trim($this->app_id));
+        if (Helper::is_weapp()) {
+            $gateway->setAppId(trim($this->mini_app_id));
+        } else {
+            $gateway->setAppId(trim($this->app_id));
+        }
+
         $gateway->setMchId(trim($this->mch_id));
 
         // 这个 key 需要在微信商户里面单独设置，而不是微信服务号里面的 key
@@ -445,6 +475,8 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
          */
         $request  = $gateway->purchase($order_data);
         $response = $request->send();
+
+        // $this->log(var_export($response, true));
 
         do_action('woocommerce_wenprise_wechatpay_before_payment_redirect', $response);
 
@@ -682,7 +714,11 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
 
             if (Helper::is_wechat()) {
                 // 微信中，用户需要点击支付按钮调起支付窗口
-                echo '<button class="button" onclick="wprs_wc_call_wechat_pay()" >立即支付</button>';
+                if (Helper::is_weapp()) {
+                    echo '<button class="button" id="button-weapp" onclick="wprs_wc_call_weapp_pay()">小程序支付</button>';
+                } else {
+                    echo '<button class="button" onclick="wprs_wc_call_wechat_pay()" >立即支付</button>';
+                }
             }
 
             if ($code_url) {
