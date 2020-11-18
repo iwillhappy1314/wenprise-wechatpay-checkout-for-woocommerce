@@ -157,7 +157,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         add_action('woocommerce_api_wprs-wc-wechatpay-notify', [$this, 'listen_notify']);
         add_action('woocommerce_api_wprs-wc-wechatpay-bridge', [$this, 'bridge']);
 
-        add_action('woocommerce_api_wprs-wc-wechatpay-mini-app-bridge', [$this, 'mini_app_payment_bridge']);
+        add_action('woocommerce_api_wprs-wc-wechatpay-mini-app-bridge', [$this, 'process_mini_app_payment']);
 
         // 添加前端脚本
         add_action('wp_enqueue_scripts', [$this, 'enqueue_script']);
@@ -574,7 +574,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
     /**
      * 在这里处理小程序支付
      */
-    public function mini_app_payment_bridge()
+    public function process_mini_app_payment()
     {
 
         /**
@@ -588,8 +588,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         $gateway = $this->get_gateway('mini_app');
         $order   = wc_get_order($order_id);
 
-        // $order_no = $this->get_order_number($order_id);
-        $order_no = wprs_order_no();
+        $order_no = $this->get_order_number($order_id);
         $total    = $order->get_total();
 
         $exchange_rate = (float)$this->get_option('exchange_rate');
@@ -616,11 +615,13 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         $request  = $gateway->purchase($order_data);
         $response = $request->send();
 
-        // 已收到订单页面
-        //$order->get_checkout_order_received_url()
+        // 在小程序中使用的附加数据
+        $addition_data = [
+            'return_url' => $order->get_checkout_order_received_url(),
+        ];
 
         if ($response->isSuccessful()) {
-            wp_send_json_success($response->getJsOrderData());
+            wp_send_json_success(array_merge($addition_data, $response->getJsOrderData()));
         } else {
             wp_send_json_error($response->getData());
         }
