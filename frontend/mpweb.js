@@ -44,24 +44,4 @@ function wprs_wc_call_wechat_pay() {
     });
 }
 
-/**
- * 构建查询字符串
- *
- * @param obj
- * @returns {string}
- */
-function wprs_wc_serialize(obj) {
-    return '?' + Object.keys(obj).reduce(function(a, k) {
-        a.push(k + '=' + encodeURIComponent(obj[k]));
-        return a;
-    }, []).join('&');
-}
-
-/**
- * 调用微信小程序支付
- */
-function wprs_wc_call_weapp_pay() {
-    wx.miniProgram.reLaunch({url: '/pages/wePay/wePay' + wprs_wc_serialize(WpWooWechatPayOrder)});
-}
-
 wprs_wc_call_wechat_pay();
