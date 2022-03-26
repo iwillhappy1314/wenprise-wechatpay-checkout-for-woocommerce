@@ -7,7 +7,7 @@ Requires at least: 4.7
 Tested up to: 5.9
 WC requires at least: 3.5
 WC tested up to: 6.3
-Stable tag: 1.0.15
+Stable tag: 1.1.0
 License: GPL-2.0+
 
 Wechat payment gateway for WooCommerce, WooCommerce 微信免费全功能支付网关。
