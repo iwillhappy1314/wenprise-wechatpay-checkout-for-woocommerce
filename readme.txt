@@ -7,7 +7,7 @@ Requires at least: 4.7
 Tested up to: 5.9
 WC requires at least: 3.5
 WC tested up to: 6.3
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPL-2.0+
 
 Wechat payment gateway for WooCommerce, WooCommerce 微信免费全功能支付网关。
@@ -62,6 +62,10 @@ Email: amos@wpcio.com
 * payment
 
 ## Changelog ##
+
+### 1.1.2 ###
+* 兼容讯虎登录插件
+* 兼容 Wenprise Security 登录插件
 
 ### 1.0.15 ###
 * 移动端浏览器支付增加跳转中间页，解决某些情况下无法验证支付状态的问题。
