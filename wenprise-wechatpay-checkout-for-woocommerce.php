@@ -3,13 +3,15 @@
  * Plugin Name: Wenprise WeChatPay Payment Gateway For WooCommerce
  * Plugin URI: https://www.wpzhiku.com/wenprise-wechatpay-payment-gateway-for-woocommerce
  * Description: Wenprise WeChatPay Payment Gateway For WooCommerce， WooCommerce 全功能微信支付网关
- * Version: 1.1.0
+ * Version: 1.1.1
  * Author: WordPress智库
  * Author URI: https://www.wpzhiku.com
  * Text Domain: wprs-wc-wechatpay
  * Domain Path: /languages
  * Requires PHP: 7.1
  */
+
+use WenpriseWechatPay\Helper;
 
 if ( ! defined('ABSPATH')) {
     exit; // Exit if accessed directly
@@ -45,7 +47,7 @@ add_action('wp_enqueue_scripts', function ()
         return;
     }
 
-    if ((is_checkout() || is_checkout_pay_page()) && wp_is_mobile() && ! wprs_is_wechat()) {
+    if ((is_checkout() || is_checkout_pay_page()) && wp_is_mobile() && ! Helper::is_wechat()) {
         wp_enqueue_script('wprs-wc-wechatpay-scripts', plugins_url('/frontend/script.js', __FILE__), ['jquery', 'jquery-blockui'], WENPRISE_WECHATPAY_VERSION, true);
 
         wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatData', [
@@ -83,7 +85,7 @@ add_action('plugins_loaded', function ()
  */
 add_action('init', function ()
 {
-    if (wprs_is_wechat() && ! is_user_logged_in() && ! has_filter('wprs_wc_wechat_open_id')) {
+    if (Helper::is_wechat() && ! is_user_logged_in() && ! has_filter('wprs_wc_wechat_open_id')) {
         $gateway = new Wenprise_Wechat_Pay_Gateway();
         $auth    = new \WenpriseWechatPay\Auth();
 

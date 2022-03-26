@@ -31,7 +31,7 @@ class Auth
     public function get_auth_url()
     {
 
-        return 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' . $this->gateway->app_id . '&redirect_uri=' . urlencode(WC()->api_request_url('wprs-wc-wechatpay-auth')) . '&response_type=code&scope=snsapi_userinfo&state=' . urlencode(wprs_get_current_url()) . '#wechat_redirect';
+        return 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=' . $this->gateway->app_id . '&redirect_uri=' . urlencode(WC()->api_request_url('wprs-wc-wechatpay-auth')) . '&response_type=code&scope=snsapi_userinfo&state=' . urlencode(Helper::get_current_url()) . '#wechat_redirect';
 
     }
 
