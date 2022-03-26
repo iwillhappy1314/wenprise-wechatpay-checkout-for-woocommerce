@@ -8,7 +8,7 @@
  * Author URI: https://www.wpzhiku.com
  * Text Domain: wprs-wc-wechatpay
  * Domain Path: /languages
- * Requires PHP: 5.6
+ * Requires PHP: 7.1
  */
 
 if ( ! defined('ABSPATH')) {
