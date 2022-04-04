@@ -84,3 +84,47 @@
 .rs-modal__footer .button{
     margin-left: .5rem;
 }
+
+.rs-wechatpay-logo{
+    display: flex;
+    align-items: center;
+}
+
+.rs-wechatpay-logo img{
+    margin-right: .5rem;
+}
+
+.rs-conform-block{
+    margin: 2rem auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rs-block{
+    display: inline-block;
+    background: #f6f6f6;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-right: 2rem;
+}
+
+.rs-block__header{
+    padding: 2rem 0 0;
+    display: flex;
+    justify-content: center;
+}
+
+.rs-block__content{
+    padding: 2rem;
+}
+
+.rs-block__content canvas{
+    vertical-align: middle;
+}
+
+.rs-block__footer{
+    padding: 1.5rem 0;
+    text-align: center;
+}

@@ -251,6 +251,15 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
                 'description' => sprintf(__('If checked, plugin will show program errors in frontend.', 'wprs-wc-wechatpay')),
                 'default'     => 'no',
             ],
+            'template'           => [
+                'title'   => __('Checkout Style', 'wprs-wc-wechatpay'),
+                'type'    => 'select',
+                'default' => 'modal',
+                'options' => [
+                    'modal' => __('Show qrcode in modal', 'wprs-wc-wechatpay'),
+                    'flat'  => __('Show qrcode in page', 'wprs-wc-wechatpay'),
+                ],
+            ],
         ];
 
         if ( ! in_array($this->current_currency, ['RMB', 'CNY'])) {
@@ -779,16 +788,16 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         if (Helper::is_mini_app()) {
             ?>
             <script>
-                jQuery(document).ready(function($) {
-                    /**
-                     * 调用微信小程序支付
-                     */
-                    function wprs_wcc_call_mini_app_pay() {
-                        wx.miniProgram.reLaunch({url: '/pages/wePay/wePay?order_id=<?= $order_id; ?>'});
-                    }
+              jQuery(document).ready(function($) {
+                /**
+                 * 调用微信小程序支付
+                 */
+                function wprs_wcc_call_mini_app_pay() {
+                  wx.miniProgram.reLaunch({url: '/pages/wePay/wePay?order_id=<?= $order_id; ?>'});
+                }
 
-                    wprs_wcc_call_mini_app_pay();
-                });
+                wprs_wcc_call_mini_app_pay();
+              });
             </script>
 
             <?php
@@ -817,31 +826,61 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
             }
 
             if ($code_url) {
-                ?>
 
-                <div id="js-wechatpay-confirm-modal" class="rs-confirm-modal" style="display: none;">
+                if ($this->template === 'modal'):
+                    ?>
 
-                    <div class="rs-modal">
-                        <header class="rs-modal__header">
-                            <?= __('Please scan the QR code with WeChat to finish the payment.', 'wprs-wc-wechatpay'); ?>
-                        </header>
-                        <div class="rs-modal__content">
-                            <div id="js-wprs-wc-wechatpay" style="text-align: center" data-order_id="<?= $order_id; ?>"></div>
+                    <div id="js-wechatpay-confirm-modal" class="rs-confirm-modal" style="display: none;">
+
+                        <div class="rs-modal">
+                            <header class="rs-modal__header">
+                                <?= __('Please scan the QR code with WeChat to finish the payment.', 'wprs-wc-wechatpay'); ?>
+                            </header>
+                            <div class="rs-modal__content">
+                                <div id="js-wprs-wc-wechatpay" style="text-align: center" data-order_id="<?= $order_id; ?>"></div>
+                            </div>
+                            <footer class="rs-modal__footer">
+                                <input type="button" id="js-wechatpay-success" class="button alt is-primary" value="支付成功" />
+                                <input type="button" id="js-wechatpay-fail" class="button" value="支付失败" />
+                            </footer>
                         </div>
-                        <footer class="rs-modal__footer">
-                            <input type="button" id="js-wechatpay-success" class="button alt is-primary" value="支付成功" />
-                            <input type="button" id="js-wechatpay-fail" class="button" value="支付失败" />
-                        </footer>
+
                     </div>
 
-                </div>
+                <?php else: ?>
+
+                    <div class='rs-conform-block'>
+
+                        <div class='rs-block'>
+                            <header class='rs-block__header'>
+                                <div class="rs-wechatpay-logo">
+                                    <img src="<?= $this->icon; ?>" alt="<?= $this->method_title; ?>" /> <?= $this->method_title; ?>
+                                </div>
+                            </header>
+                            <div class="rs-block__content">
+                                <div id="js-wprs-wc-wechatpay" style="text-align: center" data-order_id="<?= $order_id; ?>"></div>
+                            </div>
+                            <footer class="rs-block__footer">
+                                <?= __('Please scan the QR code with WeChat to finish the payment.', 'wprs-wc-wechatpay'); ?>
+                            </footer>
+                        </div>
+
+                        <div class='rs-block__tips'>
+                            <img src="<?= WENPRISE_WECHATPAY_ASSETS_URL . 'weixinpay_mobile.png'; ?>" alt='微信扫一扫指引' />
+                        </div>
+
+                    </div>
+
+                <?php endif; ?>
 
                 <script>
-                    jQuery(document).ready(function($) {
-                        $('#js-wprs-wc-wechatpay').qrcode('<?= $code_url; ?>');
-                    });
+                  jQuery(document).ready(function($) {
+                    $('#js-wprs-wc-wechatpay').qrcode('<?= $code_url; ?>');
+                  });
                 </script>
-            <?php }
+
+                <?php
+            }
         }
 
     }
