@@ -22,9 +22,12 @@ Wechat payment gateway for WooCommerce, WooCommerce 微信免费全功能支付�
 * 在 WooCommerce 订单中直接通过微信退款，退款原路返回
 * 货币不是人民币时，可以设置一个固定汇率
 
-支付宝支付网关：
-[Wenprise Alipay Payment Gateway For WooCommerce](https://wordpress.org/plugins/wenprise-alipay-checkout-for-woocommerce/)
+### 付费设置服务 ###
+如果你不想自己动手设置，或者自己设置有困难，可以购买我们的付费设置服务。
+[WooCommerce支付宝插件设置服务](https://www.wpzhiku.com/product/woocommerce-zhi-fu-bao-cha/)
 
+### 支付宝支付网关 ###
+[Wenprise Alipay Payment Gateway For WooCommerce](https://wordpress.org/plugins/wenprise-alipay-checkout-for-woocommerce/)
 
 ### Support 技术支持 ###
 
