@@ -104,7 +104,6 @@ add_filter('wprs_wc_wechat_open_id', function ($open_id)
 
     global $wpdb;
     $user_id = get_current_user_id();
-    $open_id = '';
 
     $wechat_login = $wpdb->get_row("SELECT mp_openid FROM {$wpdb->prefix}xh_social_channel_wechat WHERE user_id = $user_id");
 
