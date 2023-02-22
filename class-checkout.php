@@ -330,7 +330,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
 
         <h3>
             <?php echo ( ! empty($this->method_title)) ? $this->method_title : __('Settings', 'wprs-wc-wechatpay'); ?>
-            <?php wc_back_link( __( 'Return to payments', 'woocommerce' ), admin_url( 'admin.php?page=wc-settings&tab=checkout' ) ); ?>
+            <?php wc_back_link(__('Return to payments', 'woocommerce'), admin_url('admin.php?page=wc-settings&tab=checkout')); ?>
         </h3>
 
         <?php echo ( ! empty($this->method_description)) ? wpautop($this->method_description) : ''; ?>
@@ -621,8 +621,9 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
             'open_id'          => $open_id,
         ];
 
-        // 生成订单并发送支付
         /**
+         * 生成订单并发送支付
+         *
          * @var \Omnipay\WechatPay\Message\CreateOrderRequest  $request
          * @var \Omnipay\WechatPay\Message\CreateOrderResponse $response
          */
@@ -650,7 +651,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
      * @param null   $amount
      * @param string $reason
      *
-     * @return bool|\WP_Error
+     * @return bool
      */
     public function process_refund($order_id, $amount = null, $reason = '')
     {
@@ -670,7 +671,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         $refund_fee = round($amount * $exchange_rate, 2);
 
         if ($refund_fee <= 0 || $refund_fee > $total) {
-            false;
+            return false;
         }
 
         $request = $gateway->refund([
