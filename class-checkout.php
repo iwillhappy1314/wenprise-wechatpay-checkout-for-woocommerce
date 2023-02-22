@@ -121,7 +121,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         }
 
         // 前端显示的支付网关名称
-        $this->title = __('Wechat Pay', 'wprs-wc-wechatpay');
+        $this->title = $this->get_option('title');
 
         // 支付网关标题
         $this->icon = apply_filters('omnipay_wechat_pay_icon', WENPRISE_WECHATPAY_ASSETS_URL . 'wechatpay.png');
@@ -559,7 +559,9 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
 
                 if (array_key_exists('return_msg', $error)) {
                     wc_add_notice($error[ 'return_code' ] . ': ' . $error[ 'return_msg' ], 'error');
-                } elseif (array_key_exists('err_code_des', $error)) {
+                }
+
+                if (array_key_exists('err_code_des', $error)) {
                     wc_add_notice($error[ 'err_code' ] . ': ' . $error[ 'err_code_des' ], 'error');
                 }
 
@@ -918,7 +920,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
             if ( ! ($this->log)) {
                 $this->log = new WC_Logger();
             }
-            $this->log->add('wprs-wc-wechatpay', $message);
+            $this->log->add('wprs-wc-wechatpay', var_export($message, true));
         }
     }
 
