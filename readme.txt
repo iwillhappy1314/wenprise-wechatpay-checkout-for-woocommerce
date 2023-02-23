@@ -63,6 +63,70 @@ Email: amos@wpcio.com
     });
 ```
 
+### 怎么使用小程序登录功能？ ###
+
+在小程序中，发送请求到url：/wc-api/wprs-wc-wechatpay-mini-app-login
+```
+wx.login({
+	success(res) {
+		if (res.code) {
+
+			// 请求登录后端，获取open_id 和 session_key
+			wx.request({
+				url : config.getRootUrl + '/wc-api/wprs-wc-wechatpay-mini-app-login',
+				data: {
+					code: res.code,
+				},
+				success(res) {
+
+					// 保存小程序登录信息
+					wx.setStorageSync('open_id', res.data.data.openid);
+
+					// 请求支付插件获取支付信息
+					wx.request({
+						url   : config.getRootUrl +  'wc-api/wprs-wc-wechatpay-mini-app-bridge',
+						method: 'POST',
+						data  : {
+							open_id : res.data.data.openid,
+							from    : 'mini_app',
+							order_id: payData.order_id,
+						},
+						success(res) {
+
+							var payment_data = res.data.data;
+
+							// 发送支付请求，在小程序中调起支付
+							wx.requestPayment({
+								timeStamp: payment_data.timeStamp,
+								nonceStr : payment_data.nonceStr,
+								package  : decodeURIComponent(payment_data.package),
+								signType : 'MD5',
+								paySign  : payment_data.paySign,
+								success(res) {
+									console.log('支付成功', res);
+									// 支付成功以后，再跳回webview页，并把支付成功状态传回去
+									wx.navigateTo({
+										url: '../webview/webview?src=' + encodeURI(payment_data.return_url),
+									});
+								},
+								fail(res) {
+									console.log('支付失败', res);
+								},
+							});
+
+						},
+					});
+
+				},
+			});
+		} else {
+			console.log('登录失败！' + res.errMsg);
+		}
+	},
+});
+```
+
+
 ## Screenshots ##
 * Setting
 * payment
