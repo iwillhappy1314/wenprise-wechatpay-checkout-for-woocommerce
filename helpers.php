@@ -21,7 +21,8 @@ class Helper
      */
     public static function is_mini_app()
     {
-        return ! empty($_SERVER[ 'HTTP_USER_AGENT' ]) && (strpos($_SERVER[ 'HTTP_USER_AGENT' ], 'miniprogram') !== false || strpos($_SERVER[ 'HTTP_USER_AGENT' ], 'miniprogramhtmlwebview') !== false);
+        error_log(var_export($_SERVER, true));
+        return ! empty($_SERVER[ 'HTTP_USER_AGENT' ]) && (strpos($_SERVER[ 'HTTP_USER_AGENT' ], 'miniProgram') !== false || strpos($_SERVER[ 'HTTP_USER_AGENT' ], 'miniprogramhtmlwebview') !== false);
     }
 
     /**
