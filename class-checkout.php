@@ -157,6 +157,8 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         add_action('woocommerce_api_wprs-wc-wechatpay-notify', [$this, 'listen_notify']);
         add_action('woocommerce_api_wprs-wc-wechatpay-bridge', [$this, 'bridge']);
 
+        // 小程序支付功能
+        add_action('woocommerce_api_wprs-wc-wechatpay-mini-app-login', [$this, 'mini_app_login']);
         add_action('woocommerce_api_wprs-wc-wechatpay-mini-app-bridge', [$this, 'process_mini_app_payment']);
 
         // 添加前端脚本
@@ -296,7 +298,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
             if ( ! isset($_GET[ 'pay_for_order' ]) && is_checkout_pay_page()) {
 
                 if (Helper::is_wechat()) {
-                    wp_enqueue_script('wprs-wc-wechatpay-js-sdk', 'https://res.wx.qq.com/open/js/jweixin-1.4.0.js', ['jquery'], WENPRISE_WECHATPAY_VERSION, true);
+                    wp_enqueue_script('wprs-wc-wechatpay-js-sdk', 'https://res.wx.qq.com/open/js/jweixin-1.6.0.js', ['jquery'], WENPRISE_WECHATPAY_VERSION, true);
                     wp_enqueue_script('wprs-wc-wechatpay-scripts', plugins_url('/frontend/mpweb.js', __FILE__), ['jquery'], WENPRISE_WECHATPAY_VERSION, true);
                 }
 
@@ -792,22 +794,20 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
          * 小程序环境中，直接跳转到 WebView 支付页面
          */
         if (Helper::is_mini_app()) {
-            ?>
-            <script>
-              jQuery(document).ready(function($) {
-                /**
-                 * 调用微信小程序支付
-                 */
-                function wprs_wcc_call_mini_app_pay() {
-                  wx.miniProgram.reLaunch({url: '/pages/wePay/wePay?order_id=<?= $order_id; ?>'});
-                }
+        ?>
+        <script>
+            /**
+             * 调用微信小程序支付
+             */
+            function wprs_wc_call_mini_app_pay() {
+              wx.miniProgram.reLaunch({url: '/pages/wePay/wePay?order_id=<?= $order_id; ?>'});
+            }
 
-                wprs_wcc_call_mini_app_pay();
-              });
-            </script>
+            wprs_wc_call_mini_app_pay();
+        </script>
 
-            <?php
-        }
+        <?php
+    }
 
         $from     = isset($_GET[ 'from' ]) ? (string)$_GET[ 'from' ] : false;
         $code_url = get_post_meta($order_id, 'wprs_wc_wechat_code_url', true);
@@ -825,7 +825,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
             if (Helper::is_wechat()) {
                 // 微信中，用户需要点击支付按钮调起支付窗口
                 if (Helper::is_mini_app()) {
-                    echo '<button class="button" onclick="wprs_wcc_call_mini_app_pay()" >使用微信支付</button>';
+                    echo '<button class="button" onclick="wprs_wc_call_mini_app_pay()" >使用微信支付</button>';
                 } else {
                     echo '<button class="button" onclick="wprs_wc_call_wechat_pay()" >立即支付</button>';
                 }
@@ -910,6 +910,34 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         } else {
             wp_send_json_error();
         }
+    }
+
+
+    function mini_app_login()
+    {
+        if ( ! isset($_GET[ 'code' ])) {
+            wp_send_json_error('Missing code param');
+        }
+
+        $args = [
+            'appid'      => $this->mini_app_id,
+            'secret'     => $this->mini_app_secret,
+            'js_code'    => $_GET[ 'code' ],
+            'grant_type' => 'authorization_code',
+        ];
+
+        $url_base = 'https://api.weixin.qq.com/sns/jscode2session';
+        $url      = add_query_arg($args, $url_base);
+
+        $response = wp_remote_get($url);
+
+        if (is_wp_error($response)) {
+            wp_send_json_error($response->get_error_message());
+        } else {
+            wp_send_json_success(json_decode(wp_remote_retrieve_body($response)));
+        }
+
+        exit();
     }
 
 

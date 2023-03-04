@@ -117,7 +117,7 @@ class Helper
      *
      * @return array|mixed|object
      */
-    public static function remote_get($url)
+    public static function http_get($url)
     {
         $response = wp_remote_get($url);
 
