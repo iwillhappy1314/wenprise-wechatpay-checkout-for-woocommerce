@@ -21,7 +21,37 @@ class Helper
      */
     public static function is_mini_app()
     {
-        return ! empty($_SERVER[ 'HTTP_USER_AGENT' ]) && (strpos($_SERVER[ 'HTTP_USER_AGENT' ], 'miniprogram') !== false || strpos($_SERVER[ 'HTTP_USER_AGENT' ], 'miniprogramhtmlwebview') !== false);
+        return ! empty($_SERVER[ 'HTTP_USER_AGENT' ]) && (strpos($_SERVER[ 'HTTP_USER_AGENT' ], 'miniProgram') !== false || strpos($_SERVER[ 'HTTP_USER_AGENT' ], 'miniprogramhtmlwebview') !== false);
+    }
+
+
+    public static function data_value($value)
+    {
+        return $value instanceof \Closure ? $value() : $value;
+    }
+
+
+    public static function data_get($array, ?string $key = null, $default = null)
+    {
+        if (is_null($key)) {
+            return $array;
+        }
+
+        $array = (array)$array;
+
+        if (isset($array[ $key ])) {
+            return $array[ $key ];
+        }
+
+        foreach (explode('.', $key) as $segment) {
+            if ( ! is_array($array) || ! array_key_exists($segment, $array)) {
+                return self::data_value($default);
+            }
+
+            $array = $array[ $segment ];
+        }
+
+        return $array;
     }
 
     /**
@@ -87,7 +117,7 @@ class Helper
      *
      * @return array|mixed|object
      */
-    public static function http_get($url)
+    public static function remote_get($url)
     {
         $response = wp_remote_get($url);
 
