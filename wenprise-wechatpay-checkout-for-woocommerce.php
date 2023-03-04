@@ -17,29 +17,29 @@ if ( ! defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 
-if (PHP_VERSION_ID < 50600) {
+if (PHP_VERSION_ID < 70100) {
     // 显示警告信息
     if (is_admin()) {
         add_action('admin_notices', function ()
         {
             printf('<div class="error"><p>' . __('Wenprise WeChatPay Payment Gateway For WooCommerce 需要 PHP %1$s 以上版本才能运行，您当前的 PHP 版本为 %2$s， 请升级到 PHP 到 %1$s 或更新的版本， 否则插件没有任何作用。',
                     'wprs') . '</p></div>',
-                '5.6.0', PHP_VERSION);
+                '7.1.0', PHP_VERSION);
         });
     }
 
     return;
 }
 
-define('WENPRISE_WECHATPAY_FILE_PATH', __FILE__);
+const WENPRISE_WECHATPAY_VERSION = '1.0.10';
+const WENPRISE_WECHATPAY_WOOCOMMERCE_ID = 'wprs-wc-wechatpay';
+const WENPRISE_WECHATPAY_ASSETS_URL = WENPRISE_WECHATPAY_URL . 'frontend/';
+
 define('WENPRISE_WECHATPAY_PATH', plugin_dir_path(__FILE__));
 define('WENPRISE_WECHATPAY_URL', plugin_dir_url(__FILE__));
-define('WENPRISE_WECHATPAY_VERSION', '1.0.10');
-define('WENPRISE_WECHATPAY_WOOCOMMERCE_ID', 'wprs-wc-wechatpay');
-define('WENPRISE_WECHATPAY_ASSETS_URL', WENPRISE_WECHATPAY_URL . 'frontend/');
+
 
 require WENPRISE_WECHATPAY_PATH . 'helpers.php';
-
 
 add_action('wp_enqueue_scripts', function ()
 {
@@ -81,22 +81,6 @@ add_action('plugins_loaded', function ()
 
 
 /**
- * 在微信中打开时，自动登录，以便获取微信 Open ID, 实现公众号 JS API 支付
- */
-add_action('init', function ()
-{
-    if (Helper::is_wechat() && ! is_user_logged_in() && ! has_filter('wprs_wc_wechat_open_id')) {
-        $gateway = new Wenprise_Wechat_Pay_Gateway();
-        $auth    = new \WenpriseWechatPay\Auth();
-
-        if ($gateway->enabled_auto_login) {
-            $auth->auth();
-        }
-    }
-}, 99);
-
-
-/**
  * 兼容迅虎登录插件
  */
 add_filter('wprs_wc_wechat_open_id', function ($open_id)
@@ -120,7 +104,6 @@ add_filter('wprs_wc_wechat_open_id', function ($open_id)
  */
 add_filter('wprs_wc_wechat_open_id', static function ($open_id)
 {
-
     if (class_exists(\WenpriseSecurity\Models\OpenAuth::class)) {
         $auth = new \WenpriseSecurity\Models\OpenAuth();
 
@@ -149,7 +132,7 @@ add_filter('plugin_action_links_' . plugin_basename(__FILE__), function ($links)
  */
 add_filter('woocommerce_valid_order_statuses_for_payment', function ($status, $instance)
 {
-    $from = isset($_GET[ 'from' ]) ? $_GET[ 'from' ] : false;
+    $from = Helper::data_get($_GET, 'from', false);
 
     $status_addon = [];
     if ($from === 'wap') {

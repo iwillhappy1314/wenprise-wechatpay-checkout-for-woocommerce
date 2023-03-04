@@ -30,7 +30,7 @@ function wprs_wc_call_wechat_pay() {
                 alert('支付取消');
             },
             'fail'     : function(res) {
-                alert('支付请求失败');
+                alert('支付失败');
             },
         };
 

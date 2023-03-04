@@ -8,7 +8,7 @@ class Helper
     /**
      * 判断是否在微信中打开
      */
-    public static function is_wechat()
+    public static function is_wechat(): bool
     {
         return ! empty($_SERVER[ 'HTTP_USER_AGENT' ]) && strpos($_SERVER[ 'HTTP_USER_AGENT' ], 'MicroMessenger') !== false;
     }
@@ -19,7 +19,7 @@ class Helper
      *
      * @return bool
      */
-    public static function is_mini_app()
+    public static function is_mini_app(): bool
     {
         return ! empty($_SERVER[ 'HTTP_USER_AGENT' ]) && (strpos($_SERVER[ 'HTTP_USER_AGENT' ], 'miniProgram') !== false || strpos($_SERVER[ 'HTTP_USER_AGENT' ], 'miniprogramhtmlwebview') !== false);
     }
@@ -94,7 +94,7 @@ class Helper
         if (isset($_SERVER[ 'SERVER_ADDR' ])) {
             $is_https   = isset($_SERVER[ 'HTTPS' ]) && 'on' === $_SERVER[ 'HTTPS' ];
             $protocol   = 'http' . ($is_https ? 's' : '');
-            $host       = isset($_SERVER[ 'HTTP_HOST' ]) ? $_SERVER[ 'HTTP_HOST' ] : $_SERVER[ 'SERVER_ADDR' ];
+            $host       = $_SERVER[ 'HTTP_HOST' ] ?? $_SERVER[ 'SERVER_ADDR' ];
             $port       = $_SERVER[ 'SERVER_PORT' ];
             $path_query = $_SERVER[ 'REQUEST_URI' ];
 
@@ -117,7 +117,7 @@ class Helper
      *
      * @return array|mixed|object
      */
-    public static function http_get($url)
+    public static function remote_get($url)
     {
         $response = wp_remote_get($url);
 
