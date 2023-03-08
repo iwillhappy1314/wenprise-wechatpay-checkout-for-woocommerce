@@ -300,7 +300,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         }
 
         $signPackage = $jssdk->GetSignPackage();
-        $order_data  = get_post_meta($order_id, 'wprs_wc_wechat_order_data', true);
+        $order_data  = $order->get_meta('wprs_wc_wechat_order_data', true);
 
         if ($order && 'wprs-wc-wechatpay' === $order->get_payment_method()) {
             if ( ! isset($_GET[ 'pay_for_order' ]) && is_checkout_pay_page()) {
@@ -526,7 +526,8 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
 
                 if (Helper::is_wechat()) {
                     // 微信中，返回跳转 URL，带上支付数据，由微信拉起支付
-                    update_post_meta($order_id, 'wprs_wc_wechat_order_data', $response->getJsOrderData());
+                    // update_post_meta($order_id, 'wprs_wc_wechat_order_data', $response->getJsOrderData());
+                    $order->update_meta_data('wprs_wc_wechat_order_data', $response->getJsOrderData());
                     $redirect_url = add_query_arg(['order-pay' => $order->get_id(), 'key' => $order->get_order_key()], wc_get_checkout_url());
 
                 } else {
@@ -537,7 +538,8 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
 
                     $redirect_url = add_query_arg(['order-pay' => $order->get_id(), 'key' => $order->get_order_key(), 'from' => 'wap'], wc_get_checkout_url());
 
-                    update_post_meta($order_id, 'wprs_wc_wechat_mweb_url', $payment_url);
+                    // update_post_meta($order_id, 'wprs_wc_wechat_mweb_url', $payment_url);
+                    $order->update_meta_data('wprs_wc_wechat_mweb_url', $payment_url);
 
                     return [
                         'result'      => 'success',
@@ -550,11 +552,13 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
                 // PC端，返回跳转URL，跳转页面中包含原生支付二维码
                 // 用户支付成功后，微信服务器推送支付成功数据到网站
                 // 在跳转URL中，JS 轮询支付状态，检测到支付成功后，跳转到支付成功页面
-                $code_url = $response->getCodeUrl();
-                update_post_meta($order_id, 'wprs_wc_wechat_code_url', $code_url);
+                // update_post_meta($order_id, 'wprs_wc_wechat_code_url', $code_url);
+                $order->update_meta_data('wprs_wc_wechat_code_url', $response->getCodeUrl());
 
                 $redirect_url = $order->get_checkout_payment_url(true);
             }
+
+            $order->save();
 
             return [
                 'result'   => 'success',
@@ -700,7 +704,9 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
                     sprintf(__('Refunded %1$s', 'woocommerce'), $amount)
                 );
 
-                update_post_meta($order_id, 'refund_id', $data[ 'refund_id' ]);
+                // update_post_meta($order_id, 'refund_id', $data[ 'refund_id' ]);
+                $order->update_meta_data('refund_id', $data[ 'refund_id' ]);
+                $order->save();
 
                 return true;
             }
@@ -764,9 +770,14 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
                     sprintf(__('Wechatpay payment complete (Transaction ID: %s)', 'wprs-wc-wechatpay'), $data[ 'transaction_id' ])
                 );
 
-                delete_post_meta($order->get_id(), 'wprs_wc_wechat_order_data');
-                delete_post_meta($order->get_id(), 'wprs_wc_wechat_code_url');
-                delete_post_meta($order->get_id(), 'wprs_wc_wechat_mweb_url');
+                // delete_post_meta($order->get_id(), 'wprs_wc_wechat_order_data');
+                // delete_post_meta($order->get_id(), 'wprs_wc_wechat_code_url');
+                // delete_post_meta($order->get_id(), 'wprs_wc_wechat_mweb_url');
+
+                $order->delete_meta_data('wprs_wc_wechat_order_data');
+                $order->delete_meta_data('wprs_wc_wechat_code_url');
+                $order->delete_meta_data('wprs_wc_wechat_mweb_url');
+                $order->save();
 
                 echo exit('<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>');
 
@@ -798,6 +809,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
      */
     function receipt_page(int $order_id)
     {
+        $order = wc_get_order($order_id);
 
         /**
          * 小程序中获取 open_id 处理
@@ -834,14 +846,15 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         }
 
         $from     = isset($_GET[ 'from' ]) ? (string)$_GET[ 'from' ] : false;
-        $code_url = get_post_meta($order_id, 'wprs_wc_wechat_code_url', true);
+        // $code_url = get_post_meta($order_id, 'wprs_wc_wechat_code_url', true);
+        $code_url = $order->get_meta('wprs_wc_wechat_code_url');
 
         if ($from === 'wap') {
             // 移动浏览器中，显示已支付和继续支付的按钮没，功能和 Modal 类似
 
             echo '<div class="wprs-wc-buttons">';
             echo '<button class="button" id="js-wprs-wc-wechatpay" data-order_id="' . $order_id . '">已支付</button>';
-            echo '<a target="_blank" class="button" href="' . get_post_meta($order_id, 'wprs_wc_wechat_mweb_url', true) . '">继续支付</a>';
+            echo '<a target="_blank" class="button" href="' . $order->get_meta('wprs_wc_wechat_mweb_url') . '">继续支付</a>';
             echo '</div>';
 
         } else {
