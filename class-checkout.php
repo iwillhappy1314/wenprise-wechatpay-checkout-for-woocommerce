@@ -291,7 +291,6 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
     public function enqueue_script()
     {
         $order_id = get_query_var('order-pay');
-        $order    = wc_get_order($order_id);
 
         if (Helper::is_mini_app()) {
             $jssdk = new JSSDK($this->mini_app_id, $this->mini_app_secret);
@@ -300,31 +299,36 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         }
 
         $signPackage = $jssdk->GetSignPackage();
-        $order_data  = $order->get_meta('wprs_wc_wechat_order_data', true);
 
-        if ($order && 'wprs-wc-wechatpay' === $order->get_payment_method()) {
-            if ( ! isset($_GET[ 'pay_for_order' ]) && is_checkout_pay_page()) {
+        if ($order_id) {
+            $order = wc_get_order($order_id);
+            if ('wprs-wc-wechatpay' === $order->get_payment_method()) {
 
-                if (Helper::is_wechat()) {
-                    wp_enqueue_script('wprs-wc-wechatpay-js-sdk', 'https://res.wx.qq.com/open/js/jweixin-1.6.0.js', ['jquery'], WENPRISE_WECHATPAY_VERSION, true);
-                    wp_enqueue_script('wprs-wc-wechatpay-scripts', plugins_url('/frontend/mpweb.js', __FILE__), ['jquery'], WENPRISE_WECHATPAY_VERSION, true);
+                if ( ! isset($_GET[ 'pay_for_order' ]) && is_checkout_pay_page()) {
+
+                    if (Helper::is_wechat()) {
+                        wp_enqueue_script('wprs-wc-wechatpay-js-sdk', 'https://res.wx.qq.com/open/js/jweixin-1.6.0.js', ['jquery'], WENPRISE_WECHATPAY_VERSION, true);
+                        wp_enqueue_script('wprs-wc-wechatpay-scripts', plugins_url('/frontend/mpweb.js', __FILE__), ['jquery'], WENPRISE_WECHATPAY_VERSION, true);
+                    }
+
+                    wp_enqueue_style('wprs-wc-wechatpay-style', plugins_url('/frontend/styles.css', __FILE__), [], WENPRISE_WECHATPAY_VERSION, false);
+                    wp_enqueue_script('wprs-wc-wechatpay-scripts', plugins_url('/frontend/script.js', __FILE__), ['jquery', 'jquery-blockui'], WENPRISE_WECHATPAY_VERSION, true);
+                    wp_enqueue_script('qrcode', WC()->plugin_url() . '/assets/js/jquery-qrcode/jquery.qrcode.js', ['jquery'], WENPRISE_WECHATPAY_VERSION);
+
+                    wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatPaySign', $signPackage);
+
+                    if ( ! empty($order)) {
+                        $order_data = $order->get_meta('wprs_wc_wechat_order_data');
+                        wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatPayOrder', $order_data);
+                    }
+
+                    wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatData', [
+                        'return_url' => $this->get_return_url($order),
+                        'bridge_url' => WC()->api_request_url('wprs-wc-wechatpay-bridge'),
+                        'query_url'  => WC()->api_request_url('wprs-wc-wechatpay-query'),
+                    ]);
+
                 }
-
-                wp_enqueue_style('wprs-wc-wechatpay-style', plugins_url('/frontend/styles.css', __FILE__), [], WENPRISE_WECHATPAY_VERSION, false);
-                wp_enqueue_script('wprs-wc-wechatpay-scripts', plugins_url('/frontend/script.js', __FILE__), ['jquery', 'jquery-blockui'], WENPRISE_WECHATPAY_VERSION, true);
-                wp_enqueue_script('qrcode', WC()->plugin_url() . '/assets/js/jquery-qrcode/jquery.qrcode.js', ['jquery'], WENPRISE_WECHATPAY_VERSION);
-
-                wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatPaySign', $signPackage);
-
-                if ( ! empty($order_data)) {
-                    wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatPayOrder', $order_data);
-                }
-
-                wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatData', [
-                    'return_url' => $this->get_return_url($order),
-                    'bridge_url' => WC()->api_request_url('wprs-wc-wechatpay-bridge'),
-                    'query_url'  => WC()->api_request_url('wprs-wc-wechatpay-query'),
-                ]);
 
             }
         }
@@ -483,7 +487,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
             $exchange_rate = 1;
         }
 
-        $total = round($total * $exchange_rate, 2);
+        $total = round($total * $exchange_rate, get_option('woocommerce_price_num_decimals'));
 
         do_action('wenprise_woocommerce_wechatpay_before_process_payment');
 
@@ -622,7 +626,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
             $exchange_rate = 1;
         }
 
-        $total = round($total * $exchange_rate, 2);
+        $total = round($total * $exchange_rate, get_option('woocommerce_price_num_decimals'));
 
         $order_data = [
             'body'             => sprintf(__('Pay for order %1$s at %2$s', 'wprs-wc-wechatpay'), $order_no, get_bloginfo('name')),
@@ -679,8 +683,8 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
             $exchange_rate = 1;
         }
 
-        $total      = round($total * $exchange_rate, 2);
-        $refund_fee = round($amount * $exchange_rate, 2);
+        $total      = round($total * $exchange_rate, get_option('woocommerce_price_num_decimals'));
+        $refund_fee = round($amount * $exchange_rate, get_option('woocommerce_price_num_decimals'));
 
         if ($refund_fee <= 0 || $refund_fee > $total) {
             return false;
@@ -845,7 +849,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
             <?php
         }
 
-        $from     = isset($_GET[ 'from' ]) ? (string)$_GET[ 'from' ] : false;
+        $from = isset($_GET[ 'from' ]) ? (string)$_GET[ 'from' ] : false;
         // $code_url = get_post_meta($order_id, 'wprs_wc_wechat_code_url', true);
         $code_url = $order->get_meta('wprs_wc_wechat_code_url');
 
