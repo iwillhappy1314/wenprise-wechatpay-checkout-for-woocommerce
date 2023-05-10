@@ -25,6 +25,12 @@ Wechat payment gateway for WooCommerce, WooCommerce 微信免费全功能支付�
 * 兼容 Wenprise Security 登录插件
 * 兼容讯虎登录插件
 
+### 在微信小程序中使用 ###
+
+本插件支持小程序支付，具体使用方法请参考下面的示例项目。
+
+[小程序支付示例项目](https://github.com/iwillhappy1314/woocommerce-wechat-miniapp-webview-payment)
+
 ### 付费设置服务 ###
 如果你不想自己动手设置，或者自己设置有困难，可以购买我们的付费设置服务。
 [WooCommerce支付宝插件设置服务](https://www.wpzhiku.com/product/woocommerce-zhi-fu-bao-cha/)
@@ -56,7 +62,8 @@ Email: amos@wpcio.com
 
 ### 怎么兼容其他微信登录插件？ ###
 如果已经使用了其他微信登录插件，可以通过`wprs_wc_wechat_open_id` 这个 Filter 来修改支付插件使用的 open_id，修改下面代码中获取 open_id 的代码为对应登录插件中的代码即可。
-```php
+
+```
     add_filter('wprs_wc_wechat_open_id', function(){
         $open_id = '';
         return $open_id;
@@ -66,6 +73,7 @@ Email: amos@wpcio.com
 ### 怎么使用小程序登录功能？ ###
 
 在小程序中，发送请求到url：/wc-api/wprs-wc-wechatpay-mini-app-login
+
 ```
 wx.login({
 	success(res) {
