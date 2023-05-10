@@ -4,10 +4,10 @@ Donate link: https://www.wpzhiku.com/
 Tags: Alipay, WooCommerce, woocommerce, payment, payment gateway, gateway, 微信, 微信支付, Wechat payment gateway, Wechat gateway, credit card, pay, online payment, shop, e-commerce, ecommerce
 Requires PHP: 7.1
 Requires at least: 4.7
-Tested up to: 6.1
+Tested up to: 6.2
 WC requires at least: 3.5
-WC tested up to: 6.3
-Stable tag: 1.1.2
+WC tested up to: 7.7
+Stable tag: 1.2.0
 License: GPL-2.0+
 
 Wechat payment gateway for WooCommerce, WooCommerce 微信免费全功能支付网关。
@@ -132,6 +132,8 @@ wx.login({
 * payment
 
 ## Changelog ##
+### 1.2.0 ###
+* 兼容性升级
 
 ### 1.1.2 ###
 * 兼容讯虎登录插件
