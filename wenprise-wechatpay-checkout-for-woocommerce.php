@@ -12,6 +12,7 @@
  */
 
 use WenpriseWechatPay\Helper;
+use Automattic\Jetpack\Constants;
 
 if ( ! defined('ABSPATH')) {
     exit; // Exit if accessed directly
@@ -34,9 +35,9 @@ if (PHP_VERSION_ID < 70100) {
 define('WENPRISE_WECHATPAY_PATH', plugin_dir_path(__FILE__));
 define('WENPRISE_WECHATPAY_URL', plugin_dir_url(__FILE__));
 
-const WENPRISE_WECHATPAY_VERSION = '1.0.10';
+const WENPRISE_WECHATPAY_VERSION        = '1.0.10';
 const WENPRISE_WECHATPAY_WOOCOMMERCE_ID = 'wprs-wc-wechatpay';
-const WENPRISE_WECHATPAY_ASSETS_URL = WENPRISE_WECHATPAY_URL . 'frontend/';
+const WENPRISE_WECHATPAY_ASSETS_URL     = WENPRISE_WECHATPAY_URL . 'frontend/';
 
 require WENPRISE_WECHATPAY_PATH . 'helpers.php';
 
@@ -47,7 +48,11 @@ add_action('wp_enqueue_scripts', function ()
     }
 
     if ((is_checkout() || is_checkout_pay_page()) && wp_is_mobile() && ! Helper::is_wechat()) {
-        wp_enqueue_script('wprs-wc-wechatpay-scripts', plugins_url('/frontend/script.js', __FILE__), ['jquery', 'jquery-blockui'], WENPRISE_WECHATPAY_VERSION, true);
+        $version = Constants::get_constant('WC_VERSION');
+        $suffix  = Constants::is_true('SCRIPT_DEBUG') ? '' : '.min';
+
+        wp_register_script('qrcode', WC()->plugin_url() . '/assets/js/jquery-qrcode/jquery.qrcode' . $suffix . '.js', array('jquery'), $version);
+        wp_enqueue_script('wprs-wc-wechatpay-scripts', plugins_url('/frontend/script.js', __FILE__), ['jquery', 'jquery-blockui', 'qrcode'], WENPRISE_WECHATPAY_VERSION, true);
 
         wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatData', [
             'bridge_url' => WC()->api_request_url('wprs-wc-wechatpay-bridge'),
