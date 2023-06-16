@@ -55,7 +55,6 @@ add_action('wp_enqueue_scripts', function ()
         wp_enqueue_script('wprs-wc-wechatpay-scripts', plugins_url('/frontend/script.js', __FILE__), ['jquery', 'jquery-blockui', 'qrcode'], WENPRISE_WECHATPAY_VERSION, true);
 
         wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatData', [
-            'bridge_url' => WC()->api_request_url('wprs-wc-wechatpay-bridge'),
             'query_url'  => WC()->api_request_url('wprs-wc-wechatpay-query'),
         ]);
     }
