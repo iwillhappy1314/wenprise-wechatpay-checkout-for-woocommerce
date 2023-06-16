@@ -488,6 +488,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         }
 
         $total = round($total * $exchange_rate, get_option('woocommerce_price_num_decimals'));
+        $total = number_format($total, get_option('woocommerce_price_num_decimals'), '.', '');
 
         do_action('wenprise_woocommerce_wechatpay_before_process_payment');
 
@@ -627,6 +628,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         }
 
         $total = round($total * $exchange_rate, get_option('woocommerce_price_num_decimals'));
+        $total = number_format($total, get_option('woocommerce_price_num_decimals'), '.', '');
 
         $order_data = [
             'body'             => sprintf(__('Pay for order %1$s at %2$s', 'wprs-wc-wechatpay'), $order_no, get_bloginfo('name')),
@@ -685,6 +687,7 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
 
         $total      = round($total * $exchange_rate, get_option('woocommerce_price_num_decimals'));
         $refund_fee = round($amount * $exchange_rate, get_option('woocommerce_price_num_decimals'));
+        $refund_fee = number_format($refund_fee, get_option('woocommerce_price_num_decimals'), '.', '');
 
         if ($refund_fee <= 0 || $refund_fee > $total) {
             return false;
