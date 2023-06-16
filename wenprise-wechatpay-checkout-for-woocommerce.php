@@ -51,11 +51,11 @@ add_action('wp_enqueue_scripts', function ()
         $version = Constants::get_constant('WC_VERSION');
         $suffix  = Constants::is_true('SCRIPT_DEBUG') ? '' : '.min';
 
-        wp_register_script('qrcode', WC()->plugin_url() . '/assets/js/jquery-qrcode/jquery.qrcode' . $suffix . '.js', array('jquery'), $version);
+        wp_register_script('qrcode', WC()->plugin_url() . '/assets/js/jquery-qrcode/jquery.qrcode' . $suffix . '.js', ['jquery'], $version);
         wp_enqueue_script('wprs-wc-wechatpay-scripts', plugins_url('/frontend/script.js', __FILE__), ['jquery', 'jquery-blockui', 'qrcode'], WENPRISE_WECHATPAY_VERSION, true);
 
         wp_localize_script('wprs-wc-wechatpay-scripts', 'WpWooWechatData', [
-            'query_url'  => WC()->api_request_url('wprs-wc-wechatpay-query'),
+            'query_url' => WC()->api_request_url('wprs-wc-wechatpay-query'),
         ]);
     }
 });
@@ -144,3 +144,15 @@ add_filter('woocommerce_valid_order_statuses_for_payment', function ($status, $i
 
     return array_merge($status, $status_addon);
 }, 10, 2);
+
+
+/**
+ * 避免 TranslatePress 插件翻译签名字符串
+ */
+add_filter('option_trp_advanced_settings', function ($options)
+{
+    $options[ 'exclude_gettext_strings' ][ 'string' ][] = 'Pay for order %1$s at %2$s';
+    $options[ 'exclude_gettext_strings' ][ 'domain' ][] = 'wprs-wc-wechatpay';
+
+    return $options;
+});
