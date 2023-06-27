@@ -145,10 +145,6 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
 
         $this->exchange_rate = $this->get_option('exchange_rate');
 
-        // 设置是否应该重命名按钮。
-        $this->order_button_text = apply_filters('woocommerce_wechatpay_button_text', __('Proceed to Wechatpay', 'wprs-wc-wechatpay'));
-
-
         // 保存设置
         if (is_admin()) {
             add_action('woocommerce_update_options_payment_gateways_' . $this->id, [$this, 'process_admin_options']);
