@@ -65,7 +65,7 @@ Email: amos@wpcio.com
 
 ``
     add_filter('wprs_wc_wechat_open_id', function(){
-        $open_id = '';
+        $open_id = ''; //需要自行获取其他微信登录插件中记录的 openid
         return $open_id;
     });
 ``
@@ -74,12 +74,10 @@ Email: amos@wpcio.com
 
 在小程序中，发送请求到url：/wc-api/wprs-wc-wechatpay-mini-app-login
 
-``
+``JavaScript
 wx.login({
 	success(res) {
 		if (res.code) {
-
-			// 请求登录后端，获取open_id 和 session_key
 			wx.request({
 				url : config.getRootUrl + '/wc-api/wprs-wc-wechatpay-mini-app-login',
 				data: {
