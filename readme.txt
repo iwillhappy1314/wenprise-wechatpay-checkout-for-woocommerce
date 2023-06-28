@@ -33,7 +33,7 @@ Wechat payment gateway for WooCommerce, WooCommerce 微信免费全功能支付�
 
 ### 付费设置服务 ###
 如果你不想自己动手设置，或者自己设置有困难，可以购买我们的付费设置服务。
-[WooCommerce支付宝插件设置服务](https://www.wpzhiku.com/product/woocommerce-zhi-fu-bao-cha/)
+[WooCommerce微信支付插件设置服务](https://www.wpzhiku.com/product/wechat-payment-setup-service/)
 
 ### 支付宝支付网关 ###
 [Wenprise Alipay Payment Gateway For WooCommerce](https://wordpress.org/plugins/wenprise-alipay-checkout-for-woocommerce/)
@@ -74,7 +74,7 @@ Email: amos@wpcio.com
 
 在小程序中，发送请求到url：/wc-api/wprs-wc-wechatpay-mini-app-login
 
-``JavaScript
+``
 wx.login({
 	success(res) {
 		if (res.code) {
