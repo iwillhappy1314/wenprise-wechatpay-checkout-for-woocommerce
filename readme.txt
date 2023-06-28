@@ -63,18 +63,18 @@ Email: amos@wpcio.com
 ### 怎么兼容其他微信登录插件？ ###
 如果已经使用了其他微信登录插件，可以通过`wprs_wc_wechat_open_id` 这个 Filter 来修改支付插件使用的 open_id，修改下面代码中获取 open_id 的代码为对应登录插件中的代码即可。
 
-```
+``
     add_filter('wprs_wc_wechat_open_id', function(){
         $open_id = '';
         return $open_id;
     });
-```
+``
 
 ### 怎么使用小程序登录功能？ ###
 
 在小程序中，发送请求到url：/wc-api/wprs-wc-wechatpay-mini-app-login
 
-```
+``
 wx.login({
 	success(res) {
 		if (res.code) {
@@ -132,7 +132,7 @@ wx.login({
 		}
 	},
 });
-```
+``
 
 
 ## Screenshots ##
