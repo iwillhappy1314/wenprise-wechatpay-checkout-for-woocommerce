@@ -290,9 +290,9 @@ class Wenprise_Wechat_Pay_Gateway extends WC_Payment_Gateway
         $order_id = get_query_var('order-pay');
 
         if (Helper::is_mini_app()) {
-            $jssdk = new JSSDK($this->mini_app_id, $this->mini_app_secret);
+            $jssdk = new Wenprise_Wechat_Pay_JSSDK($this->mini_app_id, $this->mini_app_secret);
         } else {
-            $jssdk = new JSSDK($this->app_id, $this->app_secret);
+            $jssdk = new Wenprise_Wechat_Pay_JSSDK($this->app_id, $this->app_secret);
         }
 
         $signPackage = $jssdk->GetSignPackage();
