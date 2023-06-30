@@ -33,7 +33,7 @@ Wechat payment gateway for WooCommerce, WooCommerce 微信免费全功能支付�
 
 ### 付费设置服务 ###
 如果你不想自己动手设置，或者自己设置有困难，可以购买我们的付费设置服务。
-[WooCommerce支付宝插件设置服务](https://www.wpzhiku.com/product/woocommerce-zhi-fu-bao-cha/)
+[WooCommerce微信支付插件设置服务](https://www.wpzhiku.com/product/wechat-payment-setup-service/)
 
 ### 支付宝支付网关 ###
 [Wenprise Alipay Payment Gateway For WooCommerce](https://wordpress.org/plugins/wenprise-alipay-checkout-for-woocommerce/)
@@ -63,23 +63,21 @@ Email: amos@wpcio.com
 ### 怎么兼容其他微信登录插件？ ###
 如果已经使用了其他微信登录插件，可以通过`wprs_wc_wechat_open_id` 这个 Filter 来修改支付插件使用的 open_id，修改下面代码中获取 open_id 的代码为对应登录插件中的代码即可。
 
-```
+``
     add_filter('wprs_wc_wechat_open_id', function(){
-        $open_id = '';
+        $open_id = ''; //需要自行获取其他微信登录插件中记录的 openid
         return $open_id;
     });
-```
+``
 
 ### 怎么使用小程序登录功能？ ###
 
 在小程序中，发送请求到url：/wc-api/wprs-wc-wechatpay-mini-app-login
 
-```
+``
 wx.login({
 	success(res) {
 		if (res.code) {
-
-			// 请求登录后端，获取open_id 和 session_key
 			wx.request({
 				url : config.getRootUrl + '/wc-api/wprs-wc-wechatpay-mini-app-login',
 				data: {
@@ -132,7 +130,7 @@ wx.login({
 		}
 	},
 });
-```
+``
 
 
 ## Screenshots ##
