@@ -1,8 +1,8 @@
 <?php
 
-namespace WenpriseWechatPay;
+namespace Wenprise\Wechatpay;
 
-class Helper
+class Helpers
 {
 
     /**

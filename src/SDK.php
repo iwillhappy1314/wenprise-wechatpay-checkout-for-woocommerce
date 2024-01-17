@@ -1,8 +1,10 @@
 <?php
 
-use WenpriseWechatPay\Helper;
+namespace Wenprise\Wechatpay;
 
-class Wenprise_Wechat_Pay_JSSDK
+use Wenprise\Wechatpay\Helpers;
+
+class SDK
 {
     /**
      * @var
@@ -64,7 +66,7 @@ class Wenprise_Wechat_Pay_JSSDK
             // $url = "https://qyapi.weixin.qq.com/cgi-bin/get_jsapi_ticket?access_token=$accessToken";
             $url    = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?type=jsapi&access_token=$accessToken";
             $res    = json_decode(wp_remote_retrieve_body(wp_remote_post($url)));
-            $ticket = Helper::data_get($res, 'ticket');
+            $ticket = Helpers::data_get($res, 'ticket');
 
             if ($ticket) {
                 $data->expire_time  = time() + 7000;
@@ -95,7 +97,7 @@ class Wenprise_Wechat_Pay_JSSDK
             // $url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=$this->appId&corpsecret=$this->appSecret";
             $url          = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=$this->appId&secret=$this->appSecret";
             $res          = json_decode(wp_remote_retrieve_body(wp_remote_post($url)), true);
-            $access_token = Helper::data_get($res, 'access_token');
+            $access_token = Helpers::data_get($res, 'access_token');
 
             if ($access_token) {
                 $data->expire_time  = time() + 7000;
