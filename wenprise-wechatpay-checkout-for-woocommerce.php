@@ -8,7 +8,7 @@
  * Author URI: https://www.wpzhiku.com
  * Text Domain: wprs-wc-wechatpay
  * Domain Path: /languages
- * Requires PHP: 7.1
+ * Requires PHP: 7.2
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -22,7 +22,7 @@ if ( PHP_VERSION_ID < 70100 ) {
 		{
 			printf( '<div class="error"><p>' . __( 'Wenprise WeChatPay Payment Gateway For WooCommerce 需要 PHP %1$s 以上版本才能运行，您当前的 PHP 版本为 %2$s， 请升级到 PHP 到 %1$s 或更新的版本， 否则插件没有任何作用。',
 					'wprs' ) . '</p></div>',
-				'7.1.0', PHP_VERSION );
+				'7.2.0', PHP_VERSION );
 		} );
 	}
 
