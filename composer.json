@@ -1,6 +1,7 @@
 {
   "require": {
-    "omnipay/common": "3.0.*",
+    "omnipay/common": "^3.0",
+    "moneyphp/money": "^3.1",
     "lokielse/omnipay-wechatpay": "^3.0",
     "symfony/http-foundation": "3.4.*",
     "symfony/polyfill-intl-idn": "1.20.0",
@@ -16,6 +17,9 @@
   "config": {
     "preferred-install": {
       "*": "dist"
+    },
+    "allow-plugins": {
+      "php-http/discovery": true
     }
   }
 }
