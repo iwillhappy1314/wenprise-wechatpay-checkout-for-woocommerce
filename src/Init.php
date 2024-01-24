@@ -4,11 +4,12 @@ namespace Wenprise\Wechatpay;
 
 use Automattic\Jetpack\Constants;
 use Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry;
+use Automattic\WooCommerce\Utilities\FeaturesUtil;
 
 class Init {
 
 	public function __construct() {
-		add_filter( 'plugin_action_links_' . WENPRISE_WECHATPAY_BASE_NAME, [ $this, 'add_settings_link' ] );
+		add_filter( 'plugin_action_links_' . WENPRISE_WECHATPAY_BASE_FILE, [ $this, 'add_settings_link' ] );
 		add_filter( 'option_trp_advanced_settings', [ $this, 'ignore_translate_strings' ], 10, 2 );
 
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
@@ -17,6 +18,7 @@ class Init {
 		add_filter( 'wprs_wc_wechat_open_id', [ $this, 'wenprise_security_integrate' ] );
 
 		add_action( 'woocommerce_blocks_loaded', [ $this, 'add_block_support' ] );
+		add_action( 'before_woocommerce_init', [ $this, 'add_custom_table_support' ] );
 
 		add_filter( 'woocommerce_valid_order_statuses_for_payment', [ $this, 'modify_order_status_for_wap' ], 10, 2 );
 	}
@@ -113,6 +115,13 @@ class Init {
 					$payment_method_registry->register( new BlockSupport() );
 				}
 			);
+		}
+	}
+
+
+	function add_custom_table_support() {
+		if ( class_exists( FeaturesUtil::class ) ) {
+			FeaturesUtil::declare_compatibility( 'custom_order_tables', WENPRISE_WECHATPAY_FILE_PATH );
 		}
 	}
 

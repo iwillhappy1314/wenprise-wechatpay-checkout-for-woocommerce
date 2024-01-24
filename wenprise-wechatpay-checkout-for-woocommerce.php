@@ -33,11 +33,12 @@ if ( PHP_VERSION_ID < 70200 ) {
 	return;
 }
 
+define('WENPRISE_WECHATPAY_BASE_FILE', plugin_basename( __FILE__ ));
 define( 'WENPRISE_WECHATPAY_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WENPRISE_WECHATPAY_URL', plugin_dir_url( __FILE__ ) );
 
-const WENPRISE_WECHATPAY_BASE_NAME = __FILE__;
-const WENPRISE_WECHATPAY_VERSION        = '1.3.0';
+const WENPRISE_WECHATPAY_FILE_PATH   = __FILE__;
+const WENPRISE_WECHATPAY_VERSION   = '2.0.0';
 const WENPRISE_WECHATPAY_WOOCOMMERCE_ID = 'wprs-wc-wechatpay';
 const WENPRISE_WECHATPAY_ASSETS_URL     = WENPRISE_WECHATPAY_URL . 'frontend/';
 
