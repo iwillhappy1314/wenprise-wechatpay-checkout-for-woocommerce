@@ -24,6 +24,8 @@ WeChat payment gateway for WooCommerce, WooCommerce 微信免费全功能支付�
 * 货币不是人民币时，可以设置一个固定汇率
 * 兼容 Wenprise Security 登录插件
 * 兼容讯虎登录插件
+* 支持区块结账页面
+* 支持高性能存储
 
 ### 在微信小程序中使用 ###
 
@@ -34,6 +36,12 @@ WeChat payment gateway for WooCommerce, WooCommerce 微信免费全功能支付�
 ### 付费设置服务 ###
 如果你不想自己动手设置，或者自己设置有困难，可以购买我们的付费设置服务。
 [WooCommerce微信支付插件设置服务](https://www.wpzhiku.com/product/wechat-payment-setup-service/)
+
+### WordPress插件定制开发服务 ###
+``
+我们还提供 WordPress 定制开发服务，有需要的朋友可通过下面的页面联系我们。
+``
+[WordPress插件定制开发服务](https://www.wpzhiku.com/service/plugin/)
 
 ### 支付宝支付网关 ###
 [Wenprise Alipay Payment Gateway For WooCommerce](https://wordpress.org/plugins/wenprise-alipay-checkout-for-woocommerce/)
