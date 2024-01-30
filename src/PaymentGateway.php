@@ -523,7 +523,7 @@ class PaymentGateway extends \WC_Payment_Gateway {
 					$redirect_url = add_query_arg( [ 'order-pay' => $order->get_id(), 'key' => $order->get_order_key() ], wc_get_checkout_url() );
 				} else {
 					/**
-					 * 移动浏览器中，返回跳转 URL，跳转 URl 中包含支付 URL，由 JS 跳转到支付 URL 进行支付
+					 * 移动浏览器中，返回跳转 URL，跳转 URL 中包含支付 URL，由 JS 跳转到支付 URL 进行支付
 					 * 支付后，微信支付服务器推送支付成功数据到网站
 					 * 在跳转URL中，JS 轮询支付状态，检测到支付成功后，跳转到支付成功页面
 					 */

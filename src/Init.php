@@ -52,11 +52,15 @@ class Init {
 		global $wpdb;
 		$user_id = get_current_user_id();
 		$open_id = '';
+		$table_name = $wpdb->prefix . 'xh_social_channel_wechat';
+		// $table_exists = $wpdb->get_var("SHOW TABLES LIKE '$table_name'") === $table_name;
 
-		$wechat_login = $wpdb->get_row( "SELECT mp_openid FROM {$wpdb->prefix}xh_social_channel_wechat WHERE user_id = $user_id" );
+		if(function_exists('xh_social_loginbar')){
+			$wechat_login = $wpdb->get_row( "SELECT mp_openid FROM $table_name WHERE user_id = $user_id" );
 
-		if ( ! is_wp_error( $wechat_login ) && $wechat_login ) {
-			$open_id = $wechat_login->mp_openid;
+			if ( ! is_wp_error( $wechat_login ) && $wechat_login ) {
+				$open_id = $wechat_login->mp_openid;
+			}
 		}
 
 		return $open_id;

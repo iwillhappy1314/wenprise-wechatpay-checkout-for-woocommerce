@@ -5,8 +5,8 @@ import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 
 const defaultLabel = __(
-    '支付宝支付',
-    'wenprise-wc-alipay'
+    '微信支付支付',
+    'wenprise-wc-wechatpay'
 );
 
 export const ariaLabel = ({ title }) => {
