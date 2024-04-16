@@ -31,9 +31,8 @@ class Init {
 
 		if ( ( is_checkout() || is_checkout_pay_page() ) && wp_is_mobile() && ! Helpers::is_wechat() ) {
 			$version = Constants::get_constant( 'WC_VERSION' );
-			$suffix  = Constants::is_true( 'SCRIPT_DEBUG' ) ? '' : '.min';
 
-			wp_register_script( 'qrcode', WC()->plugin_url() . '/assets/js/jquery-qrcode/jquery.qrcode' . $suffix . '.js', [ 'jquery' ], $version );
+			wp_register_script( 'qrcode', WC()->plugin_url() . '/assets/js/jquery-qrcode/jquery.qrcode.min.js', [ 'jquery' ], $version );
 			wp_enqueue_script( 'wprs-wc-wechatpay-scripts', WENPRISE_WECHATPAY_URL . '/frontend/script.js', [ 'jquery', 'jquery-blockui', 'qrcode' ], WENPRISE_WECHATPAY_VERSION, true );
 
 			wp_localize_script( 'wprs-wc-wechatpay-scripts', 'WpWooWechatData', [
