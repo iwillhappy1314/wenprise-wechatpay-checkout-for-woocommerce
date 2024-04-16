@@ -299,13 +299,13 @@ class PaymentGateway extends \WC_Payment_Gateway {
 				if ( ! isset( $_GET[ 'pay_for_order' ] ) && is_checkout_pay_page() ) {
 
 					if ( Helpers::is_wechat() ) {
-						wp_enqueue_script( 'wprs-wc-wechatpay-js-sdk', 'https://res.wx.qq.com/open/js/jweixin-1.6.0.js', [ 'jquery' ], WENPRISE_WECHATPAY_VERSION, true );
+						wp_enqueue_script( 'wprs-wc-wechatpay-js-sdk', 'https://res.wx.qq.com/open/js/jweixin-1.6.2.js', [ 'jquery' ], '1.6.2', true );
 						wp_enqueue_script( 'wprs-wc-wechatpay-scripts', WENPRISE_WECHATPAY_URL . '/frontend/mpweb.js', [ 'jquery' ], WENPRISE_WECHATPAY_VERSION, true );
 					}
 
 					wp_enqueue_style( 'wprs-wc-wechatpay-style', WENPRISE_WECHATPAY_URL . '/frontend/styles.css', [], WENPRISE_WECHATPAY_VERSION, false );
 					wp_enqueue_script( 'wprs-wc-wechatpay-scripts', WENPRISE_WECHATPAY_URL . '/frontend/script.js', [ 'jquery', 'jquery-blockui' ], WENPRISE_WECHATPAY_VERSION, true );
-					wp_enqueue_script( 'qrcode', WC()->plugin_url() . '/assets/js/jquery-qrcode/jquery.qrcode.js', [ 'jquery' ], WENPRISE_WECHATPAY_VERSION );
+					wp_enqueue_script( 'qrcode', WC()->plugin_url() . '/assets/js/jquery-qrcode/jquery.qrcode.min.js', [ 'jquery' ], WENPRISE_WECHATPAY_VERSION );
 
 					wp_localize_script( 'wprs-wc-wechatpay-scripts', 'WpWooWechatPaySign', $signPackage );
 
