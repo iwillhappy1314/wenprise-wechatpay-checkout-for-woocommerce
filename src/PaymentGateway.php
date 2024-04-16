@@ -6,6 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
+use Automattic\Jetpack\Constants;
 use Omnipay\Omnipay;
 
 /**
@@ -305,7 +306,9 @@ class PaymentGateway extends \WC_Payment_Gateway {
 
 					wp_enqueue_style( 'wprs-wc-wechatpay-style', WENPRISE_WECHATPAY_URL . '/frontend/styles.css', [], WENPRISE_WECHATPAY_VERSION, false );
 					wp_enqueue_script( 'wprs-wc-wechatpay-scripts', WENPRISE_WECHATPAY_URL . '/frontend/script.js', [ 'jquery', 'jquery-blockui' ], WENPRISE_WECHATPAY_VERSION, true );
-					wp_enqueue_script( 'qrcode', WC()->plugin_url() . '/assets/js/jquery-qrcode/jquery.qrcode.min.js', [ 'jquery' ], WENPRISE_WECHATPAY_VERSION );
+
+					$suffix = Constants::is_true( 'SCRIPT_DEBUG' ) ? '' : '.min';
+                    wp_enqueue_script( 'qrcode', WC()->plugin_url() . '/assets/js/jquery-qrcode/jquery.qrcode' . $suffix . '.js', [ 'jquery' ], WENPRISE_WECHATPAY_VERSION );
 
 					wp_localize_script( 'wprs-wc-wechatpay-scripts', 'WpWooWechatPaySign', $signPackage );
 
