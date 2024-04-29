@@ -310,11 +310,11 @@ class PaymentGateway extends \WC_Payment_Gateway {
 					$suffix = Constants::is_true( 'SCRIPT_DEBUG' ) ? '' : '.min';
                     wp_enqueue_script( 'qrcode', WC()->plugin_url() . '/assets/js/jquery-qrcode/jquery.qrcode' . $suffix . '.js', [ 'jquery' ], WENPRISE_WECHATPAY_VERSION );
 
-					wp_localize_script( 'wprs-wc-wechatpay-scripts', 'WpWooWechatPaySign', $signPackage );
+					wp_localize_script( 'wprs-wc-wechatpay-scripts', 'WpWooWechatPaySign', (array)$signPackage );
 
 					if ( ! empty( $order ) ) {
 						$order_data = $order->get_meta( 'wprs_wc_wechat_order_data' );
-						wp_localize_script( 'wprs-wc-wechatpay-scripts', 'WpWooWechatPayOrder', $order_data );
+						wp_localize_script( 'wprs-wc-wechatpay-scripts', 'WpWooWechatPayOrder', (array)$order_data );
 					}
 
 					wp_localize_script( 'wprs-wc-wechatpay-scripts', 'WpWooWechatData', [
