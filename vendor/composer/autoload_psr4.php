@@ -7,12 +7,14 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Wenprise\\Wechatpay\\' => array($baseDir . '/src'),
+    'Symfony\\Polyfill\\Php80\\' => array($vendorDir . '/symfony/polyfill-php80'),
     'Symfony\\Polyfill\\Php72\\' => array($vendorDir . '/symfony/polyfill-php72'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Polyfill\\Intl\\Normalizer\\' => array($vendorDir . '/symfony/polyfill-intl-normalizer'),
     'Symfony\\Polyfill\\Intl\\Idn\\' => array($vendorDir . '/symfony/polyfill-intl-idn'),
     'Symfony\\Component\\HttpFoundation\\' => array($vendorDir . '/symfony/http-foundation'),
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
+    'Psr\\Http\\Client\\' => array($vendorDir . '/psr/http-client/src'),
     'Omnipay\\WechatPay\\' => array($vendorDir . '/lokielse/omnipay-wechatpay/src'),
     'Omnipay\\Common\\' => array($vendorDir . '/omnipay/common/src/Common'),
     'Money\\' => array($vendorDir . '/moneyphp/money/src'),
