@@ -33,6 +33,9 @@ WeChat payment gateway for WooCommerce, WooCommerce 微信免费全功能支付�
 
 [小程序支付示例项目](https://github.com/iwillhappy1314/woocommerce-wechat-miniapp-webview-payment)
 
+### 插件设置方法及使用教程 ###
+[Wenprise WeChatPay Payment Gateway For WooCommerce 微信支付插件设置教程](https://www.wpzhiku.com/document/wenprise-wechatpay-payment-gateway-for-woocommerce-setup-manual/)
+
 ### 付费设置服务 ###
 如果你不想自己动手设置，或者自己设置有困难，可以购买我们的付费设置服务。
 [WooCommerce微信支付插件设置服务](https://www.wpzhiku.com/product/wechat-payment-setup-service/)
