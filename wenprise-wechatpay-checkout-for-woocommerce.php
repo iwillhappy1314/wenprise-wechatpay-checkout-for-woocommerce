@@ -3,16 +3,16 @@
  * Plugin Name: Wenprise WeChatPay Payment Gateway For WooCommerce
  * Plugin URI: https://www.wpzhiku.com/wenprise-wechatpay-payment-gateway-for-woocommerce
  * Description: Wenprise WeChatPay Payment Gateway For WooCommerce， WooCommerce 全功能微信支付网关
- * Version: 2.0.1
+ * Version: 2.0.2
  * Author: WordPress智库
  * Author URI: https://www.wpzhiku.com
  * Text Domain: wprs-wc-wechatpay
  * Domain Path: /languages
  * Requires PHP: 7.2
  * Requires at least: 4.7
- * Tested up to: 6.2
+ * Tested up to: 6.6
  * WC requires at least: 3.6
- * WC tested up to: 8.5
+ * WC tested up to: 9.1
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
