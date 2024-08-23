@@ -48,6 +48,7 @@ add_action( 'plugins_loaded', function ()
 		return;
 	}
 
+	require WENPRISE_WECHATPAY_PATH . 'build/autoload.php';
 	require WENPRISE_WECHATPAY_PATH . 'vendor/autoload.php';
 
 	load_plugin_textdomain( 'wprs-wc-wechatpay', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );

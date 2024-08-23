@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Automattic\Jetpack\Constants;
-use Omnipay\Omnipay;
+use Wenprise\Wechatpay\Omnipay\Omnipay;
 
 /**
  * Gateway class

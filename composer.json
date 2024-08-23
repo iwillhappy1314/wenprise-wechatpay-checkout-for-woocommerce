@@ -1,7 +1,8 @@
 {
   "require": {
-    "php": "^7.2 || ^8.0",
-    "lokielse/omnipay-wechatpay": "^3.0"
+    "php": "^7.4",
+    "lokielse/omnipay-wechatpay": "^3.0",
+    "moneyphp/money": "^3.3"
   },
   "autoload": {
     "psr-4": {
@@ -15,5 +16,52 @@
     "allow-plugins": {
       "php-http/discovery": true
     }
+  },
+  "require-dev": {
+    "brianhenryie/strauss": "^0.19.2"
+  },
+  "extra": {
+    "strauss": {
+      "target_directory": "build",
+      "namespace_prefix": "\\Wenprise\\Wechatpay\\",
+      "classmap_prefix": "Wenprise_Wechatpay_",
+      "constant_prefix": "WENPRISE_WECHATPAY_",
+      "packages": [
+      ],
+      "update_call_sites": false,
+      "override_autoload": {
+      },
+      "exclude_from_copy": {
+        "packages": [
+        ],
+        "namespaces": [
+        ],
+        "file_patterns": [
+        ]
+      },
+      "exclude_from_prefix": {
+        "packages": [
+        ],
+        "namespaces": [
+        ],
+        "file_patterns": [
+        ]
+      },
+      "namespace_replacement_patterns" : {
+      },
+      "delete_vendor_packages": true,
+      "delete_vendor_files": true
+    }
+  },
+  "scripts": {
+    "prefix-namespaces": [
+      "strauss"
+    ],
+    "post-install-cmd": [
+      "@prefix-namespaces"
+    ],
+    "post-update-cmd": [
+      "@prefix-namespaces"
+    ]
   }
 }
