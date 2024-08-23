@@ -15,7 +15,7 @@ class Init {
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 
 		add_filter( 'wprs_wc_wechat_open_id', [ $this, 'xh_login_integrate' ], 12 );
-		add_filter( 'wprs_wc_wechat_open_id', [ $this, 'wenprise_security_integrate' ] );
+		add_filter( 'wprs_wc_wechat_open_id', [ $this, 'wenprise_security_integrate' ], 12 );
 
 		add_action( 'woocommerce_blocks_loaded', [ $this, 'add_block_support' ] );
 		add_action( 'before_woocommerce_init', [ $this, 'add_custom_table_support' ] );
