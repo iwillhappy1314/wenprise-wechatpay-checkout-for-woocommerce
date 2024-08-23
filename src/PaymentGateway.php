@@ -412,11 +412,11 @@ class PaymentGateway extends \WC_Payment_Gateway {
 	 *
 	 * @param string $type
 	 *
-	 * @return \Omnipay\Common\GatewayInterface|\Omnipay\WechatPay\BaseAbstractGateway
+	 * @return \Wenprise\Wechatpay\Omnipay\Common\GatewayInterface|\Wenprise\Wechatpay\Omnipay\WechatPay\BaseAbstractGateway
 	 */
 	public function get_gateway( string $type = '' ) {
 
-		/** @var \Omnipay\WechatPay\BaseAbstractGateway $gateway */
+		/** @var \Wenprise\Wechatpay\Omnipay\WechatPay\BaseAbstractGateway $gateway */
 		if ( wp_is_mobile() ) {
 			if ( Helpers::is_wechat() || $type === 'mini_app' ) {
 				$gateway = Omnipay::create( 'WechatPay_Js' );
@@ -502,8 +502,8 @@ class PaymentGateway extends \WC_Payment_Gateway {
 		/**
 		 * 生成订单并发送支付
 		 *
-		 * @var \Omnipay\WechatPay\Message\CreateOrderRequest  $request
-		 * @var \Omnipay\WechatPay\Message\CreateOrderResponse $response
+		 * @var \Wenprise\Wechatpay\Omnipay\WechatPay\Message\CreateOrderRequest  $request
+		 * @var \Wenprise\Wechatpay\Omnipay\WechatPay\Message\CreateOrderResponse $response
 		 */
 		$request  = $gateway->purchase( $order_data );
 		$response = $request->send();
@@ -632,8 +632,8 @@ class PaymentGateway extends \WC_Payment_Gateway {
 		/**
 		 * 生成订单并发送支付
 		 *
-		 * @var \Omnipay\WechatPay\Message\CreateOrderRequest  $request
-		 * @var \Omnipay\WechatPay\Message\CreateOrderResponse $response
+		 * @var \Wenprise\Wechatpay\Omnipay\WechatPay\Message\CreateOrderRequest  $request
+		 * @var \Wenprise\Wechatpay\Omnipay\WechatPay\Message\CreateOrderResponse $response
 		 */
 		$request  = $gateway->purchase( $order_data );
 		$response = $request->send();
@@ -690,7 +690,7 @@ class PaymentGateway extends \WC_Payment_Gateway {
 			'refund_fee'     => $refund_fee * 100, //=0.01
 		] );
 
-		/** @var \Omnipay\WechatPay\Message\BaseAbstractResponse $response */
+		/** @var \Wenprise\Wechatpay\Omnipay\WechatPay\Message\BaseAbstractResponse $response */
 		try {
 			$response = $request->send();
 			$data     = $response->getData();
@@ -730,7 +730,7 @@ class PaymentGateway extends \WC_Payment_Gateway {
 			'request_params' => file_get_contents( 'php://input' ),
 		];
 
-		/** @var \Omnipay\WechatPay\Message\CompletePurchaseResponse $response */
+		/** @var \Wenprise\Wechatpay\Omnipay\WechatPay\Message\CompletePurchaseResponse $response */
 		$request = $gateway->completePurchase( $options );
 
 		try {
