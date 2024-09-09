@@ -11,7 +11,6 @@ require_once __DIR__ . '/symfony/polyfill-php80/bootstrap.php';
 require_once __DIR__ . '/guzzlehttp/guzzle/src/functions_include.php';
 require_once __DIR__ . '/symfony/polyfill-intl-idn/bootstrap.php';
 require_once __DIR__ . '/symfony/polyfill-intl-normalizer/bootstrap.php';
-require_once __DIR__ . '/symfony/polyfill-php72/bootstrap.php';
 require_once __DIR__ . '/guzzlehttp/promises/src/functions_include.php';
 require_once __DIR__ . '/guzzlehttp/psr7/src/functions_include.php';
 require_once __DIR__ . '/ralouphie/getallheaders/src/getallheaders.php';

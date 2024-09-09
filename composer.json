@@ -17,9 +17,6 @@
       "php-http/discovery": true
     }
   },
-  "require-dev": {
-    "brianhenryie/strauss": "^0.19.2"
-  },
   "extra": {
     "strauss": {
       "target_directory": "build",
@@ -55,13 +52,15 @@
   },
   "scripts": {
     "prefix-namespaces": [
-      "strauss"
+      "@php strauss.phar"
     ],
     "post-install-cmd": [
-      "@prefix-namespaces"
+      "@prefix-namespaces",
+      "composer dump-autoload"
     ],
     "post-update-cmd": [
-      "@prefix-namespaces"
+      "@prefix-namespaces",
+      "composer dump-autoload"
     ]
   }
 }
