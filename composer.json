@@ -56,11 +56,11 @@
     ],
     "post-install-cmd": [
       "@prefix-namespaces",
-      "composer dump-autoload"
+      "composer dump-autoload -o"
     ],
     "post-update-cmd": [
       "@prefix-namespaces",
-      "composer dump-autoload"
+      "composer dump-autoload -o"
     ]
   }
 }

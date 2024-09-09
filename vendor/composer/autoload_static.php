@@ -22,6 +22,11 @@ class ComposerStaticInite8ab5cd558e25e1950c9eba4367d07bb
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Wenprise\\Wechatpay\\BlockSupport' => __DIR__ . '/../..' . '/src/BlockSupport.php',
+        'Wenprise\\Wechatpay\\Helpers' => __DIR__ . '/../..' . '/src/Helpers.php',
+        'Wenprise\\Wechatpay\\Init' => __DIR__ . '/../..' . '/src/Init.php',
+        'Wenprise\\Wechatpay\\PaymentGateway' => __DIR__ . '/../..' . '/src/PaymentGateway.php',
+        'Wenprise\\Wechatpay\\SDK' => __DIR__ . '/../..' . '/src/SDK.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
