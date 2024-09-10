@@ -108,7 +108,7 @@ class PaymentGateway extends \WC_Payment_Gateway {
 		$this->id = WENPRISE_WECHATPAY_WOOCOMMERCE_ID;
 
 		// 支付网关页面显示的支付网关标题
-		$this->method_title = __( 'WeChat Pay', 'wprs-wc-wechatpay' );
+		$this->method_title = __( 'WeChatPay Payment Gateway By Wenprise', 'wprs-wc-wechatpay' );
 
 		// 支付网关设置页面显示的支付网关标题
 		$this->method_description = __( 'WeChat Pay payment gateway for WooCommerce', 'wprs-wc-wechatpay' );
