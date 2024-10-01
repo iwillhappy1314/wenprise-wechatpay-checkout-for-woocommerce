@@ -301,20 +301,20 @@ class PaymentGateway extends \WC_Payment_Gateway {
 
 					if ( Helpers::is_wechat() ) {
 						wp_enqueue_script( 'wprs-wc-wechatpay-js-sdk', 'https://res.wx.qq.com/open/js/jweixin-1.6.2.js', [ 'jquery' ], '1.6.2', true );
-						wp_enqueue_script( 'wprs-wc-wechatpay-scripts', WENPRISE_WECHATPAY_URL . '/frontend/mpweb.js', [ 'jquery' ], WENPRISE_WECHATPAY_VERSION, true );
+						wp_enqueue_script( 'wprs-wc-wechatpay-mpweb', WENPRISE_WECHATPAY_URL . '/frontend/mpweb.js', [ 'jquery' ], WENPRISE_WECHATPAY_VERSION, true );
 					}
 
 					wp_enqueue_style( 'wprs-wc-wechatpay-style', WENPRISE_WECHATPAY_URL . '/frontend/styles.css', [], WENPRISE_WECHATPAY_VERSION, false );
 					wp_enqueue_script( 'wprs-wc-wechatpay-scripts', WENPRISE_WECHATPAY_URL . '/frontend/script.js', [ 'jquery', 'jquery-blockui' ], WENPRISE_WECHATPAY_VERSION, true );
 
 					$suffix = Constants::is_true( 'SCRIPT_DEBUG' ) ? '' : '.min';
-                    wp_enqueue_script( 'qrcode', WC()->plugin_url() . '/assets/js/jquery-qrcode/jquery.qrcode' . $suffix . '.js', [ 'jquery' ], WENPRISE_WECHATPAY_VERSION );
+					wp_enqueue_script( 'qrcode', WC()->plugin_url() . '/assets/js/jquery-qrcode/jquery.qrcode' . $suffix . '.js', [ 'jquery' ], WENPRISE_WECHATPAY_VERSION );
 
-					wp_localize_script( 'wprs-wc-wechatpay-scripts', 'WpWooWechatPaySign', (array)$signPackage );
+					wp_localize_script( 'wprs-wc-wechatpay-scripts', 'WpWooWechatPaySign', (array) $signPackage );
 
 					if ( ! empty( $order ) ) {
 						$order_data = $order->get_meta( 'wprs_wc_wechat_order_data' );
-						wp_localize_script( 'wprs-wc-wechatpay-scripts', 'WpWooWechatPayOrder', (array)$order_data );
+						wp_localize_script( 'wprs-wc-wechatpay-scripts', 'WpWooWechatPayOrder', (array) $order_data );
 					}
 
 					wp_localize_script( 'wprs-wc-wechatpay-scripts', 'WpWooWechatData', [
@@ -754,20 +754,7 @@ class PaymentGateway extends \WC_Payment_Gateway {
 
 			if ( $response->isPaid() ) {
 
-				$order->payment_complete( $data[ 'transaction_id' ] );
-
-				// Empty cart.
-				WC()->cart->empty_cart();
-
-				// 添加订单备注
-				$order->add_order_note(
-					sprintf( __( 'Wechatpay payment complete (Transaction ID: %s)', 'wprs-wc-wechatpay' ), $data[ 'transaction_id' ] )
-				);
-
-				$order->delete_meta_data( 'wprs_wc_wechat_order_data' );
-				$order->delete_meta_data( 'wprs_wc_wechat_code_url' );
-				$order->delete_meta_data( 'wprs_wc_wechat_mweb_url' );
-				$order->save();
+				$this->complete_order( $order, $data );
 
 				echo exit( '<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>' );
 
@@ -786,6 +773,37 @@ class PaymentGateway extends \WC_Payment_Gateway {
 			$this->log( $e->getMessage() );
 		}
 
+	}
+
+
+	/**
+	 * 完成订单
+	 * 1. 设置订单完成状态，设置微信支付交易号
+	 * 2. 清空购物车
+	 * 3. 添加订单备注
+	 * 4. 删除微信支付过程中设置的order meta
+	 *
+	 * @param $order_id
+	 * @param $data
+	 *
+	 * @return void
+	 */
+	function complete_order( $order_id, $data ) {
+		$order = wc_get_order( $order_id );
+		$order->payment_complete( $data[ 'transaction_id' ] );
+
+		// Empty cart.
+		WC()->cart->empty_cart();
+
+		// 添加订单备注
+		$order->add_order_note(
+			sprintf( __( 'Wechatpay payment complete (Transaction ID: %s)', 'wprs-wc-wechatpay' ), $data[ 'transaction_id' ] )
+		);
+
+		$order->delete_meta_data( 'wprs_wc_wechat_order_data' );
+		$order->delete_meta_data( 'wprs_wc_wechat_code_url' );
+		$order->delete_meta_data( 'wprs_wc_wechat_mweb_url' );
+		$order->save();
 	}
 
 
@@ -912,7 +930,7 @@ class PaymentGateway extends \WC_Payment_Gateway {
                         <div class='rs-block'>
                             <header class='rs-block__header'>
                                 <div class="rs-wechatpay-logo">
-                                    <img src="<?= $this->icon; ?>" alt="<?= $this->method_title; ?>" /> <?= $this->method_title; ?>
+                                    <img src="<?= $this->icon; ?>" alt="<?= $this->title; ?>" /> <?= $this->title; ?>
                                 </div>
                             </header>
                             <div class="rs-block__content">
@@ -946,12 +964,28 @@ class PaymentGateway extends \WC_Payment_Gateway {
 
 	/**
 	 * 监听微信扫码支付返回
+     * https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_02
 	 */
 	public function query_order() {
 		$order_id = isset( $_GET[ 'order_id' ] ) ? (int) $_GET[ 'order_id' ] : false;
 
 		if ( $order_id ) {
 			$order = wc_get_order( $order_id );
+
+			$response = $this->get_gateway()->query( [
+				'out_trade_no' => $this->get_order_number( $order_id ),
+			] )->send();
+
+			$result_data = $response->getData();
+
+            //交易成功判断条件： return_code、result_code和trade_state都为SUCCESS
+			if ( Helpers::data_get( $result_data, 'return_code' ) === 'SUCCESS'
+			     && Helpers::data_get( $result_data, 'result_code' ) === 'SUCCESS'
+			     && Helpers::data_get( $result_data, 'trade_state' ) === 'SUCCESS'
+			) {
+				$this->complete_order( $order, $result_data );
+				wp_send_json_success( $order->get_checkout_order_received_url() );
+			}
 
 			if ( $order && $order->is_paid() ) {
 				wp_send_json_success( $order->get_checkout_order_received_url() );
