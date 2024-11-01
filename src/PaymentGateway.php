@@ -18,13 +18,6 @@ class PaymentGateway extends \WC_Payment_Gateway {
 	public $log = false;
 
 	/**
-	 * @var bool
-	 *
-	 * @deprecated
-	 */
-	public $enabled_auto_login = false;
-
-	/**
 	 * @var string
 	 */
 	private $order_prefix = '';
@@ -133,8 +126,6 @@ class PaymentGateway extends \WC_Payment_Gateway {
 
 		$this->has_fields = false;
 
-		$this->enabled_auto_login = 'yes' === $this->get_option( 'enabled_auto_login' );
-
 		$this->description = $this->get_option( 'description' );
 
 		$this->current_currency = get_option( 'woocommerce_currency' );
@@ -182,12 +173,6 @@ class PaymentGateway extends \WC_Payment_Gateway {
 			'enabled'            => [
 				'title'   => __( 'Enable / Disable', 'wprs-wc-wechatpay' ),
 				'label'   => __( 'Enable this payment gateway', 'wprs-wc-wechatpay' ),
-				'type'    => 'checkbox',
-				'default' => 'no',
-			],
-			'enabled_auto_login' => [
-				'title'   => __( 'Enable / Disable', 'wprs-wc-wechatpay' ),
-				'label'   => __( 'Enable auto login in wechat Official Accounts (此功能将被弃用，不建议使用)', 'wprs-wc-wechatpay' ),
 				'type'    => 'checkbox',
 				'default' => 'no',
 			],
@@ -822,7 +807,7 @@ class PaymentGateway extends \WC_Payment_Gateway {
 		 * 小程序中获取 open_id 处理
 		 */
 		if ( Helpers::is_wechat() ) {
-			$open_id = get_user_meta( get_current_user_id(), 'wprs_wechat_open_id', true );
+			$open_id                 = apply_filters( 'wprs_wc_wechat_open_id', get_user_meta( get_current_user_id(), 'wprs_wc_wechat_open_id', true ) );
 
 			//如果用户已登录，且没有open_id,说明用户没有绑定过
 			//Url中没有code，说明不是授权后跳转回来的
