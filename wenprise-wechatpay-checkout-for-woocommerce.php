@@ -33,14 +33,19 @@ if ( PHP_VERSION_ID < 70400 ) {
 	return;
 }
 
-define('WENPRISE_WECHATPAY_BASE_FILE', plugin_basename( __FILE__ ));
+define( 'WENPRISE_WECHATPAY_BASE_FILE', plugin_basename( __FILE__ ) );
 define( 'WENPRISE_WECHATPAY_PATH', plugin_dir_path( __FILE__ ) );
 define( 'WENPRISE_WECHATPAY_URL', plugin_dir_url( __FILE__ ) );
 
-const WENPRISE_WECHATPAY_FILE_PATH   = __FILE__;
-const WENPRISE_WECHATPAY_VERSION   = '2.1.0';
+const WENPRISE_WECHATPAY_FILE_PATH      = __FILE__;
+const WENPRISE_WECHATPAY_VERSION        = '2.1.0';
 const WENPRISE_WECHATPAY_WOOCOMMERCE_ID = 'wprs-wc-wechatpay';
 const WENPRISE_WECHATPAY_ASSETS_URL     = WENPRISE_WECHATPAY_URL . 'frontend/';
+
+add_action( 'init', function ()
+{
+	load_plugin_textdomain( 'wprs-wc-wechatpay', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+} );
 
 add_action( 'plugins_loaded', function ()
 {
@@ -51,7 +56,6 @@ add_action( 'plugins_loaded', function ()
 	require WENPRISE_WECHATPAY_PATH . 'build/autoload.php';
 	require WENPRISE_WECHATPAY_PATH . 'vendor/autoload.php';
 
-	load_plugin_textdomain( 'wprs-wc-wechatpay', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 
 	add_action( 'woocommerce_receipt_wprs-wc-wechatpay', [ new \Wenprise\Wechatpay\PaymentGateway(), 'receipt_page' ] );
 
