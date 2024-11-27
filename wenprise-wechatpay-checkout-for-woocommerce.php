@@ -56,7 +56,6 @@ add_action( 'plugins_loaded', function ()
 	require WENPRISE_WECHATPAY_PATH . 'build/autoload.php';
 	require WENPRISE_WECHATPAY_PATH . 'vendor/autoload.php';
 
-
 	add_action( 'woocommerce_receipt_wprs-wc-wechatpay', [ new \Wenprise\Wechatpay\PaymentGateway(), 'receipt_page' ] );
 
 	add_filter( 'woocommerce_payment_gateways', function ( $methods )
