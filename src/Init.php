@@ -75,7 +75,7 @@ class Init {
 			$auth = new \WenpriseSecurity\Models\OpenAuth();
 
 			if(method_exists( $auth, 'get_open_id' ) ) {
-				$open_id = $auth->get_openid_by_user_id( 'wechat' );
+				$open_id = $auth->get_open_id( 'wechat' );
 			}
 
 			if(method_exists( $auth, 'get_openid_by_user_id' ) ) {
