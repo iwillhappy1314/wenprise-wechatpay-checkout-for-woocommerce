@@ -739,6 +739,8 @@ class PaymentGateway extends \WC_Payment_Gateway {
 
 			if ( $response->isPaid() ) {
 
+				do_action('wprs-wc-wechatpay-paid-order', $order_id);
+
 				$this->complete_order( $order, $data );
 
 				echo exit( '<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>' );
