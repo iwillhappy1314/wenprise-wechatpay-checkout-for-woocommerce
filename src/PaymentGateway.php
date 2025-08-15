@@ -57,6 +57,8 @@ class PaymentGateway extends \WC_Payment_Gateway {
 	 */
 	public $current_currency = '';
 
+	public $enabled_auto_login = false;
+
 	/**
 	 * @var bool
 	 */
