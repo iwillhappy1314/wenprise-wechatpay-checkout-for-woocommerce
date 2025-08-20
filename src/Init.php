@@ -54,7 +54,7 @@ class Init {
 		$table_name = $wpdb->prefix . 'xh_social_channel_wechat';
 
 		if(function_exists('xh_social_loginbar')){
-			$wechat_login = $wpdb->get_row( "SELECT mp_openid FROM $table_name WHERE user_id = $user_id" );
+			$wechat_login = $wpdb->get_row( $wpdb->prepare("SELECT mp_openid FROM $table_name WHERE user_id = %d", $user_id) );
 
 			if ( ! is_wp_error( $wechat_login ) && $wechat_login ) {
 				$open_id = $wechat_login->mp_openid;
