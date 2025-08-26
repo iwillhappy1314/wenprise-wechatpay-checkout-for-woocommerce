@@ -57,8 +57,6 @@ class PaymentGateway extends \WC_Payment_Gateway {
 	 */
 	public $current_currency = '';
 
-	public $enabled_auto_login = false;
-
 	/**
 	 * @var bool
 	 */
@@ -172,77 +170,77 @@ class PaymentGateway extends \WC_Payment_Gateway {
 		 */
 
 		$this->form_fields = [
-			'enabled'            => [
+			'enabled'         => [
 				'title'   => __( 'Enable / Disable', 'wprs-wc-wechatpay' ),
 				'label'   => __( 'Enable this payment gateway', 'wprs-wc-wechatpay' ),
 				'type'    => 'checkbox',
 				'default' => 'no',
 			],
-			'title'              => [
+			'title'           => [
 				'title'   => __( 'Title', 'wprs-wc-wechatpay' ),
 				'type'    => 'text',
 				'default' => __( 'Wechatpay', 'wprs-wc-wechatpay' ),
 			],
-			'description'        => [
+			'description'     => [
 				'title'   => __( 'Description', 'wprs-wc-wechatpay' ),
 				'type'    => 'textarea',
 				'default' => __( 'Pay securely using WeChat Pay', 'wprs-wc-wechatpay' ),
 				'css'     => 'max-width:350px;',
 			],
-			'order_prefix'       => [
+			'order_prefix'    => [
 				'title'       => __( 'Order Number Prefix', 'wprs-wc-wechatpay' ),
 				'type'        => 'text',
 				'description' => __( 'Only alphabet or number Allowed', 'wprs-wc-wechatpay' ),
 				'default'     => __( 'WC-', 'wprs-wc-wechatpay' ),
 			],
-			'app_id'             => [
+			'app_id'          => [
 				'title'       => __( 'WeChat Official Account Developer ID(AppID)', 'wprs-wc-wechatpay' ),
 				'type'        => 'text',
 				'description' => __( 'Enter your WeChat Official Account Developer ID(AppID). Setup and obtain it in "Settings and Development > Basic configuration".', 'wprs-wc-wechatpay' ),
 			],
-			'app_secret'         => [
+			'app_secret'      => [
 				'title'       => __( 'WeChat Official Account Developer Password(AppSecret)', 'wprs-wc-wechatpay' ),
 				'type'        => 'text',
 				'description' => __( 'Enter your WeChat Official Account Developer Password(AppSecret). Setup and obtain it in "Settings and Development > Basic configuration".', 'wprs-wc-wechatpay' ),
 			],
-			'mini_app_id'        => [
+			'mini_app_id'     => [
 				'title'       => __( 'WeChat miniApp AppID(小程序ID)', 'wprs-wc-wechatpay' ),
 				'type'        => 'text',
 				'description' => __( 'Enter your WeChat MiniApp AppId. Setup and obtain it in 「开发 > 开发管理 > 开发设置」。', 'wprs-wc-wechatpay' ),
 			],
-			'mini_app_secret'    => [
+			'mini_app_secret' => [
 				'title'       => __( 'WeChat MiniApp AppSecret(小程序密钥)', 'wprs-wc-wechatpay' ),
 				'type'        => 'text',
 				'description' => __( 'Enter your WeChat MiniApp AppSecret. Setup and obtain it in 「开发 > 开发管理 > 开发设置」。', 'wprs-wc-wechatpay' ),
 			],
-			'mch_id'             => [
+			'mch_id'          => [
 				'title'       => __( 'WeChatPay Mch Id', 'wprs-wc-wechatpay' ),
 				'type'        => 'text',
 				'description' => sprintf( __( 'Enter your WeChatPay Mch Id. obtain it in <a target=_blank href="%s">here</a>.', 'wprs-wc-wechatpay' ), 'https://pay.weixin.qq.com/index.php/core/account/info' ),
 			],
-			'api_key'            => [
+			'api_key'         => [
 				'title'       => __( 'WeChatPay APIv2 Secret', 'wprs-wc-wechatpay' ),
 				'type'        => 'text',
 				'description' => sprintf( __( 'Enter your WeChatPay APIv2 Secret that Setup in <a target=_blank href="%s">here</a>。支付授权目录和 H5 支付域名为： %s, 扫码回调链接为: %s.', 'wprs-wc-wechatpay' ), 'https://pay.weixin.qq.com/index.php/core/cert/api_cert', home_url(), home_url( 'wc-api/wprs-wc-wechatpay-notify/' ) ),
 			],
-			'cert_path'          => [
+			'cert_path'       => [
 				'title'       => __( 'apiclient_cert.pem path', 'wprs-wc-wechatpay' ),
 				'type'        => 'text',
 				'description' => sprintf( __( 'Enter the absolute path of apiclient_cert.pem file that can access by the site, used by refund action。<br/>Ex: <code>/home/apiclient_cert.pem</code>，For security *DO NOT* place it in public dir. Setup in <a target=_blank href="%s">here</a>', 'wprs-wc-wechatpay' ), 'https://pay.weixin.qq.com/index.php/core/cert/api_cert' ),
 			],
-			'key_path'           => [
+			'key_path'        => [
 				'title'       => __( 'apiclient_key.pem Path', 'wprs-wc-wechatpay' ),
 				'type'        => 'text',
 				'description' => sprintf( __( 'Enter the absolute path of apiclient_key.pem file that can access by the site, used by refund action. <br/>Ex: <code>/home/apiclient_key.pem</code>，For security *DO NOT* place it in public dir. Setup in <a target=_blank href="%s">here</a>', 'wprs-wc-wechatpay' ), 'https://pay.weixin.qq.com/index.php/core/cert/api_cert' ),
 			],
-			'is_debug_mod'       => [
+			'is_debug_mod'    => [
 				'title'       => __( 'Debug Mode', 'wprs-wc-wechatpay' ),
 				'label'       => __( 'Enable debug mod', 'wprs-wc-wechatpay' ),
 				'type'        => 'checkbox',
 				'description' => __( 'If checked, plugin will show program errors in frontend.', 'wprs-wc-wechatpay' ),
 				'default'     => 'no',
 			],
-			'template'           => [
+			'template'        => [
 				'title'   => __( 'Checkout Style', 'wprs-wc-wechatpay' ),
 				'type'    => 'select',
 				'default' => 'modal',
@@ -362,18 +360,6 @@ class PaymentGateway extends \WC_Payment_Gateway {
 
 
 	/**
-	 * 获取订单号
-	 *
-	 * @param $order_id
-	 *
-	 * @return string
-	 */
-	public function get_order_number( $order_id ): string {
-		return $this->order_prefix . ltrim( $order_id, '#' );
-	}
-
-
-	/**
 	 * 检查是否可用
 	 *
 	 * @return bool
@@ -428,6 +414,35 @@ class PaymentGateway extends \WC_Payment_Gateway {
 		$gateway->setNotifyUrl( WC()->api_request_url( 'wprs-wc-wechatpay-notify' ) );
 
 		return $gateway;
+	}
+
+
+	/**
+	 * 获取订单号
+	 * 对于重复支付的情况，在原订单号后附加重试次数
+	 *
+	 * @param $order_id
+	 *
+	 * @return string
+	 */
+	public function get_order_number( $order_id ): string {
+		$order       = wc_get_order( $order_id );
+		$retry_count = (int) $order->get_meta( '_wprs_wechat_pay_retry_count', true );
+
+		// 如果是重试支付，增加重试次数并更新
+		if ( $retry_count > 0 ) {
+			$retry_count ++;
+			$order->update_meta_data( '_wprs_wechat_pay_retry_count', $retry_count );
+			$order->save();
+
+			return $this->order_prefix . ltrim( $order_id, '#' ) . '_retry' . $retry_count;
+		}
+
+		// 首次支付，设置重试次数为0
+		$order->update_meta_data( '_wprs_wechat_pay_retry_count', 0 );
+		$order->save();
+
+		return $this->order_prefix . ltrim( $order_id, '#' );
 	}
 
 
@@ -707,12 +722,8 @@ class PaymentGateway extends \WC_Payment_Gateway {
 	 * 处理支付接口异步返回的信息
 	 */
 	public function listen_notify() {
-
 		$gateway = $this->get_gateway();
 
-		/**
-		 * 获取支付宝返回的参数
-		 */
 		$options = [
 			'request_params' => file_get_contents( 'php://input' ),
 		];
@@ -721,11 +732,16 @@ class PaymentGateway extends \WC_Payment_Gateway {
 		$request = $gateway->completePurchase( $options );
 
 		try {
-
 			$response = $request->send();
 			$data     = $response->getRequestData();
 
 			$out_trade_no = $data[ 'out_trade_no' ];
+
+			// 处理带有重试标记的订单号
+			if ( strpos( $out_trade_no, '_retry' ) !== false ) {
+				$parts        = explode( '_retry', $out_trade_no );
+				$out_trade_no = $parts[ 0 ];
+			}
 
 			if ( is_numeric( $out_trade_no ) ) {
 				if ( ! empty( $this->order_prefix ) ) {
@@ -740,28 +756,23 @@ class PaymentGateway extends \WC_Payment_Gateway {
 			$order = wc_get_order( $order_id );
 
 			if ( $response->isPaid() ) {
-
-				do_action('wprs-wc-wechatpay-paid-order', $order_id);
+				// 支付成功后重置重试计数
+				$order->update_meta_data( '_wprs_wechat_pay_retry_count', 0 );
+				$order->save();
 
 				$this->complete_order( $order, $data );
-
 				echo exit( '<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>' );
-
 			} else {
-
 				$error = $response->getData();
 				$this->log( $error );
 
 				if ( $this->is_debug_mod ) {
 					wc_add_notice( $error, 'error' );
 				}
-
 			}
-
 		} catch ( \Exception $e ) {
 			$this->log( $e->getMessage() );
 		}
-
 	}
 
 
@@ -780,6 +791,8 @@ class PaymentGateway extends \WC_Payment_Gateway {
 	function complete_order( $order_id, $data ) {
 		$order = wc_get_order( $order_id );
 		$order->payment_complete( $data[ 'transaction_id' ] );
+
+        error_log('微信支付订单完成数据：' . print_r($order, true));
 
 		// Empty cart.
 		WC()->cart->empty_cart();
@@ -811,7 +824,7 @@ class PaymentGateway extends \WC_Payment_Gateway {
 		 * 小程序中获取 open_id 处理
 		 */
 		if ( Helpers::is_wechat() ) {
-			$open_id                 = apply_filters( 'wprs_wc_wechat_open_id', get_user_meta( get_current_user_id(), 'wprs_wc_wechat_open_id', true ) );
+			$open_id = apply_filters( 'wprs_wc_wechat_open_id', get_user_meta( get_current_user_id(), 'wprs_wc_wechat_open_id', true ) );
 
 			//如果用户已登录，且没有open_id,说明用户没有绑定过
 			//Url中没有code，说明不是授权后跳转回来的
@@ -953,7 +966,10 @@ class PaymentGateway extends \WC_Payment_Gateway {
 
 	/**
 	 * 监听微信扫码支付返回
-     * https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_02
+	 * https://pay.weixin.qq.com/wiki/doc/api/micropay.php?chapter=9_02
+	 */
+	/**
+	 * 处理查询请求时的订单号
 	 */
 	public function query_order() {
 		$order_id = isset( $_GET[ 'order_id' ] ) ? (int) $_GET[ 'order_id' ] : false;
@@ -961,13 +977,15 @@ class PaymentGateway extends \WC_Payment_Gateway {
 		if ( $order_id ) {
 			$order = wc_get_order( $order_id );
 
+			// 获取最新的订单号（包含重试信息）
+			$current_order_number = $this->get_order_number( $order_id );
+
 			$response = $this->get_gateway()->query( [
-				'out_trade_no' => $this->get_order_number( $order_id ),
+				'out_trade_no' => $current_order_number,
 			] )->send();
 
 			$result_data = $response->getData();
 
-            //交易成功判断条件： return_code、result_code和trade_state都为SUCCESS
 			if ( Helpers::data_get( $result_data, 'return_code' ) === 'SUCCESS'
 			     && Helpers::data_get( $result_data, 'result_code' ) === 'SUCCESS'
 			     && Helpers::data_get( $result_data, 'trade_state' ) === 'SUCCESS'
