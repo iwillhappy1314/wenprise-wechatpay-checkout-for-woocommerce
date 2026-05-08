@@ -88,6 +88,13 @@ class PaymentGateway extends \WC_Payment_Gateway {
 	public $template = '';
 
 	/**
+	 * 旧版自动登录设置，用于兼容已保存的网关配置。
+	 *
+	 * @var string
+	 */
+	public $enabled_auto_login = '';
+
+	/**
 	 * 网关支持的功能
 	 *
 	 * @var array
