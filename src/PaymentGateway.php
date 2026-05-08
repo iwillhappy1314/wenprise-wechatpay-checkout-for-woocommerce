@@ -696,7 +696,7 @@ class PaymentGateway extends \WC_Payment_Gateway {
 		try {
 			$response = $request->send();
 			$data     = $response->getData();
-
+			
 			if ( $response->isSuccessful() ) {
 				$order->add_order_note(
 					sprintf( __( 'Refunded %1$s', 'woocommerce' ), $amount )
@@ -710,7 +710,6 @@ class PaymentGateway extends \WC_Payment_Gateway {
 
 		} catch ( \Exception $e ) {
 			$this->log( $e->getMessage() );
-
 			return false;
 		}
 
