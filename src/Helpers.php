@@ -54,32 +54,21 @@ class Helpers
         return $array;
     }
 
-    /**
-     * 获取用户的真实 IP
-     *
-     * @return mixed
-     */
-    public static function get_client_ip()
-    {
-        if (isset($_SERVER[ 'HTTP_CF_CONNECTING_IP' ])) {
-            $_SERVER[ 'REMOTE_ADDR' ]    = $_SERVER[ 'HTTP_CF_CONNECTING_IP' ];
-            $_SERVER[ 'HTTP_CLIENT_IP' ] = $_SERVER[ 'HTTP_CF_CONNECTING_IP' ];
-        }
+	/**
+	 * 获取用户 IP 地址。
+	 *
+	 * @return string
+	 */
+	public static function get_client_ip(): string
+	{
+		if ( class_exists( '\WC_Geolocation' ) ) {
+			return \WC_Geolocation::get_ip_address();
+		}
 
-        $client  = @$_SERVER[ 'HTTP_CLIENT_IP' ];
-        $forward = @$_SERVER[ 'HTTP_X_FORWARDED_FOR' ];
-        $remote  = $_SERVER[ 'REMOTE_ADDR' ];
+		$remote_ip = $_SERVER[ 'REMOTE_ADDR' ] ?? '';
 
-        if (filter_var($client, FILTER_VALIDATE_IP)) {
-            $ip = $client;
-        } elseif (filter_var($forward, FILTER_VALIDATE_IP)) {
-            $ip = $forward;
-        } else {
-            $ip = $remote;
-        }
-
-        return $ip;
-    }
+		return filter_var( $remote_ip, FILTER_VALIDATE_IP ) ? $remote_ip : '0.0.0.0';
+	}
 
 
     /**

@@ -50,11 +50,11 @@ class Init {
 	 */
 	function xh_login_integrate($open_id) {
 		global $wpdb;
-		$user_id = get_current_user_id();
+		$user_id = absint( get_current_user_id() );
 		$table_name = $wpdb->prefix . 'xh_social_channel_wechat';
 
 		if(function_exists('xh_social_loginbar')){
-			$wechat_login = $wpdb->get_row( "SELECT mp_openid FROM $table_name WHERE user_id = $user_id" );
+			$wechat_login = $wpdb->get_row( $wpdb->prepare( "SELECT mp_openid FROM {$table_name} WHERE user_id = %d", $user_id ) );
 
 			if ( ! is_wp_error( $wechat_login ) && $wechat_login ) {
 				$open_id = $wechat_login->mp_openid;
@@ -139,7 +139,11 @@ class Init {
 		$from = Helpers::data_get( $_GET, 'from', false );
 
 		$status_addon = [];
-		if ( $from === 'wap' ) {
+		if ( $from === 'wap'
+		     && $instance instanceof \WC_Order
+		     && WENPRISE_WECHATPAY_WOOCOMMERCE_ID === $instance->get_payment_method()
+		     && ( $instance->get_meta( 'wprs_wc_wechat_mweb_url' ) || $instance->get_meta( 'wprs_wc_wechat_out_trade_no' ) )
+		) {
 			$status_addon = [ 'processing' ];
 		}
 

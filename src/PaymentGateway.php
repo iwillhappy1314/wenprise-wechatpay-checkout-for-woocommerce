@@ -1384,9 +1384,33 @@ class PaymentGateway extends \WC_Payment_Gateway {
 
 
 	/**
+	 * 检查小程序登录接口是否触发频率限制。
+	 *
+	 * @return bool
+	 */
+	private function is_mini_app_login_rate_limited(): bool {
+		$client_ip = Helpers::get_client_ip();
+		$rate_key  = 'wprs_wc_wechatpay_mini_app_login_' . md5( $client_ip );
+		$count     = (int) get_transient( $rate_key );
+
+		if ( $count >= 30 ) {
+			return true;
+		}
+
+		set_transient( $rate_key, $count + 1, MINUTE_IN_SECONDS );
+
+		return false;
+	}
+
+
+	/**
 	 * 小程序登录接口，使用微信 code 换取 openid。
 	 */
 	function mini_app_login() {
+		if ( $this->is_mini_app_login_rate_limited() ) {
+			wp_send_json_error( __( 'Too many requests, please try again later.', 'wprs-wc-wechatpay' ), 429 );
+		}
+
 		if ( ! isset( $_GET[ 'code' ] ) ) {
 			wp_send_json_error( 'Missing code param' );
 		}
