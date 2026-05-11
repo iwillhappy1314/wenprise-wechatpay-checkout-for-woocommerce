@@ -2,7 +2,9 @@
   "require": {
     "php": "^7.4",
     "lokielse/omnipay-wechatpay": "^3.0",
-    "moneyphp/money": "^3.3"
+    "moneyphp/money": "^3.3",
+    "symfony/http-foundation": "^5.4.50",
+    "symfony/deprecation-contracts": "^2.5"
   },
   "autoload": {
     "psr-4": {

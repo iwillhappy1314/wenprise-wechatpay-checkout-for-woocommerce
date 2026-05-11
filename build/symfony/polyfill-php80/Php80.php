@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * Modified by __root__ on 09-September-2024 using {@see https://github.com/BrianHenryIE/strauss}.
+ * Modified by __root__ on 11-May-2026 using {@see https://github.com/BrianHenryIE/strauss}.
  */
 
 namespace Wenprise\Wechatpay\Symfony\Polyfill\Php80;
@@ -62,7 +62,7 @@ final class Php80
     public static function get_resource_id($res): int
     {
         if (!\is_resource($res) && null === @get_resource_type($res)) {
-            throw new \TypeError(sprintf('Argument 1 passed to get_resource_id() must be of the type resource, %s given', get_debug_type($res)));
+            throw new \TypeError(\sprintf('Argument 1 passed to get_resource_id() must be of the type resource, %s given', get_debug_type($res)));
         }
 
         return (int) $res;

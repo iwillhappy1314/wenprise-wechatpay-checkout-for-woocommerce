@@ -59,8 +59,19 @@ class SDK
         // jsapi_ticket 应该全局存储与更新，以下代码以写入到文件中做示例
         $data = get_option('wprs-wc-wechat-jsapi_ticket');
 
-        if (isset($data->expire_time) && $data->expire_time < time()) {
+        if ( ! is_object($data)) {
+            $data = (object) [
+                'expire_time'  => 0,
+                'jsapi_ticket' => '',
+            ];
+        }
+
+        if (empty($data->jsapi_ticket) || empty($data->expire_time) || $data->expire_time < time()) {
             $accessToken = $this->getAccessToken();
+
+            if ( ! $accessToken) {
+                return '';
+            }
 
             // 如果是企业号用以下 URL 获取 ticket
             // $url = "https://qyapi.weixin.qq.com/cgi-bin/get_jsapi_ticket?access_token=$accessToken";
@@ -91,7 +102,14 @@ class SDK
         // access_token 应该全局存储与更新，以下代码以写入到文件中做示例
         $data = get_option('wprs-wc-wechat-access_token');
 
-        if ($data->expire_time < time()) {
+        if ( ! is_object($data)) {
+            $data = (object) [
+                'expire_time'  => 0,
+                'access_token' => '',
+            ];
+        }
+
+        if (empty($data->access_token) || empty($data->expire_time) || $data->expire_time < time()) {
 
             // 如果是企业号用以下URL获取access_token
             // $url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=$this->appId&corpsecret=$this->appSecret";
@@ -107,7 +125,7 @@ class SDK
 
         } else {
 
-            $access_token = $data->access_token;
+            $access_token = $data->access_token ?? '';
 
         }
 
@@ -147,4 +165,3 @@ class SDK
     }
 
 }
-

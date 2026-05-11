@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * Modified by __root__ on 09-September-2024 using {@see https://github.com/BrianHenryIE/strauss}.
+ * Modified by __root__ on 11-May-2026 using {@see https://github.com/BrianHenryIE/strauss}.
  */
 
 namespace Wenprise\Wechatpay\Symfony\Component\HttpFoundation;
@@ -246,8 +246,12 @@ class BinaryFileResponse extends Response
             }
             if ('x-accel-redirect' === strtolower($type)) {
                 // Do X-Accel-Mapping substitutions.
-                // @link https://www.nginx.com/resources/wiki/start/topics/examples/x-accel/#x-accel-redirect
-                $parts = HeaderUtils::split($request->headers->get('X-Accel-Mapping', ''), ',=');
+                // @link https://github.com/rack/rack/blob/main/lib/rack/sendfile.rb
+                // @link https://mattbrictson.com/blog/accelerated-rails-downloads
+                if (!$request->headers->has('X-Accel-Mapping')) {
+                    throw new \LogicException('The "X-Accel-Mapping" header must be set when "X-Sendfile-Type" is set to "X-Accel-Redirect".');
+                }
+                $parts = HeaderUtils::split($request->headers->get('X-Accel-Mapping'), ',=');
                 foreach ($parts as $part) {
                     [$pathPrefix, $location] = $part;
                     if (substr($path, 0, \strlen($pathPrefix)) === $pathPrefix) {
