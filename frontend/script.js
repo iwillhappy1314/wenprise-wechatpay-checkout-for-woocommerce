@@ -1,5 +1,4 @@
 (function($) {
-    var loopCnt = 50;
     var looptime = 1000; //ms
     var queryTimer = null;
     var countdownTimer = null;
@@ -22,18 +21,19 @@
     var $refreshQrcode = $('#js-wechatpay-refresh-qrcode');
 
     function getExpiresAt() {
-        return parseInt($paymentBox.data('expires_at'), 10) || 0;
-    }
-
-    function shouldContinueQuery() {
-        var expiresAt = getExpiresAt();
-
-        if (!expiresAt) {
-            return loopCnt-- > 0;
+        var val = $paymentBox.data('expires_at');
+        if (!val) {
+            return 0;
         }
 
-        return Math.floor(Date.now() / 1000) <= expiresAt + 300;
+        // 处理日期字符串格式 (如 "2026-05-12 14:37:42")
+        if (typeof val === 'string' && val.indexOf('-') !== -1) {
+            return Math.floor(Date.parse(val.replace(/-/g, '/')) / 1000);
+        }
+
+        return parseInt(val, 10) || 0;
     }
+
 
     function setQrcodeStatus(text, status) {
         $qrcodeStatus.
@@ -124,39 +124,52 @@
         renderQrcode(startQrcodeCountdown);
     }
 
-    function wprs_woo_wechatpay_query_order(manual = false) {
-        var order_id = $paymentBox.data('order_id');
-        var order_key = $paymentBox.data('order_key');
+    var order_id = $paymentBox.attr('data-order_id');
+    var order_key = $paymentBox.attr('data-order_key');
+    var query_attempts = 0;
+
+    function wprs_woo_wechatpay_query_order(manual) {
+        if (typeof manual === 'undefined') {
+            manual = false;
+        }
 
         if (!order_id || !order_key) {
             return;
         }
 
+        query_attempts++;
+        if (query_attempts > 100 && !manual) {
+            return;
+        }
+
         $.ajax({
-            type   : 'GET',
-            url    : WpWooWechatData.query_url,
-            data   : {
+            type    : 'GET',
+            url     : WpWooWechatData.query_url,
+            data    : {
                 order_id : order_id,
                 order_key: order_key,
+                t        : Date.now(), // 增加时间戳，防止移动端浏览器缓存请求
             },
-            success: function(data) {
-                if (data && data.data && (data.success === true || manual === true)) {
+            dataType: 'json',
+            complete: function(xhr) {
+                var data = xhr.responseJSON;
+
+                if (data && data.success === true && data.data) {
                     location.href = data.data;
                 } else {
-                    if (shouldContinueQuery()) {
-                        queryTimer = setTimeout(wprs_woo_wechatpay_query_order, looptime);
+                    if (!manual) {
+                        setTimeout(function() {
+                            wprs_woo_wechatpay_query_order();
+                        }, 2000);
                     }
-                }
-            },
-            error  : function(data) {
-                if (shouldContinueQuery()) {
-                    queryTimer = setTimeout(wprs_woo_wechatpay_query_order, looptime);
                 }
             },
         });
     }
 
-    wprs_woo_wechatpay_query_order();
+    if ($paymentBox.length) {
+        wprs_woo_wechatpay_query_order();
+    }
 
     /**
      * 支付成功后，如果没有自动跳转，点击按钮查询订单并跳转支付结果
@@ -169,6 +182,7 @@
 
     $refreshQrcode.click(function() {
         var $button = $(this);
+        var loopCount;
 
         $button.prop('disabled', true);
         showQrcodeLoading();
@@ -195,7 +209,7 @@
                         queryTimer = null;
                     }
 
-                    loopCnt = 50;
+                    loopCount = 128;
                     $qrcodeExpired.hide();
                     renderQrcode(function() {
                         startQrcodeCountdown();

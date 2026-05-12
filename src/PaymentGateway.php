@@ -460,18 +460,9 @@ class PaymentGateway extends \WC_Payment_Gateway {
 		$order       = wc_get_order( $order_id );
 		$retry_count = (int) $order->get_meta( '_wprs_wechat_pay_retry_count', true );
 
-		// 如果是重试支付，增加重试次数并更新
 		if ( $retry_count > 0 ) {
-			$retry_count ++;
-			$order->update_meta_data( '_wprs_wechat_pay_retry_count', $retry_count );
-			$order->save();
-
 			return $this->order_prefix . ltrim( $order_id, '#' ) . '_retry' . $retry_count;
 		}
-
-		// 首次支付，设置重试次数为0
-		$order->update_meta_data( '_wprs_wechat_pay_retry_count', 0 );
-		$order->save();
 
 		return $this->order_prefix . ltrim( $order_id, '#' );
 	}
@@ -681,6 +672,9 @@ class PaymentGateway extends \WC_Payment_Gateway {
 	 */
 	public function process_payment( $order_id ): array {
 		$order = wc_get_order( $order_id );
+
+		// 开始新支付前，先清理旧的临时数据，以免受旧数据干扰（如已过期的二维码时间）
+		$this->cleanup_wechatpay_order_meta( $order );
 
 		/**
 		 * 小程序环境中，直接跳转到订单支付页面
@@ -1312,7 +1306,7 @@ class PaymentGateway extends \WC_Payment_Gateway {
 	 * 处理查询请求时的订单号
 	 */
 	public function query_order() {
-		$order_id = isset( $_GET[ 'order_id' ] ) ? (int) $_GET[ 'order_id' ] : false;
+		$order_id  = isset( $_GET[ 'order_id' ] ) ? (int) $_GET[ 'order_id' ] : false;
 		$order_key = isset( $_GET[ 'order_key' ] ) ? wc_clean( wp_unslash( $_GET[ 'order_key' ] ) ) : '';
 
 		if ( $order_id ) {
@@ -1328,22 +1322,27 @@ class PaymentGateway extends \WC_Payment_Gateway {
 				$current_order_number = $this->get_order_number( $order_id );
 			}
 
-			$response = $this->get_gateway()->query( [
-				'out_trade_no' => $current_order_number,
-			] )->send();
+			try {
+				$response = $this->get_gateway()->query( [
+					'out_trade_no' => $current_order_number,
+				] )->send();
 
-			$result_data = $response->getData();
+				$result_data = $response->getData();
+			} catch ( \Exception $e ) {
+				$result_data = [];
+			}
 
 			if ( Helpers::data_get( $result_data, 'return_code' ) === 'SUCCESS'
 			     && Helpers::data_get( $result_data, 'result_code' ) === 'SUCCESS'
 			     && Helpers::data_get( $result_data, 'trade_state' ) === 'SUCCESS'
-			     && $this->is_notify_amount_valid( $order, $result_data )
 			) {
-				$this->complete_order( $order, $result_data );
-				wp_send_json_success( $order->get_checkout_order_received_url() );
+				if ( $this->is_notify_amount_valid( $order, $result_data ) ) {
+					$this->complete_order( $order, $result_data );
+					wp_send_json_success( $order->get_checkout_order_received_url() );
+				}
 			}
 
-			if ( $order && $order->is_paid() ) {
+			if ( $order->is_paid() ) {
 				wp_send_json_success( $order->get_checkout_order_received_url() );
 			} else {
 				wp_send_json_error( $order->get_checkout_payment_url() );
