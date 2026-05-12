@@ -7,7 +7,7 @@ Requires at least: 4.7
 Tested up to: 6.6
 WC requires at least: 3.5
 WC tested up to: 9.1
-Stable tag: 2.1.0
+Stable tag: 2.2.0
 License: GPL-2.0+
 
 WeChat payment gateway for WooCommerce, WooCommerce 微信免费全功能支付网关。
@@ -149,6 +149,9 @@ wx.login({
 * payment
 
 ## Changelog ##
+
+### 2.2.0 ###
+* 增强安全性
 
 ### 2.1.0 ###
 * 修复所用库可能和其他插件产生冲突的Bug

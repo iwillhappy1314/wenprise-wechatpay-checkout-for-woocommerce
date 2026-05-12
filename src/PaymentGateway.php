@@ -315,14 +315,17 @@ class PaymentGateway extends \WC_Payment_Gateway {
 					wp_enqueue_script( 'qrcode', WC()->plugin_url() . '/assets/js/jquery-qrcode/jquery.qrcode' . $suffix . '.js', [ 'jquery' ], WENPRISE_WECHATPAY_VERSION );
 					wp_enqueue_script( 'wprs-wc-wechatpay-scripts', WENPRISE_WECHATPAY_URL . '/frontend/script.js', [ 'jquery', 'jquery-blockui', 'qrcode' ], WENPRISE_WECHATPAY_VERSION, true );
 
-					wp_localize_script( 'wprs-wc-wechatpay-scripts', 'WpWooWechatPaySign', (array) $signPackage );
-
-					if ( ! empty( $order ) ) {
-						$order_data = $order->get_meta( 'wprs_wc_wechat_order_data' );
-						wp_localize_script( 'wprs-wc-wechatpay-scripts', 'WpWooWechatPayOrder', (array) $order_data );
+					if ( Helpers::is_wechat() ) {
+						wp_localize_script( 'wprs-wc-wechatpay-mpweb', 'WpWooWechatPaySign', (array) $signPackage );
 					}
 
-					wp_localize_script( 'wprs-wc-wechatpay-scripts', 'WpWooWechatData', [
+					if ( ! empty( $order ) && Helpers::is_wechat() ) {
+						$order_data = $order->get_meta( 'wprs_wc_wechat_order_data' );
+						wp_localize_script( 'wprs-wc-wechatpay-mpweb', 'WpWooWechatPayOrder', (array) $order_data );
+					}
+
+					$data_handle = Helpers::is_wechat() ? 'wprs-wc-wechatpay-mpweb' : 'wprs-wc-wechatpay-scripts';
+					wp_localize_script( $data_handle, 'WpWooWechatData', [
 						'return_url'  => $this->get_return_url( $order ),
 						'bridge_url'  => WC()->api_request_url( 'wprs-wc-wechatpay-bridge' ),
 						'query_url'   => WC()->api_request_url( 'wprs-wc-wechatpay-query' ),
@@ -1199,11 +1202,20 @@ class PaymentGateway extends \WC_Payment_Gateway {
 
 			if ( Helpers::is_wechat() ) {
 				// 微信中，用户需要点击支付按钮调起支付窗口
-				if ( Helpers::is_mini_app() ) {
-					echo '<button class="button alt" onclick="wprs_wc_call_mini_app_pay()" >使用微信支付</button>';
-				} else {
-					echo '<button class="button alt" onclick="wprs_wc_call_wechat_pay()" >使用微信支付</button>';
-				}
+				?>
+                <div id="js-wechat-pay-loading" class="wprs-wechatpay-qrcode__loading" style="background: transparent;">
+                    <span class="wprs-wechatpay-qrcode__spinner"></span>
+                    <p><?php echo esc_html__( 'Calling WeChat Pay, please wait a moment...', 'wenprise-wechatpay-checkout-for-woocommerce' ); ?></p>
+                </div>
+
+                <div id="js-wechat-pay-button-wrapper" style="display: none; text-align: center;">
+					<?php if ( Helpers::is_mini_app() ): ?>
+                        <button class="button alt" onclick="wprs_wc_call_mini_app_pay()"><?php echo esc_html__( 'Use WeChat Pay', 'wenprise-wechatpay-checkout-for-woocommerce' ); ?></button>
+					<?php else: ?>
+                        <button class="button alt" onclick="wprs_wc_call_wechat_pay()"><?php echo esc_html__( 'Use WeChat Pay', 'wenprise-wechatpay-checkout-for-woocommerce' ); ?></button>
+					<?php endif; ?>
+                </div>
+				<?php
 			}
 
 			if ( $code_url ) {
