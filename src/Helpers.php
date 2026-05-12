@@ -111,7 +111,7 @@ class Helpers
         $response = wp_remote_get($url);
 
         if (is_wp_error($response)) {
-            wp_die(__('request failed, please try again', 'wprs-wc-wechatpay'));
+            wp_die(__('request failed, please try again', 'wenprise-wechatpay-checkout-for-woocommerce'));
         }
 
         return json_decode(wp_remote_retrieve_body($response), true);

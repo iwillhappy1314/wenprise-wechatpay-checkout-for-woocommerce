@@ -6,7 +6,7 @@ import { decodeEntities } from '@wordpress/html-entities';
 
 const defaultLabel = __(
     '微信支付支付',
-    'wenprise-wc-wechatpay'
+    'wenprise-wechatpay-checkout-for-woocommerce'
 );
 
 export const ariaLabel = ({ title }) => {

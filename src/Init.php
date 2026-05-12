@@ -92,7 +92,7 @@ class Init {
 	 */
 	function ignore_translate_strings( $options ) {
 		$options[ 'exclude_gettext_strings' ][ 'string' ][] = 'Pay for order %1$s at %2$s';
-		$options[ 'exclude_gettext_strings' ][ 'domain' ][] = 'wprs-wc-wechatpay';
+		$options[ 'exclude_gettext_strings' ][ 'domain' ][] = 'wenprise-wechatpay-checkout-for-woocommerce';
 
 		return $options;
 	}
@@ -102,8 +102,8 @@ class Init {
 	 * 插件插件设置链接
 	 */
 	function add_settings_link( $links ) {
-		$url = admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wprs-wc-wechatpay' );
-		$url = '<a href="' . esc_url( $url ) . '">' . __( 'Settings', 'wprs-wc-wechatpay' ) . '</a>';
+		$url = admin_url( 'admin.php?page=wc-settings&tab=checkout&section=' . WENPRISE_WECHATPAY_WOOCOMMERCE_ID );
+		$url = '<a href="' . esc_url( $url ) . '">' . __( 'Settings', 'wenprise-wechatpay-checkout-for-woocommerce' ) . '</a>';
 		array_unshift( $links, $url );
 
 		return $links;

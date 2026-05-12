@@ -6,7 +6,7 @@
  * Version: 2.1.0
  * Author: WordPress智库
  * Author URI: https://www.wpzhiku.com
- * Text Domain: wprs-wc-wechatpay
+ * Text Domain: wenprise-wechatpay-checkout-for-woocommerce
  * Domain Path: /languages
  * Requires PHP: 7.4
  * Requires at least: 4.7
@@ -44,7 +44,7 @@ const WENPRISE_WECHATPAY_ASSETS_URL     = WENPRISE_WECHATPAY_URL . 'frontend/';
 
 add_action( 'init', function ()
 {
-	load_plugin_textdomain( 'wprs-wc-wechatpay', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+	load_plugin_textdomain( 'wenprise-wechatpay-checkout-for-woocommerce', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 } );
 
 add_action( 'plugins_loaded', function ()

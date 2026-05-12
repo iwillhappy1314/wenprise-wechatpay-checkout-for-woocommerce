@@ -53,7 +53,7 @@ final class BlockSupport extends AbstractPaymentMethodType {
 		);
 
 		if ( function_exists( 'wp_set_script_translations' ) ) {
-			wp_set_script_translations( 'wc-wechatpay-blocks', 'wprs-wc-wechatpay', );
+			wp_set_script_translations( 'wc-wechatpay-blocks', 'wenprise-wechatpay-checkout-for-woocommerce', );
 		}
 
 		return [ 'wc-wechatpay-blocks' ];
