@@ -10,9 +10,9 @@
  * Domain Path: /languages
  * Requires PHP: 7.4
  * Requires at least: 4.7
- * Tested up to: 6.6
+ * Tested up to: 6.9
  * WC requires at least: 3.6
- * WC tested up to: 9.3
+ * WC tested up to: 10.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

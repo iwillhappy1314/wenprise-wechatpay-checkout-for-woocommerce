@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Wenprise WechatPay for WooCommerce\n"
-"POT-Creation-Date: 2026-05-11 14:50+0800\n"
-"PO-Revision-Date: 2026-05-11 14:52+0800\n"
+"POT-Creation-Date: 2026-05-12 15:30+0800\n"
+"PO-Revision-Date: 2026-05-12 15:30+0800\n"
 "Last-Translator: Amos Lee <iwillhappy1314@gmail.com>\n"
 "Language-Team: Amos Lee (amos@wpcio.com)\n"
 "Language: zh_CN\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Poedit 3.9\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: "
@@ -21,16 +21,15 @@ msgstr ""
 msgid "微信支付支付"
 msgstr "微信支付支付"
 
-#: src/Helpers.php:125
+#: src/Helpers.php:114
 msgid "request failed, please try again"
 msgstr "请求失败，请重试"
 
-#: src/Init.php:106 src/PaymentGateway.php:347
+#: src/Init.php:106 src/PaymentGateway.php:350
 msgid "Settings"
 msgstr "设置"
 
 #: src/PaymentGateway.php:116
-#| msgid "WeChat Pay payment gateway for WooCommerce"
 msgid "WeChatPay Payment Gateway By Wenprise"
 msgstr "WeChatPay Payment Gateway By Wenprise"
 
@@ -221,11 +220,11 @@ msgid ""
 "US Dollar, then you should enter 6.19"
 msgstr "请设置 %s 转人民币的汇率，例如您的商店货币时美元，请填写 6.19"
 
-#: src/PaymentGateway.php:348
+#: src/PaymentGateway.php:351
 msgid "Return to payments"
 msgstr "返回付款页面"
 
-#: src/PaymentGateway.php:370
+#: src/PaymentGateway.php:373
 #, php-format
 msgid ""
 "WeChatPay is enabled, but the store currency is not set to Chinese Yuan. "
@@ -235,83 +234,86 @@ msgstr ""
 "微信支付已启用，但是您的商店货币不是人民币，请<a href=\"%1s\">设置 %2s 转人民"
 "币的汇率</a>。"
 
-#: src/PaymentGateway.php:384
+#: src/PaymentGateway.php:387 src/PaymentGateway.php:1202
 msgid "Calling WeChat Pay, please wait a moment..."
 msgstr "正在拉起微信支付，请稍候..."
 
-#: src/PaymentGateway.php:625 src/PaymentGateway.php:711
-#: src/PaymentGateway.php:857
+#: src/PaymentGateway.php:619 src/PaymentGateway.php:708
+#: src/PaymentGateway.php:854
 #, php-format
 msgid "Pay for order %1$s at %2$s"
 msgstr "支付网站「%2$s」中的订单：%1$s"
 
-#: src/PaymentGateway.php:638
+#: src/PaymentGateway.php:632
 msgid "Failed to generate WeChat Pay QR code."
-msgstr ""
+msgstr "生成微信支付二维码失败。"
 
-#: src/PaymentGateway.php:808 src/PaymentGateway.php:883
+#: src/PaymentGateway.php:805 src/PaymentGateway.php:880
 msgid "WeChat payment configuration error, please contact us."
 msgstr "微信支付配置错误，请联系我们。"
 
-#: src/PaymentGateway.php:830
+#: src/PaymentGateway.php:827
 msgid "Invalid request data."
 msgstr "请求数据无效。"
 
-#: src/PaymentGateway.php:840
+#: src/PaymentGateway.php:837
 msgid "Invalid payment request."
-msgstr ""
+msgstr "支付请求无效。"
 
-#: src/PaymentGateway.php:934
+#: src/PaymentGateway.php:931
 #, php-format
 msgid "Refunded %1$s"
 msgstr "退款 %1$s"
 
-#: src/PaymentGateway.php:1040
-#, php-format
-msgid "Wechatpay payment complete (Transaction ID: %s)"
-msgstr "微信支付已完成(微信订单号: %s)"
-
-#: src/PaymentGateway.php:1116
+#: src/PaymentGateway.php:1184
 msgid "查询支付结果"
 msgstr "查询支付结果"
 
-#: src/PaymentGateway.php:1147
+#: src/PaymentGateway.php:1207 src/PaymentGateway.php:1209
+msgid "Use WeChat Pay"
+msgstr "使用微信支付"
+
+#: src/PaymentGateway.php:1224
 msgid "Please scan the QR code with WeChat to finish the payment."
 msgstr "请使用微信扫描二维码完成支付。"
 
-#: src/PaymentGateway.php:1158 src/PaymentGateway.php:1196
+#: src/PaymentGateway.php:1235 src/PaymentGateway.php:1273
 msgid "Refresh QR code"
 msgstr "刷新二维码"
 
-#: src/PaymentGateway.php:1164 src/PaymentGateway.php:1202
+#: src/PaymentGateway.php:1241 src/PaymentGateway.php:1279
 msgid "Generating QR code..."
 msgstr "正在获取二维码..."
 
-#: src/PaymentGateway.php:1239
+#: src/PaymentGateway.php:1316
 msgid "Invalid order."
 msgstr "订单无效。"
 
-#: src/PaymentGateway.php:1280
+#: src/PaymentGateway.php:1362
 msgid "Invalid request."
 msgstr "请求无效。"
 
-#: src/PaymentGateway.php:1289
+#: src/PaymentGateway.php:1371
 msgid "You are not allowed to refresh this QR code."
 msgstr "您无权刷新此二维码。"
 
-#: src/PaymentGateway.php:1295
+#: src/PaymentGateway.php:1377
 msgid "Payment successful"
 msgstr "支付成功"
 
-#: src/PaymentGateway.php:1306
+#: src/PaymentGateway.php:1388
 msgid "QR code refreshed."
 msgstr "二维码已更新。"
 
-#: src/PaymentGateway.php:1310
+#: src/PaymentGateway.php:1392
 msgid "Failed to refresh WeChat Pay QR code, please try again."
 msgstr "无法刷新微信支付二维码，请重试。"
 
-#: src/PaymentGateway.php:1345
+#: src/PaymentGateway.php:1422
+msgid "Too many requests, please try again later."
+msgstr "请求过多，请稍后再试。"
+
+#: src/PaymentGateway.php:1451
 msgid "Mini app login failed."
 msgstr "小程序登录失败。"
 
@@ -326,8 +328,9 @@ msgstr ""
 "运行，您当前的 PHP 版本为 %2$s， 请升级到 PHP 到 %1$s 或更新的版本， 否则插件"
 "没有任何作用。"
 
-#~ msgid "WeChat Pay"
-#~ msgstr "微信支付"
+#, php-format
+#~ msgid "Wechatpay payment complete (Transaction ID: %s)"
+#~ msgstr "微信支付已完成(微信订单号: %s)"
 
 #~ msgid ""
 #~ "Enable auto login in wechat Official Accounts (此功能将被弃用，不建议使用)"
